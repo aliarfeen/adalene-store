@@ -1,0 +1,6 @@
+
+
+.slider-container button[data-testid="carousel-left-control"],
+.slider-container button[data-testid="carousel-right-control"] {
+  display: none !important;
+}
