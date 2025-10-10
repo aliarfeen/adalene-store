@@ -1,0 +1,60 @@
+import { useState } from "react"
+import type { Product } from "../../Types"
+import Pagination from "./Pagination"
+import ProductCard from "./ProductCard"
+import { useQuery } from "@tanstack/react-query"
+import apiFactory from "../../Api/apiFactory"
+
+interface ProductsListProps {
+  activeFilters: {
+    category: string
+    colors: string[]
+    sizes: string[]
+  }
+}
+
+const ProductsList = ({ activeFilters }: ProductsListProps) => {
+  const query = useQuery({
+    queryKey: ["products"],
+    queryFn: apiFactory.fetchProducts,
+    staleTime: 1000 * 60 * 2,
+  })
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(9)
+
+  //filter
+  const filteredProducts = (query.data ?? []).filter(product  => {
+    const matchesCategory =
+      !activeFilters.category ||
+      product.category?.toLowerCase() === activeFilters.category.toLowerCase()
+
+    
+    return matchesCategory 
+  })
+
+  const lastIndex = currentPage * itemsPerPage
+  const firstIndex = lastIndex - itemsPerPage
+  const currentItems = filteredProducts.slice(firstIndex, lastIndex)
+
+  return (
+    <div className="flex flex-col self-center">
+      <p className="text-gray-500 font-medium text-start p-7">
+        ({filteredProducts.length}) Products
+      </p>
+      <div className="grid grid-cols-1 gap-4 self-center md:grid-cols-2 xl:grid-cols-3">
+        {currentItems.map((product:Product, index:number) => (
+          <ProductCard key={index} Product={product} />
+        ))}
+      </div>
+      <Pagination
+        totalitems={filteredProducts.length ?? 0}
+        itemsPerPage={itemsPerPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
+    </div>
+  )
+}
+
+export default ProductsList

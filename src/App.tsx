@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 // Assuming your simplified factory file is named 'apiFactory'
 import apiFactory from './Api/apiFactory';
 import type { User, Product } from './Types';
+import ProductListPage from './Pages/Products/ProductList';
 
 const App: React.FC = () => {
   // 1. Initialize state with the correct types
@@ -39,14 +40,13 @@ const App: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Products ({products.length})</h1>
-      {/* Example: Display the first product's title */}
-      <p>{products[0]?.title}</p>
+     <div>
+    {/* //   <h1>Products ({products.length})</h1>
+    //   <p>{products[0]?.title}</p>
       
-      <h2>Users ({users.length})</h2>
-      {/* Example: Display the first user's email */}
-      <p>{users[0]?.email}</p>
+    //   <h2>Users ({users.length})</h2>
+    //   <p>{users[0]?.email}</p> */}
+    <ProductListPage />
     </div>
   );
 };
