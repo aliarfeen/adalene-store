@@ -47,7 +47,7 @@ const Pagination : React.FC<PaginationProps> = ({
         <button
           key={index}
           onClick={() => setCurrentPage(page)}
-          className={`relative z-10 inline-flex items-center ${page === currentPage ? " bg-amber-700 text-white" : "bg-white text-stone-800"} px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500`}
+          className={`relative z-10 inline-flex items-center ${page === currentPage ? " bg-orange-800 text-white" : "bg-white text-stone-800"} px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500`}
         >
           {page}
         </button>
