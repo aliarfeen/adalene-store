@@ -9,6 +9,7 @@ import bag3 from '../../assets/HomeImage/bag3.avif'
 import bag4 from '../../assets/HomeImage/allProduct6.jpg'
 import bag5 from '../../assets/HomeImage/allProduct4.jpg'
 import bag6 from '../../assets/HomeImage/allProduct10.jpg'
+import { Link } from "react-router-dom";
 
 
 export const MainSlider = () => {
@@ -53,7 +54,7 @@ export const MainSlider = () => {
                                 <h2 className="text-3xl sm:text-4xl xl:text-5xl font-bold mb-4">
                                     {slide.title}
                                 </h2>
-                                <Button text={slide.buttonText} className="bg-orange-800 text-white hover:bg-orange-700" />
+                             <Link to='/products'>  <Button text={slide.buttonText} className="bg-orange-800 text-white hover:bg-orange-700" /></Link> 
                             </div>
                         </div>
                     </div>

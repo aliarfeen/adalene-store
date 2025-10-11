@@ -128,7 +128,7 @@ export const Navbar = () => {
           </div>
         </div>
         <div className="p-4 border-t">
-          < Button text="Show cart details" className="w-full"/>
+        <Link to="/cart"> < Button text="Show cart details" className="w-full"/></Link> 
           </div>
       </div>
     </>
