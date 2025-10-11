@@ -1,11 +1,19 @@
-import ProductListPage from './Pages/Products/ProductList';
+import { Outlet } from "react-router-dom"
+import { Footer } from "./Components/layout/Footer"
+import { Navbar } from "./Components/layout/Navbar"
 
-const App: React.FC = () => {
+
+
+
+
+
+export const App = () => {
   return (
     <div>
-      <ProductListPage />
-    </div>
-  );
-};
+      <Navbar />
+      <Outlet/>
+      <Footer />
 
-export default App;
+    </div>
+  )
+}
