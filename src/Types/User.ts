@@ -1,7 +1,7 @@
 export interface User {
   resource: 'user';
-  id: number;
+  id: string;
   username: string;
   email: string;
   password?: string;
-}
+} 
