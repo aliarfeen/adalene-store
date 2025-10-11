@@ -11,10 +11,6 @@ import bag5 from '../../assets/HomeImage/allProduct4.jpg'
 import bag6 from '../../assets/HomeImage/allProduct10.jpg'
 
 
-
-
-
-
 export const MainSlider = () => {
     const slides = [
         {
@@ -64,6 +60,5 @@ export const MainSlider = () => {
                 ))}
             </Carousel>
         </div>
-
     );
 };
