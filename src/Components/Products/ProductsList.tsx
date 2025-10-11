@@ -8,8 +8,6 @@ import apiFactory from "../../Api/apiFactory"
 interface ProductsListProps {
   activeFilters: {
     category: string
-    colors: string[]
-    sizes: string[]
   }
 }
 

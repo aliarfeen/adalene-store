@@ -8,6 +8,9 @@ import 'flowbite';
 import { HomePage } from "./Pages/Home/HomePage.tsx";
 import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 import ProductListPage from "./Pages/Products/ProductList.tsx";
+import { Provider } from "react-redux";
+import { store } from "./App/store.ts";
+import Cart from "./Pages/Cart/cartPage.tsx";
 // Create a client
 const queryClient = new QueryClient();
 
@@ -18,6 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> }, 
       {path:"/products", element: <ProductListPage /> }, 
+       {path:"/cart", element: <Cart /> }, 
   
       { path: "*", element: <NotFound /> },
     ]
@@ -25,11 +29,15 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
+  
   <StrictMode>
+    <Provider store={store}>
     <QueryClientProvider client={queryClient}>
      <RouterProvider router={router} />
     </QueryClientProvider>
+    </Provider>
   </StrictMode>
+  
 );
 
 
