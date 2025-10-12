@@ -8,6 +8,7 @@ import bestSeller5 from '../../assets/BestSeller/p-bag6.avif'
 import bestSeller8 from '../../assets/BestSeller/p-bag5.avif'
 import bestSeller6 from '../../assets/BestSeller/p-bag7.avif'
 import bestSeller7 from '../../assets/BestSeller/p-bag8.avif'
+import { Button } from '../Common/Button'
 
 
 interface BestProduct {
@@ -66,16 +67,12 @@ export const BestSellerSlider = () => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
     }, 4000)
-
     return () => clearInterval(interval)
   }, [maxIndex])
-
   return (
     <div className="w-full bg-gray-50 py-10 px-4">
       <h2 className="text-2xl font-bold text-center mb-6">Best Sellers</h2>
-
       <div className="max-w-7xl mx-auto relative">
-
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0}
@@ -84,7 +81,6 @@ export const BestSellerSlider = () => {
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-
         <button
           onClick={handleNext}
           disabled={currentIndex >= maxIndex}
@@ -93,8 +89,6 @@ export const BestSellerSlider = () => {
         >
           <ChevronRight className="w-6 h-6" />
         </button>
-
-
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -109,13 +103,11 @@ export const BestSellerSlider = () => {
                 style={{ width: `${100 / itemsPerView}%` }}
               >
                 <div className="bg-white rounded-lg shadow-md overflow-hidden relative h-full">
-
                   <div className="absolute top-4 left-4 z-10">
                     <span className="bg-orange-800 text-white text-xs font-semibold px-4 py-1.5 rounded-full">
                       Best Seller
                     </span>
                   </div>
-
                   <div className="relative w-full aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-8">
                     <img
                       src={item.image}
@@ -123,8 +115,6 @@ export const BestSellerSlider = () => {
                       className="w-full h-full object-contain"
                     />
                   </div>
-
-
                   <div className="p-6 text-center">
                     <h3 className="text-gray-800 text-lg font-normal mb-2">
                       {item.title}
@@ -138,8 +128,6 @@ export const BestSellerSlider = () => {
             ))}
           </div>
         </div>
-
-
         <div className="flex justify-center gap-2 mt-6">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
@@ -150,6 +138,9 @@ export const BestSellerSlider = () => {
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
+        </div>
+        <div className="flex justify-center mt-8">
+          <Button text="Shop All Page" />
         </div>
       </div>
     </div>

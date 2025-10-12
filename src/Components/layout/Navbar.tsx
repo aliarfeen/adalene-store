@@ -89,10 +89,9 @@ export const Navbar = () => {
             id="navbar-search"
           >
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border md:space-x-8 md:flex-row md:mt-0 md:border-0">
-              <Link to="/shop-all"><li className="hover:text-orange-800">Shop All</li></Link>
+              <Link to="/products"><li className="hover:text-orange-800">Shop All</li></Link>
               <Link to="/story"><li className="hover:text-orange-800">Our Story</li></Link>
               <Link to="/craft"><li className="hover:text-orange-800">Our Craft</li></Link>
-              <Link to="/gift"><li className="hover:text-orange-800">Gift Card</li></Link>
               <Link to="/contact"><li className="hover:text-orange-800">Contact</li></Link>
             </ul>
           </div>
