@@ -59,6 +59,8 @@ createRoot(document.getElementById("root")!).render(
     </ProductProvider>
     </Provider>
   </StrictMode>
+
+  
   
 );
 
