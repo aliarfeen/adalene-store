@@ -65,8 +65,10 @@ const Login: React.FC = () => {
         return;
       }
 
+      // ✅ Store logged-in user in localStorage
+      localStorage.setItem("loggedUser", JSON.stringify(existingUser));
+
       toast.success("🎉 Logged in successfully!");
-      console.log("✅ Logged in:", existingUser);
     } catch (error) {
       toast.error("⚠️ Something went wrong. Please try again.");
     } finally {
@@ -117,7 +119,6 @@ const Login: React.FC = () => {
           </Link>
         </div>
 
-        {/* ✅ الزر بيتقفل بعد الضغط ومش بيرجع يشتغل إلا لما المستخدم يغير أي input */}
         <button
           type="submit"
           disabled={isLoading || isButtonDisabled}
