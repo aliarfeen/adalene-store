@@ -42,7 +42,7 @@ const ProductsList = ({ activeFilters }: ProductsListProps) => {
       </p>
       <div className="grid grid-cols-1 gap-4 self-center md:grid-cols-2 xl:grid-cols-3">
         {currentItems.map((product:Product, index:number) => (
-          <ProductCard key={index} Product={product} />
+          <ProductCard key={index} product={product} />
         ))}
       </div>
       <Pagination

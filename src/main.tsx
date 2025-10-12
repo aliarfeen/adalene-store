@@ -1,21 +1,37 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import {App }from "./App.tsx";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { store } from "./App/store.ts";
+import { Provider } from "react-redux";
+
 import 'flowbite';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+
+import {App }from "./App.tsx";
 import { HomePage } from "./Pages/Home/HomePage.tsx";
 import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 import ProductListPage from "./Pages/Products/ProductList.tsx";
-import { Provider } from "react-redux";
-import { store } from "./App/store.ts";
 import Cart from "./Pages/Cart/cartPage.tsx";
 import CheckoutPage from "./Pages/Checkout/Checkout.tsx";
 import OrderSuccess from "./Pages/Checkout/OrderSuccess.tsx";
 // Create a client
-const queryClient = new QueryClient();
 
+import OurStory from './Pages/Story&craft/OurStory.tsx'
+import ProductDetails from "./Pages/Products/ProductDetails.tsx";
+import ProductDetailsLayout from "./Components/ProductDetails/ProductLayOut.tsx";
+import { ProductProvider } from "./context/ProductContext.tsx";
+import  OurCraft  from "./Pages/Story&craft/OurCraft.tsx";
+
+
+
+
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,6 +43,13 @@ const router = createBrowserRouter([
        {path:"/checkout", element: <CheckoutPage /> }, 
        {path:"/ordersuccess", element: <OrderSuccess /> }, 
   
+       {path:"/story",element:<OurStory/>},
+       {path:"/craft",element:<OurCraft/>},
+       {
+        path: "product/:slug",
+        element: <ProductDetailsLayout />,
+        children: [{ index: true, element: <ProductDetails /> }],
+      },
       { path: "*", element: <NotFound /> },
     ]
   }
@@ -36,9 +59,11 @@ createRoot(document.getElementById("root")!).render(
   
   <StrictMode>
     <Provider store={store}>
+      <ProductProvider>
     <QueryClientProvider client={queryClient}>
      <RouterProvider router={router} />
     </QueryClientProvider>
+    </ProductProvider>
     </Provider>
   </StrictMode>
   

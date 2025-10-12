@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 
 const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -10,7 +11,7 @@ const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <span 
+     <Link to='/'> <span 
         className="text-3xl font-serif italic text-orange-800 transition-all duration-500 cursor-pointer inline-block"
         style={{ 
           fontFamily: 'Georgia, Garamond, serif',
@@ -31,7 +32,7 @@ const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
             {letter}
           </span>
         ))}
-      </span>
+      </span></Link>
       <style>{`
         @keyframes fadeInUp {
           from {
