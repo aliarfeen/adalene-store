@@ -21,6 +21,7 @@
     "emailjs-com": "^3.2.0",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.12.9",
+    "framer-motion": "^12.23.24",
     "lucide-react": "^0.545.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

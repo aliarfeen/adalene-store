@@ -15,7 +15,7 @@ phone: string;
 address: string;
 city: string;
 postalCode: string;
-note: string;
+note?: string;
 }
 
 

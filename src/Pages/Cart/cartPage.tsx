@@ -4,36 +4,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 import { removeItem, setQty, clearCart } from "../../Features/cart/cartSlice";
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
 
-
-/**
- * Assumptions:
- * - Tailwind is configured in the project.
- * - Playfair Display (serif) imported globally (you already added it).
- * - cart items in Redux have shape: { id: string; name: string; img: string; category?: string; price: number; qty: number; }
- */
-
 const Cart: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { items } = useSelector((state: RootState) => state.cart);
+  const navigate = useNavigate();
 
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
 
-  // subtotal recalculated from items
   const subtotal = useMemo(
     () => items?.reduce((acc: number, item: any) => acc + item.price * item.qty, 0) ?? 0,
     [items]
   );
 
-  // If promo was applied earlier and items changed, keep discount consistent:
-  // (we set discount equal to subtotal at time of applying; if you prefer dynamic discount,
-  // you can change logic to always make discount === subtotal when promoApplied === true)
   const total = Math.max(0, subtotal - discount);
 
   if (!items || items.length === 0) {
@@ -86,7 +76,6 @@ const Cart: React.FC = () => {
       return;
     }
     if (validCodes.includes(promoCode.trim().toLowerCase())) {
-      // apply 100% discount (on current subtotal)
       setDiscount(subtotal);
       setPromoApplied(true);
       toast.success("✅ Promo code applied! 100% discount");
@@ -94,6 +83,14 @@ const Cart: React.FC = () => {
       setDiscount(0);
       toast.error("❌ Invalid promo code");
     }
+  };
+
+  // ✅ لما يضغط على Checkout
+  const handleCheckout = () => {
+    toast.success("Proceeding to checkout...");
+    setTimeout(() => {
+      navigate("/checkout");
+    }, 1000);
   };
 
   return (
@@ -181,23 +178,21 @@ const Cart: React.FC = () => {
                   type="text"
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
-                  placeholder="promo code"
-                  className="w-full border px-4 py-2 rounded outline-none focus:ring-2 focus:ring-[#f0d7cc]"
+                  placeholder="Promo code"
+                  className="w-50 px-2 py-1.5 text-sm rounded-lg border border-gray-300 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-[#f0d7cc] focus:border-[#f0d7cc] disabled:opacity-60 disabled:cursor-not-allowed"
                   disabled={promoApplied}
                 />
                 <Button
                   onClick={applyPromoCode}
-                  className={`px-4 py-2 rounded font-medium ${
-                    promoApplied ? "bg-gray-300 text-gray-700" : "bg-[#f3e1d6] text-[#b85c38]"
+                  className={`px-4 py-2 rounded font-medium transition-all duration-200 ${
+                    promoApplied
+                      ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                      : "bg-[#f3e1d6] text-[#b85c38] hover:bg-[#e9c2b0]"
                   }`}
                   text={promoApplied ? "Applied" : "Apply"}
-               / >
-                  
-               
-               
+                />
               </div>
 
-              {/* show applied promo code */}
               {promoApplied && (
                 <p className="mt-3 text-sm text-green-700">
                   Promo <span className="font-medium">{promoCode}</span> applied — 100% discount
@@ -229,13 +224,12 @@ const Cart: React.FC = () => {
               <span>${total.toFixed(2)}</span>
             </div>
 
+            {/* ✅ Checkout Button */}
             <Button
-              className="w-full py-3  "
-              onClick={() => toast.success("Proceeding to checkout...")}
-              text=" Checkout"
+              className="w-full py-3 "
+              onClick={handleCheckout}
+              text="Checkout"
             />
-             
-           
           </aside>
         </div>
       </div>
