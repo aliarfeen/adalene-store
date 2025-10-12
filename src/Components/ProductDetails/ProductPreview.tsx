@@ -18,7 +18,7 @@ const ProductPreview: React.FC<Product> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setBlur(false); // remove blur after 500ms
-    }, 1000);
+    }, 750);
     return () => clearTimeout(timer);
   }, []);
 
