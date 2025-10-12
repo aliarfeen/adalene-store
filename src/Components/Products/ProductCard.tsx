@@ -32,11 +32,21 @@ const ProductCard = ({ product }: { product: Product }) => {
           Best Seller
         </div>
       )}
+      {!loading && product.quantity <= 0&& (
+        <div className={`absolute ${!product.bestSeller?'top-5':'top-12'} left-8 bg-stone-400 text-white text-xs px-3 py-1 rounded-full z-10 shadow-md transition-opacity duration-300 opacity-100`}>
+          Out of Stock
+        </div>
+      )}
+      {!loading && product.quantity <= 5 && product.quantity > 0&& (
+        <div className={`absolute ${!product.bestSeller?'top-5':'top-12'} left-8 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full z-10 shadow-md transition-opacity duration-300 opacity-100`}>
+          Low Stock
+        </div>
+      )}
 
       {/* --- Product Image with blur --- */}
       <div className="overflow-hidden rounded-lg">
         <img
-          className={`rounded-lg brightness-105 w-full object-cover transition-all duration-500 ${
+          className={`rounded-lg brightness-105 w-full hover:scale-[1.1] object-cover transition-all duration-500 ${
             loading ? 'blur-md scale-105' : 'blur-0 scale-100'
           }`}
           src={product.image}

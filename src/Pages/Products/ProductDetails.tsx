@@ -9,8 +9,7 @@ const ProductDetails = () => {
     
   return (
     <div>
-      <ProductPrieview  bestSeller={product.bestSeller} resource={'product'} id={product.id} title={product.title} price={product.price} description={product.description} image={product.image} category={''}      
-      />
+      <ProductPrieview  bestSeller={product.bestSeller} resource={'product'} id={product.id} title={product.title} price={product.price} description={product.description} image={product.image} category={''} quantity={product.quantity}      />
       <InfoContainer />
     </div>
   )
