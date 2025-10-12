@@ -2,6 +2,7 @@ import { MainSlider } from "../../Components/Sliders/mainSlider"
 import BestSellerSlider from "../../Components/Sliders/BestSellerSlider"
 import LeatherGoodsSection from "../../Components/Sliders/Test"
 import LowestProducts from "../../Components/Sliders/LowestProducts"
+import Categories from "../../Components/Categories/Categories"
 
 
 export const HomePage = () => {
@@ -11,6 +12,7 @@ export const HomePage = () => {
     <BestSellerSlider/>
 <LeatherGoodsSection/>
 <LowestProducts/>
+<Categories/>
     
     </>
   )
