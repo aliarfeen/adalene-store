@@ -11,6 +11,8 @@ import ProductListPage from "./Pages/Products/ProductList.tsx";
 import { Provider } from "react-redux";
 import { store } from "./App/store.ts";
 import Cart from "./Pages/Cart/cartPage.tsx";
+import CheckoutPage from "./Pages/Checkout/Checkout.tsx";
+import OrderSuccess from "./Pages/Checkout/OrderSuccess.tsx";
 // Create a client
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> }, 
       {path:"/products", element: <ProductListPage /> }, 
        {path:"/cart", element: <Cart /> }, 
+       {path:"/checkout", element: <CheckoutPage /> }, 
+       {path:"/ordersuccess", element: <OrderSuccess /> }, 
   
       { path: "*", element: <NotFound /> },
     ]
