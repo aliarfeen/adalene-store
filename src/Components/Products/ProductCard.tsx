@@ -36,7 +36,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       {/* --- Product Image with blur --- */}
       <div className="overflow-hidden rounded-lg">
         <img
-          className={`rounded-lg brightness-105 w-full object-cover transition-all duration-500 ${
+          className={`rounded-lg brightness-105 w-full hover:scale-[1.1] object-cover transition-all duration-500 ${
             loading ? 'blur-md scale-105' : 'blur-0 scale-100'
           }`}
           src={product.image}

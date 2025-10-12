@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import type { Product } from '../../Types';
 import { Button } from '../Common/Button';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../Features/products/productSlice';
 
-// Placeholder image
+// --- Placeholder image ---
 const PLACEHOLDER_IMAGE_URL = 'https://i.imgur.com/g8D0kK5.png';
 
 const ProductPreview: React.FC<Product> = ({
@@ -10,15 +12,17 @@ const ProductPreview: React.FC<Product> = ({
   title = "I'm a product",
   id = 1,
   price = 250.0,
-  description = "I'm a product description. I'm a great place to add more details about your product such as sizing, material, care."
+  description = "I'm a product description. I'm a great place to add more details about your product such as sizing, material, care.",
+  resource,
+  category,
+  bestSeller,
 }) => {
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
-  const [blur, setBlur] = useState(true); // image starts blurred
+  const [blur, setBlur] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setBlur(false); // remove blur after 500ms
-    }, 750);
+    const timer = setTimeout(() => setBlur(false), 750);
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,9 +38,7 @@ const ProductPreview: React.FC<Product> = ({
 
         {/* --- Product Image --- */}
         <div className="relative w-full md:w-1/2 flex justify-center items-start">
-          
-          {/* Best Seller Badge */}
-          <div className="absolute top-4 left-4 bg-orange-800 text-white text-xs font-semibold  px-3 py-1 rounded-full shadow-md z-10">
+          <div className="absolute top-4 left-4 bg-orange-800 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-10">
             Best Seller
           </div>
 
@@ -83,12 +85,11 @@ const ProductPreview: React.FC<Product> = ({
           <div className="flex flex-col space-y-3">
             <Button
               className="py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 bg-orange-800 hover:bg-gray-800"
-              onClick={() => console.log(`Added ${quantity} of ${title} to cart!`)}
+              onClick={() => dispatch(addToCart({ id, image, title, price, quantity, resource, description, category, bestSeller }))}
               text="Add to Cart"
             />
             <Button
               className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"
-        
               onClick={() => console.log(`Added ${quantity} of ${title} to cart!`)}
               text="Buy Now"
             />
