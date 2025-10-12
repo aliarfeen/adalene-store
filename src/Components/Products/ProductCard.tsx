@@ -4,7 +4,7 @@ const ProductCard = ({Product} : {Product: Product}) => {
   return (
     <div className='relative px-5 pb-5 rounded-lg cursor-pointer hover:brightness-95'> 
       {Product.bestSeller && ( 
-        <div className='absolute top-2 left-2 bg-orange-800 text-white text-xs px-3 py-1 rounded-full z-10'>
+        <div className='absolute top-5 left-8 bg-orange-800 text-white text-xs px-3 py-1 rounded-full z-10'>
           Best Seller
         </div>
       )}
