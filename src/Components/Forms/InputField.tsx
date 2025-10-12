@@ -15,6 +15,7 @@ interface InputFieldProps {
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, type, name, placeholder, value, onChange, icon, required }, ref) => {
     return (
+      <>
       <div className="flex flex-col mb-4">
         <label htmlFor={name} className="text-l font-medium mb-1 text-gray-700">
           {label}
@@ -49,6 +50,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           />
         </div>
       </div>
+      </>
     );
   }
 );
