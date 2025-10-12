@@ -6,7 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { store } from "./App/store.ts";
 import { Provider } from "react-redux";
+
 import 'flowbite';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 
 import {App }from "./App.tsx";

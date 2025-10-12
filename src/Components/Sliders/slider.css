@@ -1,6 +1,11 @@
-
-
 .slider-container button[data-testid="carousel-left-control"],
 .slider-container button[data-testid="carousel-right-control"] {
   display: none !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: rgb(139, 39, 2) !important;
+  /* Tailwind red-700 */
+  font-weight: bold;
 }
