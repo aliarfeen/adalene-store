@@ -2,11 +2,15 @@ import type { Product } from './../../Types/Product';
 
 const ProductCard = ({Product} : {Product: Product}) => {
   return (
-    <div className='px-5 pb-5 rounded-lg cursor-pointer hover:brightness-95'>
-        <img className='rounded-lg brightness-105' src={Product.image} alt={Product.title} />
-        <p className='text-lg text-center font-normal text-gray-800 mb-1'>{Product.title}</p>
-        <p className='text-lg text-center font-serif font-medium text-red-700 italic'>{Product.price} EGP</p>
-      
+    <div className='relative px-5 pb-5 rounded-lg cursor-pointer hover:brightness-95'> 
+      {Product.bestSeller && ( 
+        <div className='absolute top-2 left-2 bg-orange-800 text-white text-xs px-3 py-1 rounded-full z-10'>
+          Best Seller
+        </div>
+      )}
+      <img className='rounded-lg brightness-105' src={Product.image} alt={Product.title} />
+      <p className='text-lg text-center font-normal text-gray-800 mb-1'>{Product.title}</p>
+      <p className='text-lg text-center font-serif font-medium text-red-700 italic'>{Product.price} EGP</p>
     </div>
   )
 }
