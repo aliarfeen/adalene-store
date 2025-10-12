@@ -34,7 +34,7 @@ const LeatherGoodsSection = () => {
 
   return (
     <div className="bg-gradient-to-b from-gray-50 to-white">
-      <div ref={containerRef} className="relative h-[300vh]">
+      <div ref={containerRef} className="relative h-[150vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           {/* Responsive grid: 1 column on mobile, 2 on medium+ */}
           <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -123,42 +123,40 @@ const LeatherGoodsSection = () => {
                       opacity: opacity + 0.5,
                     }}
                   >
-                    <h2 className="text-3xl sm:text-5xl font-thin tracking-[0.2em] sm:tracking-[0.3em] text-amber-100 mb-1 sm:mb-2">LEATHER</h2>
-                    <h2 className="text-3xl sm:text-5xl font-thin tracking-[0.2em] sm:tracking-[0.3em] text-amber-100">BELTS</h2>
+                    <h2 className="text-3xl sm:text-5xl font-thin tracking-[0.2em] sm:tracking-[0.3em] text-black mb-1 sm:mb-2">LEATHER</h2>
+                    <h2 className="text-3xl sm:text-5xl font-thin tracking-[0.2em] sm:tracking-[0.3em] text-amber-800">BELTS</h2>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Right - Belt Detail */}
+            {/* Bottom Right - Belt Detail (Hexagon Shape) */}
             <div className="relative bg-gradient-to-tl from-amber-50 to-stone-100 overflow-hidden">
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 flex items-center justify-center transition-all duration-300 p-4"
                 style={{
-                  transform: `translateY(${scrollProgress * 100}px) scale(${1 + scrollProgress * 0.5}) rotate(${scrollProgress * 15}deg)`,
+                  transform: `translateY(${scrollProgress * -50}px) scale(${scale})`,
+                  opacity: opacity + 0.3,
                 }}
               >
-                <div className="w-full h-full relative flex items-center justify-center">
-                  <div className="relative">
+                <div
+                  className="relative"
+                  style={{ transform: `rotate(${rotation * 0.2}deg)` }}
+                >
+                  <div
+                    className="relative w-40 h-44 sm:w-64 sm:h-72 bg-gradient-to-br from-amber-700 to-amber-950 shadow-2xl overflow-hidden"
+                    style={{
+                      clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    }}
+                  >
+                    <img src={leather2} alt="Belt Detail" className="w-full h-full object-cover" />
                     <div
-                      className="w-40 h-40 sm:w-64 sm:h-64 rounded-full bg-gradient-to-br from-amber-700 to-amber-950 shadow-2xl overflow-hidden"
+                      className="absolute -top-4 -right-4 w-6 h-6 sm:w-8 sm:h-8 bg-amber-400 rounded-full blur-sm"
                       style={{
-                        boxShadow: `0 0 ${scrollProgress * 100}px rgba(217, 119, 6, ${scrollProgress * 0.5})`,
+                        transform: `translate(${Math.sin(rotation * 0.05) * 20}px, ${Math.cos(rotation * 0.05) * 20}px)`,
+                        opacity: scrollProgress * 0.5,
                       }}
-                    >
-                      <img src={leather2} alt="Belt Detail" className="w-full h-full object-cover" />
-                    </div>
-
-                    {[0, 120, 240].map((angle, i) => (
-                      <div
-                        key={i}
-                        className="absolute top-1/2 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-amber-500 rounded-full"
-                        style={{
-                          transform: `translate(-50%, -50%) rotate(${angle + rotation}deg) translateY(-120px)`,
-                          opacity: scrollProgress,
-                        }}
-                      ></div>
-                    ))}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -170,7 +168,7 @@ const LeatherGoodsSection = () => {
           <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-20 px-4">
             <div className="w-32 sm:w-48 h-1 bg-gray-300 rounded-full overflow-hidden">
               <div
-                className="h-full bg-amber-600 transition-all duration-300"
+                className="h-full bg-orange-800 transition-all duration-300"
                 style={{ width: `${scrollProgress * 100}%` }}
               ></div>
             </div>
