@@ -19,13 +19,13 @@ const ProductsList = ({ activeFilters }: ProductsListProps) => {
   //   staleTime: 1000 * 60 * 2,
   // })
 
-  const data = useProducts({ activeFilters })
+  const data = useProducts()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(9)
 
   //filter
-  const filteredProducts = (data ?? []).filter(product  => {
+  const filteredProducts = (data.products ?? []).filter(product  => {
     const matchesCategory =
       !activeFilters.category || 
       product.category?.toLowerCase() === activeFilters.category.toLowerCase()

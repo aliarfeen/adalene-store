@@ -1,21 +1,18 @@
-import { useQuery } from "@tanstack/react-query"
-import apiFactory from "../Api/apiFactory"
+import { useQuery } from "@tanstack/react-query";
+import apiFactory from "../Api/apiFactory";
 
-
-interface ProductsListProps {
-  activeFilters: {
-    category: string
-  }
-}
-
-const useProducts = ({ activeFilters }: ProductsListProps) => {
-  const query = useQuery({
+const useProducts = () => {
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: apiFactory.fetchProducts,
-    staleTime: 1000 * 60 * 2,
-  })
+    staleTime: 1000 * 60 * 2, // cache for 2 minutes
+  });
 
-return (query.data ?? [])
-}
+  return {
+    products: data ?? [],
+    isLoading,
+    isError,
+  };
+};
 
-export default useProducts
+export default useProducts;
