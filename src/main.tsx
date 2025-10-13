@@ -18,6 +18,10 @@ import { HomePage } from "./Pages/Home/HomePage.tsx";
 import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 import ProductListPage from "./Pages/Products/ProductList.tsx";
 import Cart from "./Pages/Cart/cartPage.tsx";
+import CheckoutPage from "./Pages/Checkout/Checkout.tsx";
+import OrderSuccess from "./Pages/Checkout/OrderSuccess.tsx";
+// Create a client
+
 import OurStory from './Pages/Story&craft/OurStory.tsx'
 import ProductDetails from "./Pages/Products/ProductDetails.tsx";
 import ProductDetailsLayout from "./Components/ProductDetails/ProductLayOut.tsx";
@@ -36,6 +40,9 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> }, 
       {path:"/products", element: <ProductListPage /> }, 
        {path:"/cart", element: <Cart /> }, 
+       {path:"/checkout", element: <CheckoutPage /> }, 
+       {path:"/ordersuccess", element: <OrderSuccess /> }, 
+  
        {path:"/story",element:<OurStory/>},
        {path:"/craft",element:<OurCraft/>},
        {
@@ -59,6 +66,8 @@ createRoot(document.getElementById("root")!).render(
     </ProductProvider>
     </Provider>
   </StrictMode>
+
+  
   
 );
 
