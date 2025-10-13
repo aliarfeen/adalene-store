@@ -1,4 +1,4 @@
-// src/components/Cart.tsx
+
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -85,7 +85,6 @@ const Cart: React.FC = () => {
     }
   };
 
-  // ✅ لما يضغط على Checkout
   const handleCheckout = () => {
     toast.success("Proceeding to checkout...");
     setTimeout(() => {
@@ -97,7 +96,7 @@ const Cart: React.FC = () => {
     <div className="min-h-screen px-6 md:px-16 py-10 bg-white font-serif">
       <ToastContainer theme="colored" />
       <div className="max-w-7xl mx-auto">
-        {/* Header row: title + Clear Cart (top-right) */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <h2 className="text-3xl font-semibold">Shopping Cart</h2>
           <button
@@ -112,7 +111,11 @@ const Cart: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT - products list */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
+            <div
+              className={`space-y-6 custom-scroll ${
+                items.length > 4 ? "max-h-[500px] overflow-y-auto pr-2" : ""
+              }`}
+            >
               {items.map((item: any) => (
                 <div
                   key={item.id}
@@ -167,7 +170,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
 
-            {/* Promo Code row */}
+            {/* Promo Code */}
             <div className="mt-8">
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Enter a promo code
@@ -201,36 +204,23 @@ const Cart: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT - order summary */}
+         {/* RIGHT - order summary */}
           <aside className="border rounded-xl p-6 shadow-sm bg-white">
-            <h4 className="text-2xl font-semibold mb-4">Order Summary</h4>
-
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">${subtotal.toFixed(2)}</span>
-            </div>
-
-            {discount > 0 && (
-              <div className="flex justify-between mb-2 text-green-700">
-                <span>Discount</span>
-                <span>- ${discount.toFixed(2)}</span>
+             <h4 className="text-2xl font-semibold mb-4">Order Summary</h4> 
+             <div className="flex justify-between mb-2"> 
+              <span className="text-gray-600">Subtotal</span> 
+              <span className="font-medium text-gray-600">${subtotal.toFixed(2)}</span> 
               </div>
-            )}
-
-            <hr className="my-4" />
-
-            <div className="flex justify-between text-lg font-semibold mb-6">
-              <span>Total</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-
-            {/* ✅ Checkout Button */}
-            <Button
-              className="w-full py-3 "
-              onClick={handleCheckout}
-              text="Checkout"
-            />
-          </aside>
+               {discount > 0 && ( <div className="flex justify-between mb-2 text-orange-800"> 
+                <span>Discount</span> 
+                <span>- ${discount.toFixed(2)}</span> 
+                </div>
+               )} <hr className="my-4" />
+                <div className="flex justify-between text-lg font-semibold mb-6"> 
+                  <span>Total</span> <span>${total.toFixed(2)}</span> </div>
+                   {/* ✅ Checkout Button */}
+                    <Button className="w-full py-3 " onClick={handleCheckout} text="Checkout" /> 
+         </aside>
         </div>
       </div>
     </div>
