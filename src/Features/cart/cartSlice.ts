@@ -13,7 +13,7 @@ initialState,
 reducers: {
 addItem(state, action: PayloadAction<CartItem>) {
 const found = state.items.find((i) => i.id === action.payload.id);
-if (found) found.qty += action.payload.qty; else state.items.push(action.payload);
+if (found) found.quantity += action.payload.quantity; else state.items.push(action.payload);
 save(state.items);
 },
 removeItem(state, action: PayloadAction<string>) {
@@ -22,7 +22,7 @@ save(state.items);
 },
 setQty(state, action: PayloadAction<{ id: string; qty: number }>) {
 const it = state.items.find((i) => i.id === action.payload.id);
-if (it) it.qty = Math.max(1, action.payload.qty);
+if (it) it.quantity = Math.max(1, action.payload.qty);
 save(state.items);
 },
 clearCart(state) { state.items = []; save(state.items); },
