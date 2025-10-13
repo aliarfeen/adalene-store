@@ -1,12 +1,14 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { removeItem, setQty, clearCart } from "../../Features/cart/cartSlice";
+import { removeItem, setQty, clearCart,  } from "../../Features/cart/cartSlice";
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
+import type { CartItem } from "../../Types/Cart";
+import { loadCartFromStorage } from "../../Features/products/productSlice";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -19,9 +21,15 @@ const Cart: React.FC = () => {
 
   // ✅ Subtotal = sum of (price * quantity)
   const subtotal = useMemo(
-    () => items?.reduce((s, i) => s + i.price * i.quantity, 0) ?? 0,
+    () => items?.reduce((s, i) => s + i.price * i.orderQuantity, 0) ?? 0,
     [items]
   );
+
+  // useEffect(() => {
+  //   dispatch(loadItems())
+  // }, [dispatch]);
+
+
 
   // ✅ Total after discount
   const total = useMemo(() => {
@@ -48,23 +56,23 @@ const Cart: React.FC = () => {
   // ✅ الكمية القصوى حسب الـ API
   const maxQty = item.quantity;
 
-  if (item.quantity >= maxQty) {
+  if (item.orderQuantity >= maxQty) {
     toast.error(`Only ${maxQty} items available in stock`);
     return;
   }
 
-  dispatch(setQty({ id, qty: item.quantity + 1 }));
+  dispatch(setQty({ id, qty: item.orderQuantity + 1 }));
 };
 
 
   const handleDecrease = (id: string) => {
     const item = items.find((i: any) => i.id === id);
     if (!item) return;
-    if (item.quantity <= 1) {
+    if (item.orderQuantity <= 1) {
       toast.error(`Minimum quantity reached`);
       return;
     }
-    dispatch(setQty({ id, qty: item.quantity - 1 }));
+    dispatch(setQty({ id, qty: item.orderQuantity - 1 }));
   };
 
   const handleRemove = (id: string) => {
@@ -166,7 +174,7 @@ const Cart: React.FC = () => {
                     </button>
 
                     <div className="w-10 text-center font-medium">
-                      {item.quantity}
+                      {item.orderQuantity}
                     </div>
 
                     <button
@@ -262,3 +270,4 @@ const Cart: React.FC = () => {
 };
 
 export default Cart;
+

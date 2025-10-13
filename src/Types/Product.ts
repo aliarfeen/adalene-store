@@ -7,5 +7,6 @@ export interface Product {
   image: string;
   category: string;
   quantity: number;
+  orderQuantity:number;
   bestSeller: boolean;
 }

@@ -4,6 +4,7 @@ title: string;
 price: number;
 image?: string;
 quantity: number;
+orderQuantity: number;
 category?:string
 }
 

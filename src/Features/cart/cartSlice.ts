@@ -1,42 +1,51 @@
-import  { createSlice } from '@reduxjs/toolkit';
-import  type {  PayloadAction } from '@reduxjs/toolkit';
-import type {CartItem}  from '../../Types/Cart';
+import { createSlice, current } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { CartItem } from '../../Types/Cart';
+
+const initialState: { items: CartItem[] } = {
+  items: JSON.parse(localStorage.getItem('cart') || '[]'),
+};
 
 
-const initialState: { items: CartItem[] } = { items: JSON.parse(localStorage.getItem('cart') || '[]') };
-const save = (items: CartItem[]) => localStorage.setItem('cart', JSON.stringify(items));
+const save = (items: CartItem[]) => {
+  console.log("Saving to localStorage:", items);
+  localStorage.setItem('cart', JSON.stringify(items));
+  
+  console.log("After set:", localStorage.getItem("cart"));
+};
 
 
 const slice = createSlice({
-name: 'cart',
-initialState,
-reducers: {
-addItem(state, action: PayloadAction<CartItem>) {
-const found = state.items.find((i) => i.id === action.payload.id);
-if (found) found.quantity += action.payload.quantity; else state.items.push(action.payload);
-save(state.items);
-},
-removeItem(state, action: PayloadAction<string>) {
-state.items = state.items.filter((i) => i.id !== action.payload);
-save(state.items);
-},
-setQty(state, action: PayloadAction<{ id: string; qty: number }>) {
-const it = state.items.find((i) => i.id === action.payload.id);
-if (it) it.quantity = Math.max(1, action.payload.qty);
-save(state.items);
-},
-clearCart(state) { state.items = []; save(state.items); },
-},
-});
+  name: 'cart',
+  initialState,
+  reducers: {
+    addItem(state, action: PayloadAction<CartItem>) {
+      const found = state.items.find((i) => i.id === action.payload.id);
+      if (found) found.orderQuantity += action.payload.orderQuantity;
+      else state.items.push(action.payload);
 
+      // 👇 convert proxy to real object before saving
+      save(current(state.items));
+    },
+    
+    removeItem(state, action: PayloadAction<string>) {
+      state.items = state.items.filter((i) => i.id !== action.payload);
+      save((state.items));
+    },
+    setQty(state, action: PayloadAction<{ id: string; qty: number }>) {
+      const it = state.items.find((i) => i.id === action.payload.id);
+      if (it) it.orderQuantity = Math.max(1, action.payload.qty);
+      save(current(state.items));
+    },
+    clearCart(state) {
+      state.items = [];
+      save((state.items));
+    },
+  },
+});
 
 export const { addItem, removeItem, setQty, clearCart } = slice.actions;
 export default slice.reducer;
-
-
-
-
-
 
 
 

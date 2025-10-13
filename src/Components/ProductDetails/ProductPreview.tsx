@@ -20,7 +20,7 @@ const ProductPreview: React.FC<Product> = ({
   quantity = 10, // 👈 coming from backend
 }) => {
   const dispatch = useDispatch();
-  const [userQuantity, setUserQuantity] = useState(1);
+  const [orderQuantity, setorderQantity] = useState(1);
   const [blur, setBlur] = useState(true);
 
   useEffect(() => {
@@ -40,7 +40,8 @@ const ProductPreview: React.FC<Product> = ({
         image,
         title,
         price,
-        quantity: userQuantity,
+        orderQuantity,
+        quantity,
         resource,
         description,
         category,
@@ -51,11 +52,11 @@ const ProductPreview: React.FC<Product> = ({
   };
 
   // const handleQuantityChange = (delta: number) => {
-  //   if (userQuantity  <= quantity)
-  //   setUserQuantity(prev => Math.max(1, prev + delta));
+  //   if (orderQantity  <= quantity)
+  //   setorderQantity(prev => Math.max(1, prev + delta));
   // };
   const handleQuantityChange = (delta: number) => {
-    setUserQuantity((prev) => {
+    setorderQantity((prev) => {
       // Calculate the next value based on user action
       const newQuantity = prev + delta;
 
@@ -133,11 +134,11 @@ const ProductPreview: React.FC<Product> = ({
               <button
                 className="p-2 border-r border-gray-300 hover:bg-gray-100 disabled:opacity-50"
                 onClick={() => handleQuantityChange(-1)}
-                disabled={userQuantity <= 1}
+                disabled={orderQuantity <= 1}
               >
                 –
               </button>
-              <div className="p-2">{userQuantity}</div>
+              <div className="p-2">{orderQuantity}</div>
               <button
                 className="p-2 border-l border-gray-300 hover:bg-gray-100"
                 onClick={() => handleQuantityChange(1)}
@@ -162,7 +163,7 @@ const ProductPreview: React.FC<Product> = ({
             {/* <Button
               className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"
               onClick={() =>
-                console.log(`Added ${userQuantity} of ${title} to cart!`)
+                console.log(`Added ${orderQantity} of ${title} to cart!`)
               }
               text="Buy Now"
             /> */}
