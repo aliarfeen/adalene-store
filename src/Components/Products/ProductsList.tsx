@@ -4,6 +4,7 @@ import Pagination from "./Pagination"
 import ProductCard from "./ProductCard"
 import { useQuery } from "@tanstack/react-query"
 import apiFactory from "../../Api/apiFactory"
+import useProducts from "../../hooks/useProducts"
 
 interface ProductsListProps {
   activeFilters: {
@@ -12,19 +13,21 @@ interface ProductsListProps {
 }
 
 const ProductsList = ({ activeFilters }: ProductsListProps) => {
-  const query = useQuery({
-    queryKey: ["products"],
-    queryFn: apiFactory.fetchProducts,
-    staleTime: 1000 * 60 * 2,
-  })
+  // const query = useQuery({
+  //   queryKey: ["products"],
+  //   queryFn: apiFactory.fetchProducts,
+  //   staleTime: 1000 * 60 * 2,
+  // })
+
+  const data = useProducts()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(9)
 
   //filter
-  const filteredProducts = (query.data ?? []).filter(product  => {
+  const filteredProducts = (data.products ?? []).filter(product  => {
     const matchesCategory =
-      !activeFilters.category ||
+      !activeFilters.category || 
       product.category?.toLowerCase() === activeFilters.category.toLowerCase()
 
     
