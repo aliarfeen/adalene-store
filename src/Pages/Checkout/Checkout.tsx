@@ -29,7 +29,7 @@ const schema: yup.ObjectSchema<ShippingData> = yup.object({
 
 const CheckoutPage: React.FC = () => {
   const items = useSelector((s: RootState) => s.cart.items);
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cash");
@@ -215,16 +215,16 @@ const CheckoutPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.title}
                     className="w-14 h-14 object-cover rounded-md border"
                   />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                    <p className="text-xs text-gray-500">Qty: {item.qty}</p>
+                    <p className="text-sm font-medium text-gray-800">{item.title}</p>
+                    <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                   </div>
                 </div>
                 <span className="text-sm font-semibold text-gray-700">
-                  ${(item.price * item.qty).toFixed(2)}
+                  ${(item.price * item.quantity).toFixed(2)}
                 </span>
               </div>
             ))}
