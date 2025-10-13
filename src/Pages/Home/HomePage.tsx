@@ -8,12 +8,12 @@ import Categories from "../../Components/Categories/Categories"
 export const HomePage = () => {
   return (
     <>
-    <MainSlider/>
-    <BestSellerSlider/>
-<LeatherGoodsSection/>
-<LowestProducts/>
-<Categories/>
-    
+      <MainSlider />
+      <Categories />
+      <BestSellerSlider />
+      <LeatherGoodsSection />
+      <LowestProducts />
+
     </>
   )
 }
