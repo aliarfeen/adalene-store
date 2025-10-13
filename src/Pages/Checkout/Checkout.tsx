@@ -45,13 +45,25 @@ const CheckoutPage: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<ShippingData> = (data) => {
-    toast.success("Order placed successfully!");
-    dispatch(clearCart());
-    reset();
-    setTimeout(() => {
-      navigate("/ordersuccess");
-    }, 1500);
+  const orderData = {
+    id: Date.now(),  
+    userinfo: data, 
+    items, 
+    total,
+    paymentMethod,
+    date: new Date().toLocaleString(),
   };
+  const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+  existingOrders.push(orderData);
+  localStorage.setItem("orders", JSON.stringify(existingOrders));
+  toast.success("Order placed successfully!");
+  dispatch(clearCart());
+  reset();
+  setTimeout(() => {
+    navigate("/ordersuccess");
+  }, 1500);
+};
+
 
   if (items.length === 0)
     return <div className="text-center py-20 text-gray-500">Your cart is empty</div>;
