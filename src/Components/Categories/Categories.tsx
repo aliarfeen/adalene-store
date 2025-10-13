@@ -30,9 +30,9 @@ export default function Categories() {
   ];
 
   return (
-    <div className="min-h-screen bg-amber-50 py-16 px-4">
+    <div className="min-h-60 bg-amber-50 py-16 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-serif text-center text-amber-950 mb-16">
+        <h1 className="text-4xl md:text-5xl  text-center text-amber-950 mb-16">
           Browse Our Category
         </h1>
         

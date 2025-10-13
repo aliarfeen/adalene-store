@@ -39,7 +39,7 @@ const LowestProducts = () => {
 
   return (
     <div className="my-10 px-5 m-5">
-     <h1 className="text-4xl md:text-5xl font-serif text-center text-amber-950 mb-16">Lowest Price Products</h1>
+     <h1 className="text-4xl md:text-5xl  text-center text-amber-950 mb-16">Lowest Price Products</h1>
 
       <Swiper
         modules={[Navigation]}
