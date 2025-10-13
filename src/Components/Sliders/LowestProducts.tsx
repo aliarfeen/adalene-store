@@ -3,17 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import ProductCard from "../Products/ProductCard";
+import { data } from "react-router-dom";
+import useProducts from "../../hooks/useProducts";
 
 const LowestProducts = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const res = await axios.get(
-        "https://68e4f1f88e116898997db023.mockapi.io/data"
-      );
-      return res.data;
-    },
-  });
+  //const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["products"],
+  //   queryFn: async () => {
+  //     const res = await axios.get(
+  //       "https://68e4f1f88e116898997db023.mockapi.io/data"
+  //     );
+  //     return res.data;
+  //   },
+  // });
+
+  const { products:data, isLoading, isError} = useProducts();
 
   if (isLoading) return <p>Loading products...</p>;
   if (isError) return <p>Failed to load products.</p>;

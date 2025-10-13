@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, User, X } from "lucide-react";
+import type { Product } from "../../Types";
 
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
@@ -8,7 +9,7 @@ import { Button } from "../Common/Button";
 export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-
+ 
   const location = useLocation();
 
   // Close cart when route changes
@@ -119,9 +120,9 @@ export const Navbar = () => {
           {cartItems.length === 0 ? (
             <p className="text-gray-500 text-center">Your cart is empty.</p>
           ) : (
-            cartItems.map((item, index) => (
+            cartItems.map((item: Product, index) => (
               <div key={index} className="flex items-center justify-between border-b pb-2">
-                <span>{item.name}</span>
+                <span>{item.title}</span>
                 <span className="font-medium">${item.price}</span>
               </div>
             ))

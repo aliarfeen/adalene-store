@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import type { Product } from '../../Types';
-import { Button } from '../Common/Button';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../Features/products/productSlice';
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import type { Product } from "../../Types";
+import { Button } from "../Common/Button";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../Features/products/productSlice";
+import { toast, ToastContainer } from "react-toastify";
 
 // --- Placeholder image ---
-const PLACEHOLDER_IMAGE_URL = 'https://i.imgur.com/g8D0kK5.png';
+const PLACEHOLDER_IMAGE_URL = "https://i.imgur.com/g8D0kK5.png";
 
 const ProductPreview: React.FC<Product> = ({
   image = PLACEHOLDER_IMAGE_URL,
@@ -50,8 +50,23 @@ const ProductPreview: React.FC<Product> = ({
     toast.success(`(${title}) was added to cart!`);
   };
 
+  // const handleQuantityChange = (delta: number) => {
+  //   if (userQuantity  <= quantity)
+  //   setUserQuantity(prev => Math.max(1, prev + delta));
+  // };
   const handleQuantityChange = (delta: number) => {
-    setUserQuantity(prev => Math.max(1, prev + delta));
+    setUserQuantity((prev) => {
+      // Calculate the next value based on user action
+      const newQuantity = prev + delta;
+
+      // Don't allow increasing beyond available stock
+      if (delta > 0 && newQuantity > quantity) return prev;
+
+      // Don't allow decreasing below 1
+      if (delta < 0 && newQuantity < 1) return prev;
+
+      return newQuantity;
+    });
   };
 
   const formattedPrice = `${price.toFixed(2)} EGP`;
@@ -59,16 +74,15 @@ const ProductPreview: React.FC<Product> = ({
   // --- Stock Labels Logic ---
   const stockLabel =
     quantity <= 0
-      ? { text: 'Out of Stock', color: 'bg-red-600' }
+      ? { text: "Out of Stock", color: "bg-red-600" }
       : quantity <= 5
-      ? { text: 'Low Stock', color: 'bg-yellow-500' }
+      ? { text: "Low Stock", color: "bg-yellow-500" }
       : null;
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 lg:p-12">
       <ToastContainer position="bottom-left" autoClose={2000} />
       <div className="flex flex-col md:flex-row gap-8 lg:gap-16">
-
         {/* --- Product Image --- */}
         <div className="relative w-full md:w-1/2 flex justify-center items-start">
           {bestSeller && (
@@ -89,7 +103,7 @@ const ProductPreview: React.FC<Product> = ({
             src={image}
             alt={title}
             className={`w-96 h-96 object-cover max-w-lg shadow-lg transition-all duration-500 ${
-              blur ? 'blur-md scale-105' : 'blur-0 scale-100'
+              blur ? "blur-md scale-105" : "blur-0 scale-100"
             }`}
           />
         </div>
@@ -98,14 +112,21 @@ const ProductPreview: React.FC<Product> = ({
         <div className="w-full md:w-1/2">
           <h1 className="text-3xl font-normal mb-1 text-gray-800">{title}</h1>
           <p className="text-sm mb-1 text-gray-500">SKU: ADALENE_{id}</p>
-          <p className="text-xl font-medium mb-4 text-red-600">{formattedPrice}</p>
+          <p className="text-xl font-medium mb-4 text-red-600">
+            {formattedPrice}
+          </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
+          <p className="text-base mb-2 text-yellow-500"> Only {quantity} items left !</p>
+
           <hr className="my-6 border-t border-gray-200" />
 
           {/* --- Quantity Selector --- */}
           <div className="mb-6">
-            <label htmlFor="quantity-input" className="block text-sm font-medium mb-2 text-gray-800">
+            <label
+              htmlFor="quantity-input"
+              className="block text-sm font-medium mb-2 text-gray-800"
+            >
               Quantity <span className="text-red-600">*</span>
             </label>
             <div className="flex items-center justify-between max-w-fit border border-gray-300 rounded overflow-hidden">
@@ -132,17 +153,19 @@ const ProductPreview: React.FC<Product> = ({
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
                   quantity <= 0
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-orange-800 hover:bg-gray-800'
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-orange-800 hover:bg-gray-800"
                 }`}
- onClick={addToCartAndNotify}
- text={quantity <= 0 ? 'Unavailable' : 'Add to Cart'}
+              onClick={addToCartAndNotify}
+              text={quantity <= 0 ? "Unavailable" : "Add to Cart"}
             />
-            <Button
+            {/* <Button
               className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"
-              onClick={() => console.log(`Added ${userQuantity} of ${title} to cart!`)}
+              onClick={() =>
+                console.log(`Added ${userQuantity} of ${title} to cart!`)
+              }
               text="Buy Now"
-            />
+            /> */}
           </div>
         </div>
       </div>
