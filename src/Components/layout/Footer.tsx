@@ -5,37 +5,37 @@ import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
 
 export const Footer = () => {
-  const formRef = useRef<HTMLFormElement>(null); 
+  const formRef = useRef<HTMLFormElement>(null);
   const [statusMessage, setStatusMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log("📨 Form submit triggered"); // debug log
-  setIsSending(true);
-  setStatusMessage("");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("📨 Form submit triggered"); // debug log
+    setIsSending(true);
+    setStatusMessage("");
 
-  if (!formRef.current) {
-    console.error("❌ No form reference found");
-    return;
-  }
+    if (!formRef.current) {
+      console.error("❌ No form reference found");
+      return;
+    }
 
-  emailjs
-    .sendForm("service_luvpbsn", "template_yrrgn48", formRef.current, "erFneWtAsWyDpUKJ2")
-    .then(
-      (result) => {
-        console.log("✅ EmailJS Success:", result.text); // debug log
-        setIsSending(false);
-        setStatusMessage("✅ Thank you for subscribing!");
-        formRef.current?.reset();
-      },
-      (error) => {
-        console.error("❌ EmailJS Error:", error); // debug log
-        setIsSending(false);
-        setStatusMessage("❌ Failed to subscribe. Please try again later.");
-      }
-    );
-};
+    emailjs
+      .sendForm("service_luvpbsn", "template_yrrgn48", formRef.current, "erFneWtAsWyDpUKJ2")
+      .then(
+        (result) => {
+          console.log("✅ EmailJS Success:", result.text); // debug log
+          setIsSending(false);
+          setStatusMessage("✅ Thank you for subscribing!");
+          formRef.current?.reset();
+        },
+        (error) => {
+          console.error("❌ EmailJS Error:", error); // debug log
+          setIsSending(false);
+          setStatusMessage("❌ Failed to subscribe. Please try again later.");
+        }
+      );
+  };
 
 
   return (
@@ -98,13 +98,13 @@ const handleSubmit = (e: React.FormEvent) => {
                   <label className="font-thin">Yes, subscribe me to your newsletter.</label>
                 </div>
 
-              <Button
-  type="submit"   // make sure it's submit
-  text={isSending ? "Sending..." : "Send"}
-  className="mt-3"
-  disabled={isSending}
-  onClick={() => console.log("🖱️ Button clicked")} // debug click
-/>
+                <Button
+                  type="submit"   // make sure it's submit
+                  text={isSending ? "Sending..." : "Send"}
+                  className="mt-3"
+                  disabled={isSending}
+                  onClick={() => console.log("🖱️ Button clicked")} // debug click
+                />
 
                 {statusMessage && (
                   <p className="mt-2 text-sm text-gray-600">{statusMessage}</p>

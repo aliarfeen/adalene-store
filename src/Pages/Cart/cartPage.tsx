@@ -119,7 +119,7 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 md:px-16 py-10 bg-white font-serif">
+    <div className="min-h-screen px-6 md:px-16 py-10 bg-white">
       <ToastContainer theme="colored" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
