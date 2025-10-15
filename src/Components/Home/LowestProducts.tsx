@@ -70,7 +70,7 @@
 // export default LowestProducts;
 
 import useProducts from "../../hooks/useProducts";
-import SwiperSlider from "./SwiperSlider";
+import SwiperSlider from "../Sliders/SwiperSlider";
 
 
 const LowestProducts = () => {

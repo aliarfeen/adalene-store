@@ -1,7 +1,7 @@
-import { MainSlider } from "../../Components/Sliders/mainSlider"
-import BestSellerSlider from "../../Components/Sliders/BestSellerSlider"
-import LeatherGoodsSection from "../../Components/Sliders/Test"
-import LowestProducts from "../../Components/Sliders/LowestProducts"
+import { MainSlider } from "../../Components/Home/mainSlider"
+import BestSellerSlider from "../../Components/Home/BestSellerSlider"
+import LeatherGoodsSection from "../../Components/Home/LeatherGoodsSection"
+import LowestProducts from "../../Components/Home/LowestProducts"
 import Categories from "../../Components/Categories/Categories"
 
 

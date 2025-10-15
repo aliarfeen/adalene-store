@@ -101,9 +101,6 @@ const LeatherGoodsSection = () => {
                       </h3>
                       <p className="text-stone-400 text-lg">Handcrafted Leather Excellence</p>
                       <div className="text-5xl font-bold text-amber-800">$149.00</div>
-                     <Link to='/products'> <button className="mt-6 px-8 py-3 bg-amber-800 hover:bg-amber-700 text-white rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-amber-500/50">
-                        View Details
-                      </button></Link>
                     </div>
 
                   </div>

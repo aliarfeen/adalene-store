@@ -27,6 +27,8 @@ import ProductDetails from "./Pages/Products/ProductDetails.tsx";
 import ProductDetailsLayout from "./Components/ProductDetails/ProductLayOut.tsx";
 import { ProductProvider } from "./context/ProductContext.tsx";
 import  OurCraft  from "./Pages/Story&craft/OurCraft.tsx";
+import Login from "./Pages/Auth/SignIn.tsx";
+import SignUp from "./Pages/Auth/SignUp.tsx";
 
 
 
@@ -52,7 +54,10 @@ const router = createBrowserRouter([
       },
       { path: "*", element: <NotFound /> },
     ]
-  }
+  },
+    { path: "/login", element: <Login /> },
+  { path: "/signup", element: <SignUp /> },
+  { path: "*", element: <NotFound /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(

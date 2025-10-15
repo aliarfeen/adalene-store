@@ -71,7 +71,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../Common/Button";
 import useProducts from "../../hooks/useProducts";
-import SwiperSlider from "./SwiperSlider";
+import SwiperSlider from "../Sliders/SwiperSlider";
 
 
 const BestSellerSlider = () => {
