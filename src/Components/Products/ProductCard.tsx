@@ -8,6 +8,18 @@ const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
   const { setproduct } = useContext(ProductContext) ?? {};
   const [loading, setLoading] = useState(true); // controls blur + skeleton
+  const cart = localStorage.getItem("cart")
+    const parsedCart = cart ? JSON.parse(cart) : [];
+    let initialOrderQuantity = 0;
+  
+    // Find if the product is already in the cart and set its orderQuantity
+    const existingCartItem = parsedCart.find((e: Product) => e.id === product.id);
+    if (existingCartItem) {
+      initialOrderQuantity = existingCartItem.orderQuantity;
+    }
+    
+    const [orderQuantity, setorderQantity] = useState(initialOrderQuantity);
+  const quantityDiffernce = product.quantity - orderQuantity;
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
@@ -32,12 +44,12 @@ const ProductCard = ({ product }: { product: Product }) => {
           Best Seller
         </div>
       )}
-      {!loading && product.quantity <= 0&& (
+      {!loading && quantityDiffernce <= 0&& (
         <div className={`absolute ${!product.bestSeller?'top-5':'top-12'} left-8 bg-stone-400 text-white text-xs px-3 py-1 rounded-full z-10 shadow-md transition-opacity duration-300 opacity-100`}>
           Out of Stock
         </div>
       )}
-      {!loading && product.quantity <= 5 && product.quantity > 0&& (
+      {!loading && quantityDiffernce <= 5 && quantityDiffernce > 0&& (
         <div className={`absolute ${!product.bestSeller?'top-5':'top-12'} left-8 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full z-10 shadow-md transition-opacity duration-300 opacity-100`}>
           Low Stock
         </div>

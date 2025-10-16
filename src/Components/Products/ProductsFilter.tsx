@@ -76,7 +76,7 @@ export default function ProductsFilter({
     onFilterChange({ ...activeFilters, category: categoryName })
   }
 
-  // State to track the active sub-category. Default to the first one.
+  
   const [selectedCategory, setSelectedCategory] = useState<string>(subCategories[0].href);
 
  

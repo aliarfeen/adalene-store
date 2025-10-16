@@ -20,19 +20,30 @@ const ProductPreview: React.FC<Product> = ({
   quantity = 10, // 👈 coming from backend
 }) => {
   const dispatch = useDispatch();
-  const [orderQuantity, setorderQantity] = useState(1);
+  const cart = localStorage.getItem("cart")
+  const parsedCart = cart ? JSON.parse(cart) : [];
+  let initialOrderQuantity = 1;
+
+  // Find if the product is already in the cart and set its orderQuantity
+  const existingCartItem = parsedCart.find((e: Product) => e.id === id);
+  if (existingCartItem) {
+    initialOrderQuantity = existingCartItem.orderQuantity;
+  }
+  
+  const [orderQuantity, setorderQantity] = useState(initialOrderQuantity);
   const [blur, setBlur] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setBlur(false), 750);
+    const timer = setTimeout(() =>  setBlur(false), 750);
     return () => clearTimeout(timer);
   }, []);
 
   const addToCartAndNotify = () => {
-    if (quantity <= 0) {
+    if (quantity <= 0 ) {
       toast.error(`${title} is out of stock!`);
       return;
     }
+
 
     dispatch(
       addToCart({
@@ -56,12 +67,15 @@ const ProductPreview: React.FC<Product> = ({
   //   setorderQantity(prev => Math.max(1, prev + delta));
   // };
   const handleQuantityChange = (delta: number) => {
-    setorderQantity((prev) => {
+    setorderQantity((prev: number) => {
       // Calculate the next value based on user action
       const newQuantity = prev + delta;
 
       // Don't allow increasing beyond available stock
-      if (delta > 0 && newQuantity > quantity) return prev;
+      if (newQuantity > quantity){
+          toast.error(`${title} is out of stock!`);
+
+        return prev};
 
       // Don't allow decreasing below 1
       if (delta < 0 && newQuantity < 1) return prev;
@@ -153,12 +167,12 @@ const ProductPreview: React.FC<Product> = ({
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
-                  quantity <= 0
+                  quantity - orderQuantity +1 <= 0
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
-              text={quantity <= 0 ? "Unavailable" : "Add to Cart"}
+              text={quantity - orderQuantity +1 <= 0 ? "Unavailable" : "Add to Cart"}
             />
             {/* <Button
               className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"

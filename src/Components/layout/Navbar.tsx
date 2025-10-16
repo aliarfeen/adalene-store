@@ -140,22 +140,27 @@
 //     </>
 //   );
 // };
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, X } from "lucide-react";
 import type { Product } from "../../Types";
 
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../App/store";
 
 export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<any>(null);
-
+  const dispatch = useDispatch()
   const location = useLocation();
   const navigate = useNavigate();
+
+
+  const totalQuantity = useSelector((s: RootState) => s.product.totalQuantity);
 
 
   useEffect(() => {
@@ -262,9 +267,9 @@ export const Navbar = () => {
               className="flex items-center hover:text-orange-800 relative"
             >
               <ShoppingCart className="w-5 h-5" />
-              {cartItems.length > 0 && (
+              {totalQuantity > 0 && (
                 <span className="absolute -top-2 -right-2 bg-orange-800 text-white text-xs rounded-full px-1.5">
-                  {cartItems.length}
+                  {totalQuantity}
                 </span>
               )}
             </button>

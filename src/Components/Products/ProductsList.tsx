@@ -58,7 +58,7 @@
 //   )
 // }
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Product } from "../../Types"
 import Pagination from "./Pagination"
 import ProductCard from "./ProductCard"
@@ -76,6 +76,16 @@ const ProductsList = ({ activeFilters, searchQuery = "" }: ProductsListProps) =>
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(9)
+
+  
+  useEffect(()=>{
+    
+  const timeout = setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 100);
+    return () => clearTimeout(timeout);
+  },[currentPage])
+
 
   const filteredProducts = products.filter((product: Product) => {
     const matchesCategory =

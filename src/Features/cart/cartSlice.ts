@@ -19,32 +19,10 @@ const slice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction<CartItem>) {
-      const found = state.items.find((i) => i.id === action.payload.id);
-      if (found) found.orderQuantity += action.payload.orderQuantity;
-      else state.items.push(action.payload);
-
-      // 👇 convert proxy to real object before saving
-      save(current(state.items));
-    },
-    
-    removeItem(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((i) => i.id !== action.payload);
-      save((state.items));
-    },
-    setQty(state, action: PayloadAction<{ id: string; qty: number }>) {
-      const it = state.items.find((i) => i.id === action.payload.id);
-      if (it) it.orderQuantity = Math.max(1, action.payload.qty);
-      save(current(state.items));
-    },
-    clearCart(state) {
-      state.items = [];
-      save((state.items));
-    },
-  },
+  }
 });
 
-export const { addItem, removeItem, setQty, clearCart } = slice.actions;
+export const {} = slice.actions;
 export default slice.reducer;
 
 
