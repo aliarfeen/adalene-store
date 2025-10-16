@@ -22,7 +22,7 @@ const SwiperSlider = ({ title, products, sortFn, limit = 8 }: ProductSliderProps
     return <p>No products available.</p>;
   }
 
-  let sortedProducts = [...products];
+const sortedProducts = [...products];
 
   if (sortFn) {
     sortedProducts.sort(sortFn);

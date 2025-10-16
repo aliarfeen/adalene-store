@@ -4,11 +4,11 @@ import bag1 from '../../assets/bag5.avif';
 import bag2 from '../../assets/bag6.webp';
 import leather1 from '../../assets/leather1.webp';
 import leather2 from '../../assets/leather2.avif';
-import { Link } from 'react-router-dom';
+
 
 const LeatherGoodsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const containerRef = useRef(null);
+ const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
