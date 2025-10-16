@@ -1,13 +1,14 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import ProductCard from "../Products/ProductCard";
+import type { Product } from "../../Types";
 
-type Product = {
-  id: string | number;
-  name: string;
-  price: number | string;
-  image?: string;
-};
+// type Product = {
+//   id: string | number;
+//   name: string;
+//   price: number | string;
+//   image?: string;
+// };
 
 type ProductSliderProps = {
   title: string;

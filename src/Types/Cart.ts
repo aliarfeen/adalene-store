@@ -10,6 +10,7 @@ category?:string
 
 
 export interface ShippingData {
+id:number;
 fullName: string;
 email: string;
 phone: string;
@@ -17,6 +18,7 @@ address: string;
 city: string;
 postalCode: string;
 note?: string;
+resource: string;
 }
 
 
