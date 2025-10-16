@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { Home, LogOut, User, Package } from 'lucide-react';
 
 const UserProfileLayout: React.FC = () => {
   return (
@@ -21,29 +22,54 @@ const UserProfileLayout: React.FC = () => {
           <NavLink
             to="account"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${
-                isActive
-                  ? "bg-white/20 font-semibold"
-                  : "hover:bg-white/10"
+              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${isActive
+                ? "bg-white/20 font-semibold"
+                : "hover:bg-white/10"
               }`
             }
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM6 20a6 6 0 0112 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <User className="round" />
             Account Details
           </NavLink>
 
           <NavLink
-            to="orders"
+            to="myorder"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${
-                isActive
-                  ? "bg-white/20 font-semibold"
-                  : "hover:bg-white/10"
+              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${isActive
+                ? "bg-white/20 font-semibold"
+                : "hover:bg-white/10"
               }`
             }
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v4H3zM5 11h14v10H5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <Package className="round" />
             My Orders
+          </NavLink>
+
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${isActive
+                ? "bg-white/20 font-semibold"
+                : "hover:bg-white/10"
+              }`
+            }
+          >
+
+            <Home className="round " />
+            Back Home
+          </NavLink>
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${isActive
+                ? "bg-white/20 font-semibold"
+                : "hover:bg-white/10"
+              }`
+            }
+          >
+
+            <LogOut className="round " />
+            Log out
           </NavLink>
         </nav>
       </aside>
