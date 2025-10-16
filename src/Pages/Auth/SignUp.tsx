@@ -132,7 +132,7 @@ const SignUp: React.FC = () => {
       toast.success("🎉 Account created successfully!");
 
       // ✅ زي ResetPassword: تحويل بعد النجاح
-      setTimeout(() => navigate("login"), 2000);
+      setTimeout(() => navigate("/login"), 2000);
     } catch {
       toast.error("❌ Error creating account. Try again later.");
     } finally {
