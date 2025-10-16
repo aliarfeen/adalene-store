@@ -1,4 +1,3 @@
-// src/Pages/Auth/ForgotPassword.tsx
 import React, { useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
@@ -7,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import emailjs from "emailjs-com";
 import "react-toastify/dist/ReactToastify.css";
 
-const SERVICE_ID = "service_16sfnoq"; // حطي هنا Service ID
+const SERVICE_ID = "service_16sfnoq"; // Service ID
 const TEMPLATE_ID = "template_dt6slte"; // Template ID
 const PUBLIC_KEY = "gdQC34yoBHtXwNZjK"; // Public key من EmailJS
 
@@ -26,8 +25,7 @@ const ForgotPassword: React.FC = () => {
     setIsSending(true);
 
     try {
-      // 🧠 بنجهز اللينك اللي هيتبعت
-      const resetLink = `${window.location.origin}/resetpassword?email=${encodeURIComponent(email)}`;
+      const resetLink = `${window.location.origin}resetpassword`;
 
       // ✉️ إرسال الإيميل
       await emailjs.send(
@@ -42,6 +40,13 @@ const ForgotPassword: React.FC = () => {
 
       toast.success("📧 Reset link sent! Check your email.");
       setEmail("");
+
+      // ✅ حفظ حالة طلب إعادة التعيين مع صلاحية 10 دقائق
+      const expiration = new Date().getTime() + 5 * 60 * 1000; // 5 دقائق
+      localStorage.setItem(
+        "resetRequested",
+        JSON.stringify({ email, expires: expiration })
+      );
     } catch (error) {
       toast.error("❌ Failed to send email. Try again!");
     } finally {

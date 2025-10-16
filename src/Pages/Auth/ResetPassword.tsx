@@ -1,8 +1,7 @@
-// src/Pages/Auth/ResetPassword.tsx
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { LockClosedIcon } from "@radix-ui/react-icons";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,39 +10,54 @@ import type { User } from "../../Types/User";
 const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const ResetPassword: React.FC = () => {
-  const [params] = useSearchParams();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
-  const [rePassword, setRePassword] = useState(""); // الحقل الجديد
+  const [rePassword, setRePassword] = useState(""); 
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    const emailParam = params.get("email");
-    setEmail(emailParam);
+useEffect(() => {
+  const stored = localStorage.getItem("resetRequested");
+  if (!stored) {
+    // لو مفيش أي طلب محفوظ
+    navigate("forgetpassword");
+    return;
+  }
 
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get<User[]>(API_URL);
-        setUsers(res.data.filter((u) => u.resource === "user"));
-      } catch {
-        toast.error("⚠️ Failed to load users!");
-      }
-    };
-    fetchUsers();
-  }, [params]);
+  const { email: storedEmail, expires } = JSON.parse(stored);
+
+  // لو الوقت انتهى
+  if (new Date().getTime() > expires) {
+    localStorage.removeItem("resetRequested");
+    // التحويل مباشرة على Forgot Password page
+    navigate("forgetpassword");
+    return;
+  }
+
+  setEmail(storedEmail);
+
+  // جلب المستخدمين
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get<User[]>(API_URL);
+      setUsers(res.data.filter((u) => u.resource === "user"));
+    } catch {
+      toast.error("⚠️ Failed to load users!");
+    }
+  };
+  fetchUsers();
+}, [navigate]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // التحقق من كل الحقول
     if (!email || !newPassword || !rePassword) {
       toast.error("⚠️ Please fill all fields!");
       return;
     }
 
-    // التحقق من تطابق الباسوردين
     if (newPassword !== rePassword) {
       toast.error("⚠️ Passwords do not match!");
       return;
@@ -60,7 +74,11 @@ const ResetPassword: React.FC = () => {
       await axios.put(`${API_URL}/${user.id}`, { ...user, password: newPassword });
 
       toast.success("✅ Password reset successfully!");
-      setTimeout(() => navigate("/login"), 2000);
+      
+      // ✅ إزالة حالة resetRequested بعد النجاح
+      localStorage.removeItem("resetRequested");
+
+      setTimeout(() => navigate("login"), 2000);
     } catch {
       toast.error("❌ Failed to reset password!");
     } finally {

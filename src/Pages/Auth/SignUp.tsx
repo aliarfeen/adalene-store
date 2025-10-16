@@ -1,4 +1,3 @@
-// src/Pages/Auth/SignUp.tsx
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { PersonIcon, LockClosedIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";

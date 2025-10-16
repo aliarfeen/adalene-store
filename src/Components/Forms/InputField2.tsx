@@ -9,6 +9,7 @@ interface InputFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
   required?: boolean;
+    defaultValue?:"";
 }
 
 // ✅ نستخدم forwardRef علشان يقبل ref من react-hook-form
