@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import emailjs from "emailjs-com"; // ✅ Import EmailJS
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
+import InputField from "../Forms/InputField2";
 
 export const Footer = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -79,18 +80,18 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* ✅ Newsletter Form */}
+
           <div>
             <form ref={formRef} onSubmit={handleSubmit}>
               <ul className="flex flex-col p-4 md:p-0 mt-4 md:space-y-4 md:flex-col md:mt-0 md:border-0">
                 <h1 className="font-bold hover:text-orange-800 outline-none">Join Us!</h1>
 
-                <label className="font-thin">Email*</label>
-                <input
+                <label className="font-thin"htmlFor="user_email">Email*</label>
+                <InputField
                   type="email"
-                  name="user_email" // ✅ must match variable in EmailJS
+                  name="user_email" 
                   required
-                  className="border-0 border-b-2 border-solid border-orange-800 focus:outline-none focus:ring-0"
+              
                 />
 
                 <div className="flex items-center gap-2 mt-2">
@@ -99,11 +100,11 @@ export const Footer = () => {
                 </div>
 
                 <Button
-                  type="submit"   // make sure it's submit
+                  type="submit" 
                   text={isSending ? "Sending..." : "Send"}
                   className="mt-3"
                   disabled={isSending}
-                  onClick={() => console.log("🖱️ Button clicked")} // debug click
+                  onClick={() => console.log("🖱️ Button clicked")} 
                 />
 
                 {statusMessage && (

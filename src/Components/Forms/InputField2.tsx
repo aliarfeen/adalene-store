@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 
 interface InputFieldProps {
-  label: string;
+  label?: string;
   type: string;
   name: string;
   placeholder?: string;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { User } from "../../Types/User"; 
+import { Button } from "../../Components/Common/Button";
 
 const STORAGE_KEY = "app_user_profile_v1";
 
@@ -45,28 +46,9 @@ const AccountDetails: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
-  const initialLetter = (name: string) => {
-    if (!name) return "U";
-    return name.trim()[0].toUpperCase();
-  };
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="flex items-center gap-6 mb-6">
-        <div className="w-28 h-28 rounded-full bg-[#f4e9e2] flex items-center justify-center text-3xl font-bold text-[#6a3a1b] overflow-hidden">
-          {avatarDataUrl ? (
-            <img src={avatarDataUrl} alt="avatar" className="w-full h-full object-cover" />
-          ) : (
-            <span>{initialLetter(user.username || "U")}</span>
-          )}
-        </div>
-
-        <div>
-          <h3 className="text-2xl font-semibold text-[#4a2b0b]">{user.username}</h3>
-          <p className="text-sm text-[#6b4a33]">{user.email}</p>
-          <p className="text-xs text-gray-500 mt-1">ID: <span className="font-mono">{user.id}</span></p>
-        </div>
-      </div>
 
       <div className="bg-white p-6 rounded-lg shadow-sm border border-[#f0e6df]">
         <div className="flex flex-col gap-4">
@@ -91,17 +73,17 @@ const AccountDetails: React.FC = () => {
           <label className="text-sm text-[#6b4a33]">Profile Image</label>
           <div className="flex items-center gap-3">
             <input type="file" accept="image/*" onChange={handleFile} disabled={!editing} />
-            {avatarDataUrl && <button type="button" className="text-sm text-[#a25a2a]" onClick={() => setAvatarDataUrl(null)}>Remove</button>}
+            {avatarDataUrl && <Button  className="text-sm text-[#a25a2a]" onClick={() => setAvatarDataUrl(null)} text="Remove"/>}
           </div>
 
           <div className="flex gap-3 mt-4">
             {editing ? (
               <>
-                <button type="button" onClick={handleSave} className="px-4 py-2 bg-[#a25a2a] text-white rounded-md">Save</button>
-                <button type="button" onClick={() => { setEditing(false); setForm({ username: user.username, email: user.email }); }} className="px-4 py-2 border rounded-md">Cancel</button>
+                <Button  onClick={handleSave} className="px-4 py-2 bg-[#a25a2a] text-white rounded-md" text="Save"/>
+                <Button  onClick={() => { setEditing(false); setForm({ username: user.username, email: user.email }); }} className="px-4 py-2 border rounded-md"text="Cancel"/>
               </>
             ) : (
-              <button type="button" onClick={() => setEditing(true)} className="px-4 py-2 border border-[#a25a2a] text-[#a25a2a] rounded-md">Edit</button>
+              <Button  onClick={() => setEditing(true)} className="px-4 py-2 border border-[#a25a2a] text-[#a25a2a] rounded-md"text="Edite"/>
             )}
           </div>
         </div>

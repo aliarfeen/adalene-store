@@ -11,7 +11,6 @@ import ScrollToTop from "./Components/Common/ScrollToTop"
 export const App = () => {
   return (
     <div>
-      <ScrollToTop />
       <Navbar />
       <Outlet/>
       <Footer />

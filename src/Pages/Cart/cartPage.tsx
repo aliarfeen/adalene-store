@@ -1,25 +1,23 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { removeItem, setQty, clearCart,  } from "../../Features/cart/cartSlice";
+import { removeItem, setQty, clearCart} from "../../Features/products/productSlice";
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
-import type { CartItem } from "../../Types/Cart";
-import { loadCartFromStorage } from "../../Features/products/productSlice";
 
 const Cart: React.FC = () => {
-  const dispatch = useDispatch<any>();
-  const { items } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+  const { items } = useSelector((state: RootState) => state.product);
   const navigate = useNavigate();
 
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
 
-  // ✅ Subtotal = sum of (price * quantity)
+  //  Subtotal = sum of (price * quantity)
   const subtotal = useMemo(
     () => items?.reduce((s, i) => s + i.price * i.orderQuantity, 0) ?? 0,
     [items]
@@ -31,7 +29,7 @@ const Cart: React.FC = () => {
 
 
 
-  // ✅ Total after discount
+  //  Total after discount
   const total = useMemo(() => {
     return Math.max(subtotal - discount, 0);
   }, [subtotal, discount]);
@@ -48,12 +46,12 @@ const Cart: React.FC = () => {
     );
   }
 
-  // ✅ Handle quantity +/-
-  const handleIncrease = (id: string) => {
+  //  Handle quantity +/-
+  const handleIncrease = (id: number) => {
   const item = items.find((i: any) => i.id === id);
   if (!item) return;
 
-  // ✅ الكمية القصوى حسب الـ API
+  //  الكمية القصوى حسب الـ API
   const maxQty = item.quantity;
 
   if (item.orderQuantity >= maxQty) {
@@ -65,7 +63,7 @@ const Cart: React.FC = () => {
 };
 
 
-  const handleDecrease = (id: string) => {
+  const handleDecrease = (id: number) => {
     const item = items.find((i: any) => i.id === id);
     if (!item) return;
     if (item.orderQuantity <= 1) {
@@ -75,7 +73,7 @@ const Cart: React.FC = () => {
     dispatch(setQty({ id, qty: item.orderQuantity - 1 }));
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = (id: number) => {
     dispatch(removeItem(id));
     toast.info("Item removed from cart");
   };
@@ -88,7 +86,7 @@ const Cart: React.FC = () => {
     toast.warn("Cart cleared");
   };
 
-  // ✅ Apply promo code
+  //  Apply promo code
   const applyPromoCode = () => {
     const validCodes = {
       "dr.nasr": 100, // 100% discount
@@ -101,16 +99,16 @@ const Cart: React.FC = () => {
     }
 
     const code = promoCode.trim().toLowerCase();
-    if (validCodes[code]) {
-      const discountPercent = validCodes[code];
-      const discountValue = (subtotal * discountPercent) / 100;
-      setDiscount(discountValue);
-      setPromoApplied(true);
-      toast.success(`✅ Promo applied: ${discountPercent}% off`);
-    } else {
-      setDiscount(0);
-      toast.error("❌ Invalid promo code");
-    }
+    // if (code in validCodes) {
+    //   const discountPercent = validCodes[code];
+    //   const discountValue = (subtotal * discountPercent) / 100;
+    //   setDiscount(discountValue);
+    //   setPromoApplied(true);
+    //   toast.success(` Promo applied: ${discountPercent}% off`);
+    // } else {
+    //   setDiscount(0);
+    //   toast.error("❌ Invalid promo code");
+    // }
   };
 
   const handleCheckout = () => {

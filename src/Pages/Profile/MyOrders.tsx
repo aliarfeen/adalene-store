@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Button } from "../../Components/Common/Button";
 
 type Order = {
   id: string;
@@ -8,7 +9,7 @@ type Order = {
   createdAt?: string;
 };
 
-const MOCK_API_ORDERS = ""; // if you have API: put it here, else we'll use local mock
+const MOCK_API_ORDERS = ""; 
 
 const sampleOrders: Order[] = [
   {
@@ -60,12 +61,13 @@ const MyOrders: React.FC = () => {
 
               <div className="flex flex-col items-end gap-2">
                 <div className="text-sm text-gray-400">{o.createdAt}</div>
-                <button
+                <Button
                   onClick={() => console.log("View order", o.id)}
-                  className="px-4 py-2 bg-[#a25a2a] text-white rounded-md"
-                >
-                  View Order
-                </button>
+               
+                  text="View Order"
+                />
+              
+            
               </div>
             </div>
           </div>
