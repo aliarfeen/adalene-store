@@ -15,6 +15,10 @@ const AccountDetails: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
 
+  // ✅ Regex validation
+  const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{5,15}$/; 
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[cC][oO][mM]$/;
+
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -29,17 +33,29 @@ const AccountDetails: React.FC = () => {
 
   const handleSave = async () => {
     if (!user) return;
+
+    // ✅ Validation قبل حفظ البيانات
+    if (!usernameRegex.test(form.username)) {
+      toast.error("Username must start with a letter and can contain letters, numbers, and underscores (6–16 chars)");
+      return;
+    }
+
+    if (!emailRegex.test(form.email)) {
+      toast.error("Invalid email address");
+      return;
+    }
+
     try {
       const updatedUser = { ...user, username: form.username, email: form.email };
 
-      // ✅ تحديث الـ API
+      // تحديث الـ API
       await axios.put(`${API_URL}/${user.id}`, updatedUser);
 
-      // ✅ تحديث اللوكال ستورج
+      // تحديث اللوكال ستورج
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      // ✅ إرسال إشارة للصفحات التانية (زي الـ Sidebar)
+      // إشعار الصفحات الأخرى
       window.dispatchEvent(new Event("userUpdated"));
 
       toast.success("✅ Profile updated successfully!");

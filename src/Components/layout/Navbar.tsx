@@ -102,10 +102,11 @@ export const Navbar = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <Link to="/profile">
-                  <User className="w-8 h-8 rounded-full border hover:ring-2 hover:ring-orange-800 transition" />
-
+               <div className="w-8 h-8 flex items-center justify-center rounded-full border bg-orange-200 text-orange-800 font-bold">
+                 {user.username.charAt(0).toUpperCase()}
+                </div>
                 </Link>
-                <span className="text-gray-700 font-medium">{user.username}</span>
+                 <span className="text-gray-700 font-medium">{user.username}</span>
               </div>
             ) : (
               <Link
