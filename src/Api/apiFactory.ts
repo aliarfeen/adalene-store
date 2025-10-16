@@ -44,17 +44,33 @@ async function sendResource<T extends MockResource>(
   return response.data;
 }
 
+
+async function updateResource<T extends MockResource>(
+  resourceType: T['resource'], 
+  payload: Omit<T, 'resource'>
+): Promise<T> {
+  const url = `${ALL_RESOURCES_ENDPOINT}`; 
+  
+  const resourcePayload = { ...payload, resource: resourceType };
+  
+  const response = await axiosInstance.post<T>(url, resourcePayload);
+  
+  return response.data;
+}
+
 const apiFactory = {
   // Primary, reusable function
   fetchResource, 
   sendResource,
+  updateResource,
 
   // Simple aliases for type clarity and ease of use in components
   fetchUsers: (): Promise<User[]> => fetchResource('user'),
   fetchProducts: (): Promise<Product[]> => fetchResource('product'),
   //sendOrders: (payload: Omit<Order, 'id' | 'resource'>): Promise<Order> => sendResource('order', payload),
   // sendOrders: (payload: Order): Promise<Order> => sendResource<Order>(payload,payload),
-  sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('order', payload),
+  sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
+  
   // Example of a more complex product filter built on the base function
   fetchProductsByCategory: async (category: string): Promise<Product[]> => {
     const allProducts = await fetchResource<Product>('product');
