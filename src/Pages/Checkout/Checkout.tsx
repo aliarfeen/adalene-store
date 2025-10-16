@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../App/store";
-import { clearCart } from "../../Features/cart/cartSlice";
+// import { clearCart } from "../../Features/cart/cartSlice";
 import { toast } from "react-toastify";
 import type { ShippingData } from "../../Types/Cart";
 import { Button } from "../../Components/Common/Button";
