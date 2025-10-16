@@ -1,6 +1,6 @@
-// src/Layout/AuthLayout.tsx
 import React from "react";
 import { Outlet } from "react-router-dom";
+import bgImage from "../../assets/Auth/authImage.png";
 
 const AuthLayout: React.FC = () => {
   return (
@@ -9,10 +9,10 @@ const AuthLayout: React.FC = () => {
       <div
         className="hidden md:flex w-full md:w-1/2 text-white flex-col justify-center px-6 md:px-16 py-10 md:py-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            "url('https://static.wixstatic.com/media/ea71bb_049132934a484c96b5c05403933e4539~mv2_d_6720_4480_s_4_2.jpg')",
+          backgroundImage: `url(${bgImage})`,
         }}
       >
+
         <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#4a2b0b]">
           Welcome to Our Community
         </h1>
@@ -20,6 +20,7 @@ const AuthLayout: React.FC = () => {
           Join thousands of users who trust us with their journey.
         </p>
       </div>
+
 
       {/* Right Section — dynamic content */}
       <div className="w-full md:w-1/2 bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10">
@@ -30,3 +31,4 @@ const AuthLayout: React.FC = () => {
 };
 
 export default AuthLayout;
+

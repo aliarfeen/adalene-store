@@ -1,54 +1,73 @@
 import React, { useEffect, useState } from "react";
-import type { User } from "../../Types/User"; 
+import type { User } from "../../Types/User";
 import { Button } from "../../Components/Common/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-const STORAGE_KEY = "app_user_profile_v1";
-
-const defaultUser: User = {
-  resource: "user",
-  id: "101",
-  username: "User",
-  email: "user@example.com",
-};
+const STORAGE_KEY = "loggedUser";
+const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const AccountDetails: React.FC = () => {
-  const [user, setUser] = useState<User>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : defaultUser;
-    } catch {
-      return defaultUser;
-    }
-  });
-
+  const [user, setUser] = useState<User | null>(null);
+  const [form, setForm] = useState({ username: "", email: "" });
   const [editing, setEditing] = useState(false);
-  const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(user['avatar'] || null);
-  const [form, setForm] = useState({ username: user.username, email: user.email });
+  const [showModal, setShowModal] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
 
   useEffect(() => {
-    // persist small user object to storage (including avatar)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...user, avatar: avatarDataUrl }));
-  }, [user, avatarDataUrl]);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      setUser(parsed);
+      setForm({ username: parsed.username, email: parsed.email });
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
 
-  const handleSave = () => {
-    setUser((u) => ({ ...u, username: form.username, email: form.email }));
-    setEditing(false);
+  const handleSave = async () => {
+    if (!user) return;
+    try {
+      const updatedUser = { ...user, username: form.username, email: form.email };
+
+      // ✅ تحديث الـ API
+      await axios.put(`${API_URL}/${user.id}`, updatedUser);
+
+      // ✅ تحديث اللوكال ستورج
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+      setUser(updatedUser);
+
+      // ✅ إرسال إشارة للصفحات التانية (زي الـ Sidebar)
+      window.dispatchEvent(new Event("userUpdated"));
+
+      toast.success("✅ Profile updated successfully!");
+      setEditing(false);
+    } catch (error) {
+      toast.error("❌ Failed to update profile on server");
+    }
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setAvatarDataUrl(String(reader.result));
-    reader.readAsDataURL(file);
-  };
+  const handleEditClick = () => setShowModal(true);
 
+  const handlePasswordCheck = () => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const stored = JSON.parse(raw);
+
+    if (stored.password === passwordInput) {
+      setShowModal(false);
+      setEditing(true);
+      setPasswordInput("");
+    } else {
+      toast.error("❌ Incorrect password!");
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto relative">
+      <ToastContainer position="top-right" autoClose={2000} />
 
       <div className="bg-white p-6 rounded-lg shadow-sm border border-[#f0e6df]">
         <div className="flex flex-col gap-4">
@@ -58,7 +77,9 @@ const AccountDetails: React.FC = () => {
             value={form.username}
             onChange={handleChange}
             readOnly={!editing}
-            className={`w-full p-3 rounded-md border ${editing ? "border-[#d8b69a]" : "border-transparent"} bg-[#fff]`}
+            className={`w-full p-3 rounded-md border ${
+              editing ? "border-[#d8b69a]" : "border-transparent"
+            } bg-[#fff]`}
           />
 
           <label className="text-sm text-[#6b4a33]">Email</label>
@@ -67,27 +88,72 @@ const AccountDetails: React.FC = () => {
             value={form.email}
             onChange={handleChange}
             readOnly={!editing}
-            className={`w-full p-3 rounded-md border ${editing ? "border-[#d8b69a]" : "border-transparent"} bg-[#fff]`}
+            className={`w-full p-3 rounded-md border ${
+              editing ? "border-[#d8b69a]" : "border-transparent"
+            } bg-[#fff]`}
           />
-
-          <label className="text-sm text-[#6b4a33]">Profile Image</label>
-          <div className="flex items-center gap-3">
-            <input type="file" accept="image/*" onChange={handleFile} disabled={!editing} />
-            {avatarDataUrl && <Button  className="text-sm text-[#a25a2a]" onClick={() => setAvatarDataUrl(null)} text="Remove"/>}
-          </div>
 
           <div className="flex gap-3 mt-4">
             {editing ? (
               <>
-                <Button  onClick={handleSave} className="px-4 py-2 bg-[#a25a2a] text-white rounded-md" text="Save"/>
-                <Button  onClick={() => { setEditing(false); setForm({ username: user.username, email: user.email }); }} className="px-4 py-2 border rounded-md"text="Cancel"/>
+                <Button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-[#a25a2a] text-white rounded-md"
+                  text="Save"
+                />
+                <Button
+                  onClick={() => {
+                    setEditing(false);
+                    if (user)
+                      setForm({ username: user.username, email: user.email });
+                  }}
+                  className="px-4 py-2 border rounded-md"
+                  text="Cancel"
+                />
               </>
             ) : (
-              <Button  onClick={() => setEditing(true)} className="px-4 py-2 border border-[#a25a2a] text-[#a25a2a] rounded-md"text="Edite"/>
+              <Button
+                onClick={handleEditClick}
+                className="px-4 py-2 border border-[#a25a2a] text-[#a25a2a] rounded-md"
+                text="Edit"
+              />
             )}
           </div>
         </div>
       </div>
+
+      {/* 🔒 Password Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-md">
+            <h2 className="text-lg font-semibold text-[#5c3317] mb-3">
+              Confirm Your Password
+            </h2>
+            <p className="text-sm text-[#6b4a33] mb-4">
+              Please enter your password to edit your account details.
+            </p>
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full p-3 border border-[#d8b69a] rounded-md mb-4"
+            />
+            <div className="flex justify-end gap-3">
+              <Button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 border rounded-md"
+                text="Cancel"
+              />
+              <Button
+                onClick={handlePasswordCheck}
+                className="px-4 py-2 bg-[#a25a2a] text-white rounded-md"
+                text="Confirm"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

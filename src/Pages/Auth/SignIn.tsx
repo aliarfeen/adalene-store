@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { LockClosedIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { Link, useNavigate } from "react-router-dom"; // ✅ import navigate
+import { Link, useNavigate } from "react-router-dom"; 
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
