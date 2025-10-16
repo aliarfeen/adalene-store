@@ -23,7 +23,7 @@ const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
 // --- Initial State ---
 const initialState: CartState = {
   items: savedCart,
-  totalQuantity: 0,
+  totalQuantity: savedCart.length ,
   totalPrice: 0,
 };
 
@@ -40,7 +40,7 @@ const productSlice = createSlice({
       // 👇 convert proxy to real object before saving
       save(current(state.items));
     },
-    
+
 
     removeItem(state, action: PayloadAction<number>) {
       state.items = state.items.filter((i) => i.id !== action.payload);

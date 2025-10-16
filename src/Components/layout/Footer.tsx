@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import emailjs from "emailjs-com"; // ✅ Import EmailJS
+import emailjs from "emailjs-com";
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
 import InputField from "../Forms/InputField2";
@@ -10,34 +10,50 @@ export const Footer = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
+  const loggedUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+  const loggedInEmail = loggedUser?.email || null;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("📨 Form submit triggered"); // debug log
-    setIsSending(true);
-    setStatusMessage("");
+    console.log(" Form submit triggered");
 
     if (!formRef.current) {
-      console.error("❌ No form reference found");
+      console.error("No form reference found");
       return;
     }
 
+    const formData = new FormData(formRef.current);
+    const subscriptionEmail = formData.get("user_email") as string;
+
+    if (loggedInEmail && subscriptionEmail !== loggedInEmail) {
+      setStatusMessage("The email must match your logged-in account.");
+      return;
+    }
+
+    setIsSending(true);
+    setStatusMessage("");
+
     emailjs
-      .sendForm("service_luvpbsn", "template_yrrgn48", formRef.current, "erFneWtAsWyDpUKJ2")
+      .sendForm(
+        "service_luvpbsn",
+        "template_yrrgn48",
+        formRef.current,
+        "erFneWtAsWyDpUKJ2"
+      )
       .then(
         (result) => {
-          console.log("✅ EmailJS Success:", result.text); // debug log
+          console.log("EmailJS Success:", result.text);
           setIsSending(false);
-          setStatusMessage("✅ Thank you for subscribing!");
+          setStatusMessage("Thank you for subscribing!");
           formRef.current?.reset();
         },
         (error) => {
-          console.error("❌ EmailJS Error:", error); // debug log
+          console.error("EmailJS Error:", error);
           setIsSending(false);
-          setStatusMessage("❌ Failed to subscribe. Please try again later.");
+          setStatusMessage("Failed to subscribe. Please try again later.");
         }
       );
   };
-
 
   return (
     <>
@@ -80,31 +96,38 @@ export const Footer = () => {
             </ul>
           </div>
 
-
+          {/* Subscription form */}
           <div>
             <form ref={formRef} onSubmit={handleSubmit}>
               <ul className="flex flex-col p-4 md:p-0 mt-4 md:space-y-4 md:flex-col md:mt-0 md:border-0">
                 <h1 className="font-bold hover:text-orange-800 outline-none">Join Us!</h1>
 
-                <label className="font-thin"htmlFor="user_email">Email*</label>
+                <label className="font-thin" htmlFor="user_email">Email*</label>
                 <InputField
                   type="email"
-                  name="user_email" 
+                  name="user_email"
                   required
-              
+                  defaultValue={loggedInEmail || ""}
                 />
 
-                <div className="flex items-center gap-2 mt-2">
-                  <input type="checkbox" name="subscribe" className="text-orange-800" />
-                  <label className="font-thin">Yes, subscribe me to your newsletter.</label>
+                <div className="flex items-center gap-3 mt-2">
+                  <input
+                    type="checkbox"
+                    name="subscribe"
+                    className="w-5 h-5 text-orange-800 border-gray-400 rounded cursor-pointer"
+                    required
+                  />
+                  <label className="font-thin cursor-pointer">
+                    Yes, subscribe me to your newsletter.
+                  </label>
                 </div>
 
                 <Button
-                  type="submit" 
+                  type="submit"
                   text={isSending ? "Sending..." : "Send"}
                   className="mt-3"
                   disabled={isSending}
-                  onClick={() => console.log("🖱️ Button clicked")} 
+                  onClick={() => console.log("🖱️ Button clicked")}
                 />
 
                 {statusMessage && (

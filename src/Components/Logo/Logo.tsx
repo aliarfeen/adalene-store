@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+
 
 
 const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -11,7 +11,7 @@ const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-     <Link to='/'> <span 
+   <span 
         className="text-3xl font-serif italic text-orange-800 transition-all duration-500 cursor-pointer inline-block"
         style={{ 
           fontFamily: 'Georgia, Garamond, serif',
@@ -32,7 +32,7 @@ const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
             {letter}
           </span>
         ))}
-      </span></Link>
+      </span>
       <style>{`
         @keyframes fadeInUp {
           from {
@@ -48,6 +48,6 @@ const AdalenaLogo: React.FC<{ className?: string }> = ({ className = '' }) => {
     </div>
   );
 };
-    //   <AdalenaLogo className="hover:opacity-80 transition-opacity cursor-pointer" /> (When you want to use it in any part of the site)
+   
 
 export default AdalenaLogo;
