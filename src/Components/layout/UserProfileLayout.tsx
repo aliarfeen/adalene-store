@@ -41,7 +41,7 @@ const UserProfileLayout: React.FC = () => {
     e.preventDefault();
     localStorage.removeItem("loggedUser");
     toast.success("✅ You’ve been logged out successfully!");
-    setTimeout(() => navigate("login"), 1200);
+    setTimeout(() => navigate("/login"), 1200);
   };
 
   return (
@@ -103,7 +103,7 @@ const UserProfileLayout: React.FC = () => {
           </NavLink>
 
           <NavLink
-            to="login"
+            to="/login"
             onClick={handleLogout}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition ${
