@@ -32,6 +32,8 @@ import SignUp from "./Pages/Auth/SignUp.tsx";
 import UserProfileLayout from "./Components/layout/UserProfileLayout.tsx";
 import MyOrders from "./Pages/Profile/MyOrders.tsx";
 import AccountDetails from "./Pages/Profile/ProfilePage.tsx";
+import ForgotPassword from "./Pages/Auth/ForgetPassword.tsx";
+import ResetPassword from "./Pages/Auth/ResetPassword.tsx";
 
 
 
@@ -61,6 +63,8 @@ const router = createBrowserRouter([
   },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <SignUp /> },
+  {path:"/forgetpassword",element:<ForgotPassword/>},
+  {path:"/resetpassword",element:<ResetPassword/>},
 
 { 
   path: "/profile", 
@@ -69,6 +73,7 @@ const router = createBrowserRouter([
     { index: true, element: <Navigate to="account" replace /> }, 
     { path: "account", element: <AccountDetails /> },           
     { path: "myorder", element: <MyOrders /> },
+
   ] 
 },
 
