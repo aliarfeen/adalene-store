@@ -42,7 +42,7 @@ const ForgotPassword: React.FC = () => {
       setEmail("");
 
       // ✅ حفظ حالة طلب إعادة التعيين مع صلاحية 10 دقائق
-      const expiration = new Date().getTime() + 0.5 * 60 * 1000; // 5 دقائق
+      const expiration = new Date().getTime() + 5 * 60 * 1000; // 5 دقائق
       localStorage.setItem(
         "resetRequested",
         JSON.stringify({ email, expires: expiration })
