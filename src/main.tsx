@@ -4,84 +4,89 @@ import "./index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import { store } from "./App/store.ts";
 import { Provider } from "react-redux";
+import { store } from "./App/store.ts";
 
 import 'flowbite';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-
+// Pages & Layouts
 import { App } from "./App.tsx";
 import { HomePage } from "./Pages/Home/HomePage.tsx";
-import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 import ProductListPage from "./Pages/Products/ProductList.tsx";
+import ProductDetails from "./Pages/Products/ProductDetails.tsx";
+import ProductDetailsLayout from "./Components/ProductDetails/ProductLayOut.tsx";
 import Cart from "./Pages/Cart/cartPage.tsx";
 import CheckoutPage from "./Pages/Checkout/Checkout.tsx";
 import OrderSuccess from "./Pages/Checkout/OrderSuccess.tsx";
-// Create a client
-
-import OurStory from './Pages/Story&craft/OurStory.tsx'
-import ProductDetails from "./Pages/Products/ProductDetails.tsx";
-import ProductDetailsLayout from "./Components/ProductDetails/ProductLayOut.tsx";
-import { ProductProvider } from "./context/ProductContext.tsx";
+import OurStory from './Pages/Story&craft/OurStory.tsx';
 import OurCraft from "./Pages/Story&craft/OurCraft.tsx";
 import Login from "./Pages/Auth/SignIn.tsx";
 import SignUp from "./Pages/Auth/SignUp.tsx";
+import ForgotPassword from "./Pages/Auth/ForgetPassword.tsx";
+import ResetPassword from "./Pages/Auth/ResetPassword.tsx";
+import AuthLayout from "./Components/layout/AuthLayout.tsx";
 import UserProfileLayout from "./Components/layout/UserProfileLayout.tsx";
 import MyOrders from "./Pages/Profile/MyOrders.tsx";
 import AccountDetails from "./Pages/Profile/ProfilePage.tsx";
-import ForgotPassword from "./Pages/Auth/ForgetPassword.tsx";
-import ResetPassword from "./Pages/Auth/ResetPassword.tsx";
+import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 
+import { ProductProvider } from "./context/ProductContext.tsx";
 
-
-
+// Create Query Client
 const queryClient = new QueryClient();
+
+// Router setup
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "/products", element: <ProductListPage /> },
-      { path: "/cart", element: <Cart /> },
-      { path: "/checkout", element: <CheckoutPage /> },
-      { path: "/ordersuccess", element: <OrderSuccess /> },
-
-      { path: "/story", element: <OurStory /> },
-      { path: "/craft", element: <OurCraft /> },
+      { path: "products", element: <ProductListPage /> },
+      { path: "cart", element: <Cart /> },
+      { path: "checkout", element: <CheckoutPage /> },
+      { path: "ordersuccess", element: <OrderSuccess /> },
+      { path: "story", element: <OurStory /> },
+      { path: "craft", element: <OurCraft /> },
       {
         path: "product/:slug",
         element: <ProductDetailsLayout />,
         children: [{ index: true, element: <ProductDetails /> }],
       },
-
-      { path: "*", element: <NotFound /> },
-    ]
+    ],
   },
-  { path: "/login", element: <Login /> },
-  { path: "/signup", element: <SignUp /> },
-  {path:"/forgetpassword",element:<ForgotPassword/>},
-  {path:"/resetpassword",element:<ResetPassword/>},
 
-{ 
-  path: "/profile", 
-  element: <UserProfileLayout />, 
-  children: [
-    { index: true, element: <Navigate to="account" replace /> }, 
-    { path: "account", element: <AccountDetails /> },           
-    { path: "myorder", element: <MyOrders /> },
+  // Auth routes (without /authlayout prefix)
+  {
+    element: <AuthLayout />,
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <SignUp /> },
+      { path: "forgetpassword", element: <ForgotPassword /> },
+      { path: "resetpassword", element: <ResetPassword /> },
+    ],
+  },
 
-  ] 
-},
+  // User Profile routes
+  {
+    path: "/profile",
+    element: <UserProfileLayout />,
+    children: [
+      { index: true, element: <Navigate to="account" replace /> },
+      { path: "account", element: <AccountDetails /> },
+      { path: "myorder", element: <MyOrders /> },
+    ],
+  },
 
+  // Global catch-all for 404
   { path: "*", element: <NotFound /> },
 ]);
 
+// Render
 createRoot(document.getElementById("root")!).render(
-
   <StrictMode>
     <Provider store={store}>
       <ProductProvider>
@@ -91,10 +96,5 @@ createRoot(document.getElementById("root")!).render(
       </ProductProvider>
     </Provider>
   </StrictMode>
-
-
-
 );
-
-
-
+s

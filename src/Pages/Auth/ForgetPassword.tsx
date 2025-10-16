@@ -25,7 +25,7 @@ const ForgotPassword: React.FC = () => {
     setIsSending(true);
 
     try {
-      const resetLink = `${window.location.origin}/resetpassword`;
+      const resetLink = `${window.location.origin}resetpassword`;
 
       // ✉️ إرسال الإيميل
       await emailjs.send(
