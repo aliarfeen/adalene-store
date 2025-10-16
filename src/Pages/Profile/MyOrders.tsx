@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import type { User } from "../../Types/User"; // if needed
 import axios from "axios";
 
 type Order = {
