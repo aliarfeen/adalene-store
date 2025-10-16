@@ -21,7 +21,7 @@ useEffect(() => {
   const stored = localStorage.getItem("resetRequested");
   if (!stored) {
     // لو مفيش أي طلب محفوظ
-    navigate("/forgetpassword");
+    navigate("forgetpassword");
     return;
   }
 
@@ -31,7 +31,7 @@ useEffect(() => {
   if (new Date().getTime() > expires) {
     localStorage.removeItem("resetRequested");
     // التحويل مباشرة على Forgot Password page
-    navigate("/forgetpassword");
+    navigate("forgetpassword");
     return;
   }
 
@@ -78,7 +78,7 @@ useEffect(() => {
       // ✅ إزالة حالة resetRequested بعد النجاح
       localStorage.removeItem("resetRequested");
 
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("login"), 2000);
     } catch {
       toast.error("❌ Failed to reset password!");
     } finally {

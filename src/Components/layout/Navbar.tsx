@@ -110,7 +110,7 @@ export const Navbar = () => {
               </div>
             ) : (
               <Link
-                to="/login"
+                to="login"
                 className="flex items-center gap-1 hover:text-orange-800"
               >
                 <User className="w-5 h-5" />
