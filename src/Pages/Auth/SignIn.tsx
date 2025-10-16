@@ -1,8 +1,7 @@
-// src/Pages/Auth/Login.tsx
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { LockClosedIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ import navigate
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,7 +15,8 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  // 🟢 Fetch users once
+  const navigate = useNavigate(); // ✅ init
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -30,13 +30,11 @@ const Login: React.FC = () => {
     fetchUsers();
   }, []);
 
-  // 🟠 Handle input change → لو المستخدم غيّر حاجة، فعّل الزر تاني
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setIsButtonDisabled(false);
   };
 
-  // 🟣 Handle login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -65,10 +63,15 @@ const Login: React.FC = () => {
         return;
       }
 
-      // ✅ Store logged-in user in localStorage
+      // ✅ Store logged-in user
       localStorage.setItem("loggedUser", JSON.stringify(existingUser));
 
       toast.success("🎉 Logged in successfully!");
+
+      // ✅ Redirect after short delay
+      setTimeout(() => {
+        navigate("/"); // or navigate("/dashboard")
+      }, 1500);
     } catch (error) {
       toast.error("⚠️ Something went wrong. Please try again.");
     } finally {

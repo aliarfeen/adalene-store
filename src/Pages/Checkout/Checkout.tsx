@@ -29,7 +29,7 @@ const schema: yup.ObjectSchema<ShippingData> = yup.object({
 
 const CheckoutPage: React.FC = () => {
   const items = useSelector((s: RootState) => s.cart.items);
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const total = items.reduce((s, i) => s + i.price * i.orderQuantity, 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cash");
@@ -45,13 +45,25 @@ const CheckoutPage: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<ShippingData> = (data) => {
-    toast.success("Order placed successfully!");
-    dispatch(clearCart());
-    reset();
-    setTimeout(() => {
-      navigate("/ordersuccess");
-    }, 1500);
+  const orderData = {
+    id: Date.now(),  
+    userinfo: data, 
+    items, 
+    total,
+    paymentMethod,
+    date: new Date().toLocaleString(),
   };
+  const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+  existingOrders.push(orderData);
+  localStorage.setItem("orders", JSON.stringify(existingOrders));
+  toast.success("Order placed successfully!");
+  dispatch(clearCart());
+  reset();
+  setTimeout(() => {
+    navigate("/ordersuccess");
+  }, 1500);
+};
+
 
   if (items.length === 0)
     return <div className="text-center py-20 text-gray-500">Your cart is empty</div>;
@@ -60,12 +72,12 @@ const CheckoutPage: React.FC = () => {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-8 bg-gray-50 min-h-screen">
       {/* ✅ Shipping Form */}
       <div className="lg:col-span-8 bg-white p-6 rounded-2xl shadow">
-        <h3 className="text-2xl font-semibold mb-6 text-gray-800">Checkout</h3>
+        <h3 className="text-2xl  mb-6 text-gray-800">Checkout</h3>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Shipping Info */}
           <div>
-            <h4 className="text-lg font-semibold text-gray-700 mb-3">Shipping Details</h4>
+            <h4 className="text-lg  text-gray-700 mb-3">Shipping Details</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium">Full name</label>
@@ -163,7 +175,7 @@ const CheckoutPage: React.FC = () => {
 
           {/* Payment Method */}
           <div className="pt-6 border-t">
-            <h4 className="text-lg font-semibold text-gray-700 mb-3">Payment Method</h4>
+            <h4 className="text-lg  text-gray-700 mb-3">Payment Method</h4>
             <div className="flex flex-col gap-3">
               {["cash", "card", "paypal"].map((method) => (
                 <label key={method} className="flex items-center gap-2">
@@ -191,7 +203,7 @@ const CheckoutPage: React.FC = () => {
           <div>
             <Button
               type="submit"
-              className="w-full  py-3 rounded-lg font-semibold transition-all duration-200"
+              className="w-full  py-3 rounded-lg  transition-all duration-200"
               text="Place Order"
             />
             
@@ -203,7 +215,7 @@ const CheckoutPage: React.FC = () => {
       {/* ✅ Order Summary */}
       <div className="lg:col-span-4">
         <div className="bg-white p-6 rounded-2xl shadow sticky top-6">
-          <h4 className="text-lg font-semibold mb-4">Order Summary</h4>
+          <h4 className="text-lg  mb-4">Order Summary</h4>
 
           {/* ✅ Product List with Images */}
           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
@@ -215,23 +227,23 @@ const CheckoutPage: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.title}
                     className="w-14 h-14 object-cover rounded-md border"
                   />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                    <p className="text-xs text-gray-500">Qty: {item.qty}</p>
+                    <p className="text-sm font-medium text-gray-800">{item.title}</p>
+                    <p className="text-xs text-gray-500">Qty: {item.orderQuantity}</p>
                   </div>
                 </div>
                 <span className="text-sm font-semibold text-gray-700">
-                  ${(item.price * item.qty).toFixed(2)}
+                  ${(item.price * item.orderQuantity).toFixed(2)}
                 </span>
               </div>
             ))}
           </div>
 
           {/* ✅ Total */}
-          <div className="border-t mt-4 pt-3 flex justify-between font-semibold text-gray-800">
+          <div className="border-t mt-4 pt-3 flex justify-between text-gray-800">
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>

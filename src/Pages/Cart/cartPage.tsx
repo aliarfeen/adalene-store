@@ -1,14 +1,14 @@
-// src/components/Cart.tsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FiTrash2, FiMinus, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-
-import { removeItem, setQty, clearCart } from "../../Features/cart/cartSlice";
+import { removeItem, setQty, clearCart,  } from "../../Features/cart/cartSlice";
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
+import type { CartItem } from "../../Types/Cart";
+import { loadCartFromStorage } from "../../Features/products/productSlice";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -19,41 +19,60 @@ const Cart: React.FC = () => {
   const [discount, setDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
 
+  // ✅ Subtotal = sum of (price * quantity)
   const subtotal = useMemo(
-    () => items?.reduce((acc: number, item: any) => acc + item.price * item.qty, 0) ?? 0,
+    () => items?.reduce((s, i) => s + i.price * i.orderQuantity, 0) ?? 0,
     [items]
   );
 
-  const total = Math.max(0, subtotal - discount);
+  // useEffect(() => {
+  //   dispatch(loadItems())
+  // }, [dispatch]);
+
+
+
+  // ✅ Total after discount
+  const total = useMemo(() => {
+    return Math.max(subtotal - discount, 0);
+  }, [subtotal, discount]);
 
   if (!items || items.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6">
         <ToastContainer theme="colored" />
-        <h1 className="text-2xl font-semibold text-[#b85c38] mb-3">👜 Your cart is empty</h1>
+        <h1 className="text-2xl font-semibold text-[#b85c38] mb-3">
+          👜 Your cart is empty
+        </h1>
         <p className="text-gray-500">Add some products to see them here.</p>
       </div>
     );
   }
 
+  // ✅ Handle quantity +/-
   const handleIncrease = (id: string) => {
-    const item = items.find((i: any) => i.id === id);
-    if (!item) return;
-    if (item.qty >= 10) {
-      toast.error("Maximum quantity is 10");
-      return;
-    }
-    dispatch(setQty({ id, qty: item.qty + 1 }));
-  };
+  const item = items.find((i: any) => i.id === id);
+  if (!item) return;
+
+  // ✅ الكمية القصوى حسب الـ API
+  const maxQty = item.quantity;
+
+  if (item.orderQuantity >= maxQty) {
+    toast.error(`Only ${maxQty} items available in stock`);
+    return;
+  }
+
+  dispatch(setQty({ id, qty: item.orderQuantity + 1 }));
+};
+
 
   const handleDecrease = (id: string) => {
     const item = items.find((i: any) => i.id === id);
     if (!item) return;
-    if (item.qty <= 1) {
-      toast.error("Minimum quantity is 1");
+    if (item.orderQuantity <= 1) {
+      toast.error(`Minimum quantity reached`);
       return;
     }
-    dispatch(setQty({ id, qty: item.qty - 1 }));
+    dispatch(setQty({ id, qty: item.orderQuantity - 1 }));
   };
 
   const handleRemove = (id: string) => {
@@ -69,50 +88,59 @@ const Cart: React.FC = () => {
     toast.warn("Cart cleared");
   };
 
+  // ✅ Apply promo code
   const applyPromoCode = () => {
-    const validCodes = ["dr.nasr", "engnourhan"];
+    const validCodes = {
+      "dr.nasr": 100, // 100% discount
+      "engnourhan": 50, // 50% discount
+    };
+
     if (promoApplied) {
       toast.info("Promo code already applied");
       return;
     }
-    if (validCodes.includes(promoCode.trim().toLowerCase())) {
-      setDiscount(subtotal);
+
+    const code = promoCode.trim().toLowerCase();
+    if (validCodes[code]) {
+      const discountPercent = validCodes[code];
+      const discountValue = (subtotal * discountPercent) / 100;
+      setDiscount(discountValue);
       setPromoApplied(true);
-      toast.success("✅ Promo code applied! 100% discount");
+      toast.success(`✅ Promo applied: ${discountPercent}% off`);
     } else {
       setDiscount(0);
       toast.error("❌ Invalid promo code");
     }
   };
 
-  // ✅ لما يضغط على Checkout
   const handleCheckout = () => {
     toast.success("Proceeding to checkout...");
-    setTimeout(() => {
-      navigate("/checkout");
-    }, 1000);
+    setTimeout(() => navigate("/checkout"), 1000);
   };
 
   return (
-    <div className="min-h-screen px-6 md:px-16 py-10 bg-white font-serif">
+    <div className="min-h-screen px-6 md:px-16 py-10 bg-white">
       <ToastContainer theme="colored" />
       <div className="max-w-7xl mx-auto">
-        {/* Header row: title + Clear Cart (top-right) */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <h2 className="text-3xl font-semibold">Shopping Cart</h2>
           <button
             onClick={handleClear}
             className="flex items-center gap-2 text-sm px-3 py-2 rounded shadow-sm border hover:opacity-90"
-            aria-label="Clear cart"
           >
             <FiTrash2 /> Clear Cart
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT - products list */}
+          {/* LEFT - products */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
+            <div
+              className={`space-y-6 custom-scroll ${
+                items.length > 4 ? "max-h-[500px] overflow-y-auto pr-2" : ""
+              }`}
+            >
               {items.map((item: any) => (
                 <div
                   key={item.id}
@@ -120,17 +148,19 @@ const Cart: React.FC = () => {
                 >
                   <div className="flex items-center gap-6">
                     <img
-                      src={item.img}
-                      alt={item.name}
+                      src={item.image}
+                      alt={item.title}
                       className="w-28 h-28 object-cover rounded-md"
                     />
                     <div>
-                      <h3 className="text-lg font-medium">{item.name}</h3>
+                      <h3 className="text-lg font-medium">{item.title}</h3>
                       {item.category && (
-                        <p className="text-sm text-gray-500">{item.category}</p>
+                        <p className="text-sm text-gray-500">
+                          {item.category}
+                        </p>
                       )}
                       <p className="text-[#b85c38] mt-2 font-semibold">
-                        ${Number(item.price).toFixed(2)}
+                        ${item.price.toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -139,17 +169,17 @@ const Cart: React.FC = () => {
                     <button
                       onClick={() => handleDecrease(item.id)}
                       className="border rounded px-3 py-1 flex items-center justify-center"
-                      aria-label="Decrease quantity"
                     >
                       <FiMinus />
                     </button>
 
-                    <div className="w-10 text-center">{item.qty}</div>
+                    <div className="w-10 text-center font-medium">
+                      {item.orderQuantity}
+                    </div>
 
                     <button
                       onClick={() => handleIncrease(item.id)}
                       className="border rounded px-3 py-1 flex items-center justify-center"
-                      aria-label="Increase quantity"
                     >
                       <FiPlus />
                     </button>
@@ -157,7 +187,6 @@ const Cart: React.FC = () => {
                     <button
                       onClick={() => handleRemove(item.id)}
                       className="ml-3 p-2 rounded text-[#b85c38] hover:bg-[#fff1ea]"
-                      aria-label="Remove item"
                       title="Remove item"
                     >
                       <FiTrash2 size={18} />
@@ -167,7 +196,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
 
-            {/* Promo Code row */}
+            {/* Promo Code */}
             <div className="mt-8">
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Enter a promo code
@@ -179,7 +208,7 @@ const Cart: React.FC = () => {
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
                   placeholder="Promo code"
-                  className="w-50 px-2 py-1.5 text-sm rounded-lg border border-gray-300 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-[#f0d7cc] focus:border-[#f0d7cc] disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-50 px-2 py-1.5 text-sm rounded-lg border border-gray-300 shadow-sm outline-none focus:ring-2 focus:ring-[#f0d7cc] focus:border-[#f0d7cc]"
                   disabled={promoApplied}
                 />
                 <Button
@@ -195,7 +224,9 @@ const Cart: React.FC = () => {
 
               {promoApplied && (
                 <p className="mt-3 text-sm text-green-700">
-                  Promo <span className="font-medium">{promoCode}</span> applied — 100% discount
+                  Promo{" "}
+                  <span className="font-medium">{promoCode.toUpperCase()}</span>{" "}
+                  applied — saved ${discount.toFixed(2)}
                 </p>
               )}
             </div>
@@ -207,11 +238,13 @@ const Cart: React.FC = () => {
 
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">${subtotal.toFixed(2)}</span>
+              <span className="font-medium text-gray-600">
+                ${subtotal.toFixed(2)}
+              </span>
             </div>
 
             {discount > 0 && (
-              <div className="flex justify-between mb-2 text-green-700">
+              <div className="flex justify-between mb-2 text-[#b85c38] font-medium">
                 <span>Discount</span>
                 <span>- ${discount.toFixed(2)}</span>
               </div>
@@ -224,9 +257,8 @@ const Cart: React.FC = () => {
               <span>${total.toFixed(2)}</span>
             </div>
 
-            {/* ✅ Checkout Button */}
             <Button
-              className="w-full py-3 "
+              className="w-full py-3"
               onClick={handleCheckout}
               text="Checkout"
             />
@@ -238,3 +270,4 @@ const Cart: React.FC = () => {
 };
 
 export default Cart;
+
