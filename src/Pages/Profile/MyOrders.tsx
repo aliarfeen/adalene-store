@@ -85,7 +85,7 @@ const MyOrders: React.FC = () => {
                       (sum, it) => sum + (it.orderQuantity || 1),
                       0
                     )}{" "}
-                    items • Total:{" "}
+                    Qty • Total:{" "}
                     <span className="font-semibold">
                       ${Number(o.total).toFixed(2)}
                     </span>
