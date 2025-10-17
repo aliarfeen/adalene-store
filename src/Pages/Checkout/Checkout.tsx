@@ -11,6 +11,7 @@ import type { ShippingData } from "../../Types/Cart";
 import { Button } from "../../Components/Common/Button";
 import apiFactory from "../../Api/apiFactory";
 import { clearCart } from "../../Features/products/productSlice";
+import type { Order } from "../../Types";
 //import { Product } from './../../Types/Product';
 
 
@@ -61,7 +62,7 @@ const CheckoutPage: React.FC = () => {
     // }
   const onSubmit: SubmitHandler<ShippingData> = (data) => {
   const orderData = {
-    id: Date.now(),  
+    id: Date.now().toString(),  
     userId: userId,
     userinfo: data, 
     items, 
@@ -72,7 +73,10 @@ const CheckoutPage: React.FC = () => {
   };
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
-  apiFactory.sendOrders(orderData)
+  apiFactory.sendOrders(orderData as Order)
+  orderData.items.forEach((product)=>{
+    apiFactory.updateProduct(product);
+  })
   localStorage.setItem("orders", JSON.stringify(existingOrders));
   toast.success("Order placed successfully!");
   dispatch(clearCart());

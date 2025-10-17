@@ -10,7 +10,7 @@ category?:string
 
 
 export interface ShippingData {
-id:number;
+id:string;
 fullName: string;
 email: string;
 phone: string;

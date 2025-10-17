@@ -19,7 +19,7 @@ const ProductDetails = () => {
       <ScrollToTop />
       <ProductPrieview
         bestSeller={product.bestSeller}
-        resource={"product"}
+        resource={"products"}
         id={product.id}
         title={product.title}
         price={product.price}
