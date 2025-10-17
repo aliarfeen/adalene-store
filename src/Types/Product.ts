@@ -1,6 +1,6 @@
 export interface Product {
-  resource: 'product';
-  id: number;
+  resource: 'products';
+  id: number|string;
   title: string;
   price: number;
   description: string;

@@ -73,6 +73,9 @@ const CheckoutPage: React.FC = () => {
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
   apiFactory.sendOrders(orderData)
+  orderData.items.forEach((product)=>{
+    apiFactory.updateProduct(product);
+  })
   localStorage.setItem("orders", JSON.stringify(existingOrders));
   toast.success("Order placed successfully!");
   dispatch(clearCart());

@@ -1,7 +1,5 @@
 import { createSlice, current, type PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../../App/store";
 import type { Product } from "../../Types";
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 // --- Types ---
 
@@ -71,7 +69,6 @@ const productSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.items));
     },
     removeFromCart: (state, action: PayloadAction<Product>) => {
-      // TODO: remove item by id
       state.items = state.items.filter((item) => item.id !== action.payload.id);
       state.totalQuantity -= 1;
       state.totalPrice -= action.payload.price;
@@ -84,9 +81,9 @@ const productSlice = createSlice({
     //     state.totalQuantity = 0;
     //     state.totalPrice = 0;
     // },
-    calculateTotals: (state) => {
-      // TODO: recalculate totalQuantity and totalPrice
-    },
+    // calculateTotals: (state) => {
+    //   // TODO: recalculate totalQuantity and totalPrice
+    // },
     loadCartFromStorage: (state, action: PayloadAction<CartState>) => {
       // TODO: set state from localStorage data
       state.items = action.payload.items;
@@ -102,7 +99,6 @@ export const {
   addToCart,
   removeFromCart,
   clearCart,
-  calculateTotals,
   loadCartFromStorage,
   addItem,
   removeItem,
