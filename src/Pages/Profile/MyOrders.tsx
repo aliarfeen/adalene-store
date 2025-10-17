@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button } from "../../Components/Common/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import type { Order } from "../../Types/Order";
 import type { User } from "../../Types/User";
 
@@ -11,6 +12,7 @@ const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 const MyOrders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -93,7 +95,7 @@ const MyOrders: React.FC = () => {
                 <div className="flex flex-col items-end gap-2">
                   <div className="text-sm text-gray-400">{o.date}</div>
                   <Button
-                    onClick={() => console.log("View order", o.id)}
+                    onClick={() => navigate(`/profile/myorder/${o.id}`)}
                     text="View Order"
                   />
                 </div>

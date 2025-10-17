@@ -66,7 +66,7 @@ const OrderSuccess: React.FC = () => {
             text="Back to Home"
           />
           <Button
-            onClick={() => navigate("/orderreview")}
+            onClick={() => navigate("/profile/myorder")}
             className="px-6 py-2 rounded"
             text="View Orders"
           />

@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import emailjs from "emailjs-com";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const SERVICE_ID = "service_16sfnoq"; // Service ID
 const TEMPLATE_ID = "template_dt6slte"; // Template ID
 const PUBLIC_KEY = "gdQC34yoBHtXwNZjK"; // Public key من EmailJS
+const USERS_API = "https://68e4f1f88e116898997db023.mockapi.io/data"; // نفس API بتاعك
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +28,28 @@ const ForgotPassword: React.FC = () => {
     setIsSending(true);
 
     try {
-      const resetLink = `${window.location.origin}resetpassword`;
+      // ✅ جلب كل البيانات من الـ API
+      const res = await axios.get(USERS_API);
+      const data = res.data;
 
-      // ✉️ إرسال الإيميل
+      // ✅ فلترة المستخدمين فقط (resource === "user")
+      const users = data.filter((item: any) => item.resource === "user");
+
+      // ✅ التحقق من وجود الإيميل
+      const userExists = users.some(
+        (u: any) => u.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (!userExists) {
+        toast.error("❌ Email not found! Redirecting to Sign Up...");
+        setTimeout(() => navigate("/signup"), 3000);
+        setIsSending(false);
+        return;
+      }
+
+      const resetLink = `${window.location.origin}/resetpassword`;
+
+      // ✉️ إرسال الإيميل عبر EmailJS
       await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -41,13 +63,14 @@ const ForgotPassword: React.FC = () => {
       toast.success("📧 Reset link sent! Check your email.");
       setEmail("");
 
-      // ✅ حفظ حالة طلب إعادة التعيين مع صلاحية 10 دقائق
-      const expiration = new Date().getTime() + 5 * 60 * 1000; // 5 دقائق
+      // ✅ حفظ حالة طلب إعادة التعيين مع صلاحية 5 دقائق
+      const expiration = new Date().getTime() + 5 * 60 * 1000;
       localStorage.setItem(
         "resetRequested",
         JSON.stringify({ email, expires: expiration })
       );
     } catch (error) {
+      console.error(error);
       toast.error("❌ Failed to send email. Try again!");
     } finally {
       setIsSending(false);
@@ -65,7 +88,10 @@ const ForgotPassword: React.FC = () => {
         Enter your registered email to receive a reset link.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md w-full mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 max-w-md w-full mx-auto"
+      >
         <InputField
           label="Email *"
           type="email"
