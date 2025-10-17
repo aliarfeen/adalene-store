@@ -87,6 +87,8 @@ const router = createBrowserRouter([
 
   // Global catch-all for 404
   { path: "*", element: <NotFound /> },
+
+
 ]);
 
 // Render
