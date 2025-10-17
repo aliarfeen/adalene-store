@@ -26,8 +26,9 @@ export interface UserInfo {
 
 
 export interface Order {
-  id: string | number;             
-  resource: "Order" | string;
+  id: string;             
+  resource: "order"|"Order";
+  userId: string;
   userinfo: UserInfo;     
   items: Product[];     
   total: number;   
