@@ -44,6 +44,7 @@ const productSlice = createSlice({
 
     removeItem(state, action: PayloadAction<number>) {
       state.items = state.items.filter((i) => i.id !== action.payload);
+      state.totalQuantity -= 1;
       save(state.items);
     },
     setQty(state, action: PayloadAction<{ id: number; qty: number }>) {
@@ -53,6 +54,7 @@ const productSlice = createSlice({
     },
     clearCart(state) {
       state.items = [];
+      state.totalQuantity= 0;
       save(state.items);
     },
     addToCart: (state, action: PayloadAction<Product>) => {
