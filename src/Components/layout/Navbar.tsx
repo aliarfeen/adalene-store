@@ -20,6 +20,7 @@ export const Navbar = () => {
 
   const totalQuantity = useSelector((s: RootState) => s.product.totalQuantity);
   const [shakeCart, setShakeCart] = useState(false);
+ 
 
   useEffect(() => {
     setIsCartOpen(false);

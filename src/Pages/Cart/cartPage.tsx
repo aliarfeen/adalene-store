@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { removeItem, setQty, clearCart} from "../../Features/products/productSlice";
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
+import Modal from "../../Components/Common/Dialog";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,10 @@ const Cart: React.FC = () => {
   //   dispatch(loadItems())
   // }, [dispatch]);
 
+ //modal logic
+  
+   const [isModalOpen, setModalOpen] = useState(false);
+  const currentUser =JSON.parse(localStorage.getItem("loggedUser") || "null");
 
 
   //  Total after discount
@@ -110,14 +115,40 @@ const Cart: React.FC = () => {
     //   toast.error("❌ Invalid promo code");
     // }
   };
-
-  const handleCheckout = () => {
-    toast.success("Proceeding to checkout...");
-    setTimeout(() => navigate("/checkout"), 1000);
+  const navigateAndCloseModal = () => {
+    setTimeout(() => navigate("/login"), 500)
+    setModalOpen(false);
   };
+  const handleCheckout = () => {
+    if(!currentUser){
+      
+    setModalOpen(true);
+    }
+  else{
+    
+    toast.success("Proceeding to checkout...");
+    setTimeout(() => navigate("/checkout"), 500);}
+  }
+  
+
 
   return (
     <div className="min-h-screen px-6 md:px-16 py-10 bg-white">
+       {/* diaalog*/}
+      <Modal isOpen={isModalOpen} onClose={()=>setModalOpen(false)}>
+            <h2 className="text-lg font-bold">Alert</h2>
+            <p className="text-gray-700">
+                Please logIn to continue shopping!
+                </p>
+            <button
+                className="mt-4 px-4 py-2 relative left-56
+                           bg-orange-800 text-white
+                           rounded-lg xl:left-80"
+                onClick={navigateAndCloseModal}
+            >
+                Log in
+            </button>
+        </Modal>
       <ToastContainer theme="colored" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}

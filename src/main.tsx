@@ -34,6 +34,7 @@ import AccountDetails from "./Pages/Profile/ProfilePage.tsx";
 import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 
 import { ProductProvider } from "./context/ProductContext.tsx";
+import OrderReview from "./Pages/Order/OrderPage.tsx";
 
 // Create Query Client
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       { path: "cart", element: <Cart /> },
       { path: "checkout", element: <CheckoutPage /> },
       { path: "ordersuccess", element: <OrderSuccess /> },
+      { path: "orderreview", element: <OrderReview /> },
       { path: "story", element: <OurStory /> },
       { path: "craft", element: <OurCraft /> },
       {

@@ -5,13 +5,19 @@ import * as yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../App/store";
-// import { clearCart } from "../../Features/cart/cartSlice";
+//import { clearCart } from "../../Features/cart/cartSlice";
 import { toast } from "react-toastify";
 import type { ShippingData } from "../../Types/Cart";
 import { Button } from "../../Components/Common/Button";
+import apiFactory from "../../Api/apiFactory";
+import { clearCart } from "../../Features/products/productSlice";
+//import { Product } from './../../Types/Product';
 
+
+//const user = localStorage.getItem('user')
 // ✅ Validation Schema
 const schema: yup.ObjectSchema<ShippingData> = yup.object({
+  
   fullName: yup.string().required("Full name is required").min(3),
   email: yup.string().required("Email is required").email("Invalid email address"),
   phone: yup
@@ -28,8 +34,10 @@ const schema: yup.ObjectSchema<ShippingData> = yup.object({
 });
 
 const CheckoutPage: React.FC = () => {
-  const items = useSelector((s: RootState) => s.cart.items);
+   const items = useSelector((s: RootState) => s.product.items);
   const total = items.reduce((s, i) => s + i.price * i.orderQuantity, 0);
+  const currentUser =JSON.parse(localStorage.getItem("loggedUser") || "null");
+  const userId = currentUser.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cash");
@@ -44,17 +52,27 @@ const CheckoutPage: React.FC = () => {
     mode: "onTouched",
   });
 
+
+    // const handleQty = function(array:Product[]){
+    //   array.forEach(item => {
+    //     apiFactory.
+    //     item.orderQuantity = 1;
+    //   });
+    // }
   const onSubmit: SubmitHandler<ShippingData> = (data) => {
   const orderData = {
     id: Date.now(),  
+    userId: userId,
     userinfo: data, 
     items, 
     total,
     paymentMethod,
     date: new Date().toLocaleString(),
+    resource: 'Order',
   };
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
+  apiFactory.sendOrders(orderData)
   localStorage.setItem("orders", JSON.stringify(existingOrders));
   toast.success("Order placed successfully!");
   dispatch(clearCart());
@@ -70,6 +88,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-8 bg-gray-50 min-h-screen">
+     
       {/* ✅ Shipping Form */}
       <div className="lg:col-span-8 bg-white p-6 rounded-2xl shadow">
         <h3 className="text-2xl  mb-6 text-gray-800">Checkout</h3>

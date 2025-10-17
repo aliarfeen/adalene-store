@@ -20,7 +20,7 @@ const OrderSuccess: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        {/* ✅ أيقونة النجاح المتحركة */}
+        {/* successes icon*/}
         <motion.div
           className="flex justify-center mb-4"
           initial={{ scale: 0, rotate: -180 }}
@@ -66,7 +66,7 @@ const OrderSuccess: React.FC = () => {
             text="Back to Home"
           />
           <Button
-            onClick={() => navigate("/orders")}
+            onClick={() => navigate("/orderreview")}
             className="px-6 py-2 rounded"
             text="View Orders"
           />
