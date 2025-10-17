@@ -14,7 +14,7 @@ export interface OrderItem {
 }
 
 export interface UserInfo {
-  id: number;
+  id: number | string;
   fullName: string;
   email: string;
   phone: string;
@@ -28,7 +28,8 @@ export interface UserInfo {
 export interface Order {
   id: string;             
   resource: "order"|"Order";
-  userId: string;
+  
+  userId: number | string;
   userinfo: UserInfo;     
   items: Product[];     
   total: number;   
