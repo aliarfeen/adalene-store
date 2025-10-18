@@ -1,29 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, X } from "lucide-react";
-import type { Product,  User as UserType } from "../../Types";
+import { ShoppingCart, User, X, Menu } from "lucide-react";
+import type { Product, User as UserType } from "../../Types";
 
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "../../App/store";
 
 export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // for hamburger
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
-  const [user, setUser] = useState<UserType|null>(null);
-  //const dispatch = useDispatch()
+  const [user, setUser] = useState<UserType | null>(null);
+
   const location = useLocation();
   const navigate = useNavigate();
-
-
   const totalQuantity = useSelector((s: RootState) => s.product.totalQuantity);
   const [shakeCart, setShakeCart] = useState(false);
- 
 
   useEffect(() => {
     setIsCartOpen(false);
+    setIsMenuOpen(false); // close when navigating
   }, [location]);
 
   useEffect(() => {
@@ -33,25 +32,21 @@ export const Navbar = () => {
       return () => clearTimeout(timer);
     }
   }, [totalQuantity]);
+
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     setCartItems(storedCart ? JSON.parse(storedCart) : []);
   }, [isCartOpen]);
-
 
   useEffect(() => {
     const syncUser = () => {
       const storedUser = localStorage.getItem("loggedUser");
       setUser(storedUser ? JSON.parse(storedUser) : null);
     };
-
     syncUser();
     window.addEventListener("storage", syncUser);
     return () => window.removeEventListener("storage", syncUser);
   }, []);
-
-
-
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,21 +55,21 @@ export const Navbar = () => {
     } else {
       navigate(`/products`);
     }
+    setIsMenuOpen(false); // close menu after searching (mobile)
   };
 
   return (
     <>
-
       <nav className="bg-white border-gray-200 shadow-sm">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-
+          {/* Logo */}
           <Link to="/">
             <AdalenaLogo className="hover:opacity-80 transition-opacity cursor-pointer" />
           </Link>
 
-
+          {/* Right side */}
           <div className="flex items-center gap-3 md:order-2">
-
+            {/* Search (desktop only) */}
             <form onSubmit={handleSearch} className="relative hidden md:block">
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg
@@ -100,14 +95,16 @@ export const Navbar = () => {
                 className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-800 focus:border-orange-800"
               />
             </form>
+
+            {/* User */}
             {user ? (
               <div className="flex items-center gap-3">
                 <Link to="/profile">
-               <div className="w-8 h-8 flex items-center justify-center rounded-full border bg-orange-200 text-orange-800 font-bold">
-                 {user.username.charAt(0).toUpperCase()}
-                </div>
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border bg-orange-200 text-orange-800 font-bold">
+                    {user.username.charAt(0).toUpperCase()}
+                  </div>
                 </Link>
-                 <span className="text-gray-700 font-medium">{user.username}</span>
+                <span className="text-gray-700 font-medium">{user.username}</span>
               </div>
             ) : (
               <Link
@@ -118,6 +115,8 @@ export const Navbar = () => {
                 <span className="hidden md:inline">Login</span>
               </Link>
             )}
+
+            {/* Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="flex items-center hover:text-orange-800 relative"
@@ -129,40 +128,83 @@ export const Navbar = () => {
                 </span>
               )}
             </button>
+
+            {/* Hamburger menu (mobile) */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden flex items-center text-gray-700 hover:text-orange-800"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
-          <div
-            className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-            id="navbar-search"
-          >
+
+          {/* Desktop links */}
+          <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border md:space-x-8 md:flex-row md:mt-0 md:border-0">
-              <Link to="/products">
-                <li className="hover:text-orange-800">Shop All</li>
-              </Link>
-              <Link to="/story">
-                <li className="hover:text-orange-800">Our Story</li>
-              </Link>
-              <Link to="/craft">
-                <li className="hover:text-orange-800">Our Craft</li>
-              </Link>
-              <Link to="/contact">
-                <li className="hover:text-orange-800">Contact</li>
-              </Link>
+              <Link to="/products"><li className="hover:text-orange-800">Shop All</li></Link>
+              <Link to="/story"><li className="hover:text-orange-800">Our Story</li></Link>
+              <Link to="/craft"><li className="hover:text-orange-800">Our Craft</li></Link>
+              <Link to="/contact"><li className="hover:text-orange-800">Contact</li></Link>
             </ul>
           </div>
         </div>
+
+        {/* Mobile menu dropdown */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t shadow-lg">
+            <div className="p-4 space-y-3">
+              {/* Search (mobile) */}
+              <form onSubmit={handleSearch} className="relative">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-orange-800"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search..."
+                  className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-800 focus:border-orange-800"
+                />
+              </form>
+
+              {/* Links */}
+              <ul className="flex flex-col space-y-3">
+                <Link to="/products"><li className="hover:text-orange-800">Shop All</li></Link>
+                <Link to="/story"><li className="hover:text-orange-800">Our Story</li></Link>
+                <Link to="/craft"><li className="hover:text-orange-800">Our Craft</li></Link>
+                <Link to="/contact"><li className="hover:text-orange-800">Contact</li></Link>
+              </ul>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Cart overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         onClick={() => setIsCartOpen(false)}
       ></div>
 
       {/* Cart Drawer */}
       <div
-        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold text-orange-800">Your Cart</h2>

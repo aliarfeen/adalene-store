@@ -1,7 +1,7 @@
 export interface User {
   resource: 'user';
   id: string;
-  role: string;
+  role: "admain"|"customer";
   username: string;
   email: string;
   password?: string;
