@@ -179,13 +179,6 @@ const ProductPreview: React.FC<Product> = ({
               onClick={addToCartAndNotify}
               text={quantityDiffernce +1 <= 0 ? "Unavailable" : "Add to Cart"}
             />
-            {/* <Button
-              className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"
-              onClick={() =>
-                console.log(`Added ${orderQantity} of ${title} to cart!`)
-              }
-              text="Buy Now"
-            /> */}
           </div>
         </div>
       </div>
