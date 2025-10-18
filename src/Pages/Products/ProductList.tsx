@@ -10,13 +10,16 @@
 import { useState } from "react"
 import ProductsFilter from "../../Components/Products/ProductsFilter"
 import ProductsList from "../../Components/Products/ProductsList"
-import { useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import type { RootState } from "../../App/store"
 
 const ProductListPage = () => {
+  const location = useLocation();
+  const  category = location.state?.category || "";
+  console.log("Navigated category:", category);
   const [activeFilters, setActiveFilters] = useState({
-    category: "",
+    category,
     colors: [] as string[],
     sizes: [] as string[],
   })
