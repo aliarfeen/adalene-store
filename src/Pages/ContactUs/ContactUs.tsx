@@ -157,9 +157,9 @@ export default function ContactUs() {
 
           <div className="flex justify-center pt-4">
             <Button
-            text="       Submit"
+            text="Submit"
+            className="px-20 py-3 border-2 border-[#a0785e] text-[#a0785e] hover:bg-[#a0785e] hover:text-white transition-colors duration-200"
               onClick={handleSubmit}
-              className="px-20 py-3 border-2 border-[#a0785e] text-[#a0785e] hover:bg-[#a0785e] hover:text-white transition-colors duration-200"
             />
        
        
