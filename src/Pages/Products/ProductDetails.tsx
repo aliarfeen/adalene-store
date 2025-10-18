@@ -11,8 +11,6 @@ const ProductDetails = () => {
   
   const filterdDataByCategory = products.filter((p)=> p.category === product.category)
   
-  console.log(product.category);
-  
 
   return (
     <div>
