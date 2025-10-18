@@ -11,8 +11,6 @@ import { useState } from "react"
 import ProductsFilter from "../../Components/Products/ProductsFilter"
 import ProductsList from "../../Components/Products/ProductsList"
 import { useLocation, useSearchParams } from "react-router-dom"
-import { useSelector } from "react-redux"
-import type { RootState } from "../../App/store"
 import useProducts from "../../hooks/useProducts"
 
 const ProductListPage = () => {
@@ -27,8 +25,6 @@ const ProductListPage = () => {
     category,
     price,
   })
-  
-     const items = useSelector((s: RootState) => s.product.items);
 
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get("search") || ""

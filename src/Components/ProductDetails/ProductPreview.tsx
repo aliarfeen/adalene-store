@@ -67,17 +67,14 @@ const ProductPreview: React.FC<Product> = ({
     toast.success(`(${title}) was added to cart!`);
   };
 
-  // const handleQuantityChange = (delta: number) => {
-  //   if (orderQantity  <= quantity)
-  //   setorderQantity(prev => Math.max(1, prev + delta));
-  // };
+ 
   const handleQuantityChange = (delta: number) => {
     setorderQantity((prev: number) => {
       // Calculate the next value based on user action
       const newQuantity = prev + delta;
 
       // Don't allow increasing beyond available stock
-      if (orderQuantity +newQuantity > quantity){
+      if (orderQuantity + newQuantity > quantity ){
           toast.error(`${title} is out of stock!`);
 
         return prev};
@@ -137,7 +134,7 @@ const ProductPreview: React.FC<Product> = ({
           </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
-          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce+1} items left !</p>
+          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce} items left !</p>
 
           <hr className="my-6 border-t border-gray-200" />
 
@@ -153,7 +150,7 @@ const ProductPreview: React.FC<Product> = ({
               <button
                 className="p-2 border-r border-gray-300 hover:bg-gray-100 disabled:opacity-50"
                 onClick={() => handleQuantityChange(-1)}
-                disabled={orderQuantity <= 1}
+                disabled={clientorderQuantity <= 1}
               >
                 –
               </button>
@@ -172,12 +169,12 @@ const ProductPreview: React.FC<Product> = ({
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
-                  quantityDiffernce +1 <= 0
+                  quantityDiffernce  <= 0
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
-              text={quantityDiffernce +1 <= 0 ? "Unavailable" : "Add to Cart"}
+              text={quantityDiffernce  <= 0 ? "Unavailable" : "Add to Cart"}
             />
           </div>
         </div>
