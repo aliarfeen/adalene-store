@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, X, Menu } from "lucide-react";
@@ -58,6 +59,12 @@ export const Navbar = () => {
     setIsMenuOpen(false); // close menu after searching (mobile)
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("loggedUser");
+    setUser(null);
+    navigate("/login");
+  };
+
   return (
     <>
       <nav className="bg-white border-gray-200 shadow-sm">
@@ -99,16 +106,24 @@ export const Navbar = () => {
             {/* User */}
             {user ? (
               <div className="flex items-center gap-3">
-                <Link to="/profile">
+                <Link to={user.role === "admin" ? "/admin/dashboard" : "/profile"}>
                   <div className="w-8 h-8 flex items-center justify-center rounded-full border bg-orange-200 text-orange-800 font-bold">
                     {user.username.charAt(0).toUpperCase()}
                   </div>
                 </Link>
                 <span className="text-gray-700 font-medium">{user.username}</span>
+
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-red-600 hover:underline"
+                >
+                  Logout
+                </button>
               </div>
             ) : (
               <Link
-                to="login"
+                to="/login"
                 className="flex items-center gap-1 hover:text-orange-800"
               >
                 <User className="w-5 h-5" />
