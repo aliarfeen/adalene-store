@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,35 +11,16 @@ import Sidebar from "../Forms/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface Admin {
-  username: string;
-  email: string;
-}
-
 const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
 
-  const [admin, setAdmin] = useState<Admin>();
-
-  // ✅ get admin from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("loggedAdmin");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (parsed.username && parsed.email) {
-          setAdmin(parsed);
-        }
-      } catch (error) {
-        console.error("Invalid admin data in localStorage");
-      }
-    }
-  }, []);
+  // ✅ قراءة الـ admin من localStorage (loggedUser)
+  const admin = JSON.parse(localStorage.getItem("loggedUser") || "{}");
 
   // ✅ logout logic
   const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    localStorage.removeItem("loggedAdmin");
+    localStorage.removeItem("loggedUser");
     toast.success("✅ You’ve been logged out successfully!");
     setTimeout(() => navigate("/login"), 1200);
   };
