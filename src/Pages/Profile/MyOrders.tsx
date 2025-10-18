@@ -15,6 +15,8 @@ const MyOrders: React.FC = () => {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]); 
+  const [searchTerm, setSearchTerm] = useState(""); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,7 @@ const MyOrders: React.FC = () => {
         );
 
         setOrders(userOrders);
+        setFilteredOrders(userOrders);
 
         if (userOrders.length === 0) {
           toast.info("📭 You have no orders yet.");
@@ -52,25 +55,50 @@ const MyOrders: React.FC = () => {
 
     fetchOrders();
   }, []);
+
+    // Filter logic
+  useEffect(() => {
+    const term = searchTerm.toLowerCase();
+    const filtered = orders.filter(
+      (o) =>
+        o.id.toString().includes(term) ||
+        o.date?.toLowerCase().includes(term) ||
+        o.total?.toString().includes(term)
+    );
+    setFilteredOrders(filtered);
+  }, [searchTerm, orders]);
+
   
   //pagination
   
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(4)
 
-   const lastIndex = currentPage * itemsPerPage
+  const lastIndex = currentPage * itemsPerPage
   const firstIndex = lastIndex - itemsPerPage
-  const currentItems = orders.slice(firstIndex, lastIndex)
+  const currentItems = filteredOrders.slice(firstIndex, lastIndex)
  //end of pagination 
   return (
     <div className="max-w-4xl mx-auto">
       <ToastContainer position="top-right" autoClose={2000} />
 
       <h3 className="text-2xl font-semibold text-[#4a2b0b] mb-4">My Orders</h3>
+      
+      {/* Filter input */}
+      <div className="mb-6 flex justify-end">
+        <input
+          type="text"
+          placeholder="Filter by ID, Date or Total..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-[#a25a2a]"
+        />
+      </div>
+    
 
       {loading ? (
         <div className="text-center text-gray-500">Loading your orders...</div>
-      ) : orders.length === 0 ? (
+      ) :  filteredOrders.length === 0 ? (
         <div className="text-center text-gray-400 italic mt-10">
           No orders found.
         </div>
@@ -117,7 +145,7 @@ const MyOrders: React.FC = () => {
         </div>
       )}
       <Pagination
-        totalitems={orders.length}
+        totalitems={filteredOrders.length}
         itemsPerPage={itemsPerPage}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
