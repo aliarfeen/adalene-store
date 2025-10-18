@@ -15,13 +15,13 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const navigate = useNavigate(); // ✅ init
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get<User[]>(API_URL);
-        const allUsers = response.data.filter((item) => item.resource === "user");
+        const allUsers = response.data.filter((item) => item.role === "customer");
         setUsers(allUsers);
       } catch (error) {
         toast.error("❌ Failed to load users!");

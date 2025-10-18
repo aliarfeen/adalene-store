@@ -41,7 +41,7 @@ useEffect(() => {
   const fetchUsers = async () => {
     try {
       const res = await axios.get<User[]>(API_URL);
-      setUsers(res.data.filter((u) => u.resource === "user"));
+      setUsers(res.data.filter((u) => u.role === "customer"));
     } catch {
       toast.error("⚠️ Failed to load users!");
     }

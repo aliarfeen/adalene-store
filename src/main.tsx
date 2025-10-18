@@ -36,6 +36,11 @@ import { NotFound } from "./Pages/NotFound/NotFound.tsx";
 import { ProductProvider } from "./context/ProductContext.tsx";
 import OrderReview from "./Pages/Order/OrderPage.tsx";
 import OrderDetails from "./Pages/Order/OrderDetails.tsx";
+import AdminLayout from "./Components/layout/AdminDashboardLayout.tsx";
+import DashBoard from "./Pages/Admin/Dashboard.tsx";
+import UsersTable from "./Pages/Admin/UsersDash.tsx";
+import OrdersTable from "./Pages/Admin/OrdersDash.tsx";
+import ProductsTable from "./Pages/Admin/ProductsDash.tsx";
 
 // Create Query Client
 const queryClient = new QueryClient();
@@ -84,6 +89,20 @@ const router = createBrowserRouter([
       { path: "account", element: <AccountDetails /> },
       { path: "myorder", element: <MyOrders /> },
       { path: "myorder/:id", element: <OrderDetails /> },
+    ],
+  },
+
+
+    // Admin Dashboard routes
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <Navigate to="dashboard" replace /> },
+      { path: "dashboard", element: <DashBoard/> },
+      { path: "userstable", element: <UsersTable/> },
+      { path: "orderstable", element: <OrdersTable/> },
+      { path: "productstable", element: <ProductsTable/> },
     ],
   },
 

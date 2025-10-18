@@ -10,7 +10,7 @@ import axios from "axios";
 const SERVICE_ID = "service_16sfnoq"; // Service ID
 const TEMPLATE_ID = "template_dt6slte"; // Template ID
 const PUBLIC_KEY = "gdQC34yoBHtXwNZjK"; // Public key من EmailJS
-const USERS_API = "https://68e4f1f88e116898997db023.mockapi.io/data"; // نفس API بتاعك
+const USERS_API = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ const ForgotPassword: React.FC = () => {
       const data = res.data;
 
       // ✅ فلترة المستخدمين فقط (resource === "user")
-      const users = data.filter((item: any) => item.resource === "user");
+      const users = data.filter((item: any) => item.role === "customer");
 
       // ✅ التحقق من وجود الإيميل
       const userExists = users.some(

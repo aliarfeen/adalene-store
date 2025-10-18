@@ -45,7 +45,7 @@ const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 const SignUp: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate(); // ✅ استخدمه للتحويل بعد النجاح
+  const navigate = useNavigate(); 
 
   const {
     register,
@@ -67,7 +67,7 @@ const SignUp: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get<User[]>(API_URL);
-        const allUsers = response.data.filter((item) => item.resource === "user");
+        const allUsers = response.data.filter((item) => item.role === "customer");
         setUsers(allUsers);
         console.log(allUsers);
       } catch {
@@ -124,6 +124,7 @@ const SignUp: React.FC = () => {
         email: data.email,
         password: data.password,
         resource: "user",
+        role:"customer"
       };
 
       await axios.post(API_URL, newUser);
