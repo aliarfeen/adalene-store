@@ -1,11 +1,14 @@
 export interface CartItem {
-id: string;
-title: string;
-price: number;
-image?: string;
-quantity: number;
-orderQuantity: number;
-category?:string
+ resource: 'products';
+  id: string;
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+  quantity: number;
+  orderQuantity:number;
+  bestSeller: boolean;
 }
 
 

@@ -40,12 +40,12 @@ const productSlice = createSlice({
     },
 
 
-    removeItem(state, action: PayloadAction<number>) {
+    removeItem(state, action: PayloadAction<string>) {
       state.items = state.items.filter((i) => i.id !== action.payload);
       state.totalQuantity -= 1;
       save(state.items);
     },
-    setQty(state, action: PayloadAction<{ id: number; qty: number }>) {
+    setQty(state, action: PayloadAction<{ id: string; qty: number }>) {
       const it = state.items.find((i) => i.id === action.payload.id);
       if (it) it.orderQuantity = Math.max(1, action.payload.qty);
       save(current(state.items));

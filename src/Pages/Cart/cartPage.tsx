@@ -52,7 +52,7 @@ const Cart: React.FC = () => {
   }
 
   //  Handle quantity +/-
-  const handleIncrease = (id: number) => {
+  const handleIncrease = (id: string) => {
   const item = items.find((i: any) => i.id === id);
   if (!item) return;
 
@@ -68,7 +68,7 @@ const Cart: React.FC = () => {
 };
 
 
-  const handleDecrease = (id: number) => {
+  const handleDecrease = (id: string) => {
     const item = items.find((i: any) => i.id === id);
     if (!item) return;
     if (item.orderQuantity <= 1) {
@@ -78,7 +78,7 @@ const Cart: React.FC = () => {
     dispatch(setQty({ id, qty: item.orderQuantity - 1 }));
   };
 
-  const handleRemove = (id: number) => {
+  const handleRemove = (id: string) => {
     dispatch(removeItem(id));
     toast.info("Item removed from cart");
   };

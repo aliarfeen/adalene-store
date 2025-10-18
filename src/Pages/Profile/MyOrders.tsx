@@ -6,10 +6,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import type { Order } from "../../Types/Order";
 import type { User } from "../../Types/User";
+import Pagination from "../../Components/Products/Pagination";
 
 const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const MyOrders: React.FC = () => {
+
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -49,7 +52,16 @@ const MyOrders: React.FC = () => {
 
     fetchOrders();
   }, []);
+  
+  //pagination
+  
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(4)
 
+   const lastIndex = currentPage * itemsPerPage
+  const firstIndex = lastIndex - itemsPerPage
+  const currentItems = orders.slice(firstIndex, lastIndex)
+ //end of pagination 
   return (
     <div className="max-w-4xl mx-auto">
       <ToastContainer position="top-right" autoClose={2000} />
@@ -64,7 +76,7 @@ const MyOrders: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((o) => (
+          {currentItems.map((o) => (
             <div
               key={o.id}
               className="bg-white rounded-lg p-4 shadow-sm border border-[#f0e6df]"
@@ -79,7 +91,7 @@ const MyOrders: React.FC = () => {
                     {o.items.slice(0, 2).map((it) => it.title).join(" • ")}
                   </div>
 
-                  <div className="text-xs text-gray-500 mt-1">
+                   <div className="text-xs text-gray-500 mt-1">
                     {/* ✅ استخدم orderQuantity بدل quantity */}
                     {o.items.reduce(
                       (sum, it) => sum + (it.orderQuantity || 1),
@@ -104,6 +116,12 @@ const MyOrders: React.FC = () => {
           ))}
         </div>
       )}
+      <Pagination
+        totalitems={orders.length}
+        itemsPerPage={itemsPerPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
     </div>
   );
 };

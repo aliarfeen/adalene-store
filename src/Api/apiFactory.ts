@@ -6,18 +6,8 @@ import type { User, Product, MockResource, Order } from '../Types';
 
 const ALL_RESOURCES_ENDPOINT: string = import.meta.env.VITE_MOCK_API_ENDPOINT; 
 
-interface UpdatableResource {
-  id: string;
-  resource: string;
-  [key: string]: any; // Allows for any other properties on the resource
-}
 
-interface UpdatableProduct extends UpdatableResource {
-  resource: 'product'; // Matches JSON "resource": "product"
-  // ... all other fields (title, price, description, etc.)
-  id: string; // Matches JSON "id": 1, 2, 3...
-}
-// --- Single Generic Fetch Function ---
+ //Generic Fetch Function ---
 
 /**
  * Fetches all data from the single MockAPI endpoint and filters it 
@@ -59,7 +49,7 @@ async function sendResource<T extends MockResource>(
 async function updateResource<T extends MockResource>(
   resource: T
 ): Promise<T> {
-  const url = `${ALL_RESOURCES_ENDPOINT}/${resource.resource}/${resource.id}`;
+  const url = `/${resource.resource}/${resource.id}`;
 
   // 2. The payload for PUT is the entire resource object (T).
   const response = await axiosInstance.put<T>(url, resource);
@@ -77,10 +67,12 @@ const apiFactory = {
   // Simple aliases for type clarity and ease of use in components
   fetchUsers: (): Promise<User[]> => fetchResource('user'),
   fetchProducts: (): Promise<Product[]> => fetchResource('products'),
+  fetchOrders: (): Promise<Order[]> => fetchResource('Order'),
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
   
   updateProduct: (payload: Product): Promise<Product> => updateResource<Product>(payload),
+  updateOrder: (payload: Order): Promise<Order> => updateResource<Order>(payload),
 
   // Example of a more complex product filter built on the base function
   fetchProductsByCategory: async (category: string): Promise<Product[]> => {

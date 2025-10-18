@@ -5,14 +5,12 @@ import * as yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../App/store";
-//import { clearCart } from "../../Features/cart/cartSlice";
 import { toast } from "react-toastify";
 import type { ShippingData } from "../../Types/Cart";
 import { Button } from "../../Components/Common/Button";
 import apiFactory from "../../Api/apiFactory";
 import { clearCart } from "../../Features/products/productSlice";
-import type { Order } from "../../Types";
-//import { Product } from './../../Types/Product';
+import type { Order, Product } from "../../Types";
 
 
 //const user = localStorage.getItem('user')
@@ -74,7 +72,7 @@ const CheckoutPage: React.FC = () => {
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
   apiFactory.sendOrders(orderData as Order)
-  orderData.items.forEach((product)=>{
+  orderData.items.forEach((product: Product)=>{
     apiFactory.updateProduct(product);
   })
   localStorage.setItem("orders", JSON.stringify(existingOrders));

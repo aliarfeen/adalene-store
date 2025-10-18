@@ -5,7 +5,7 @@ import type { Product,  User as UserType } from "../../Types";
 
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import type { RootState } from "../../App/store";
 
 export const Navbar = () => {
@@ -13,7 +13,7 @@ export const Navbar = () => {
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<UserType|null>(null);
-  const dispatch = useDispatch()
+  //const dispatch = useDispatch()
   const location = useLocation();
   const navigate = useNavigate();
 
