@@ -75,15 +75,7 @@ const productSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.items));
     },
 
-    // clearCart: (state) => {
-    //     localStorage.setItem("cart", JSON.stringify([]));
-    //     state.items = [];
-    //     state.totalQuantity = 0;
-    //     state.totalPrice = 0;
-    // },
-    // calculateTotals: (state) => {
-    //   // TODO: recalculate totalQuantity and totalPrice
-    // },
+   
     loadCartFromStorage: (state, action: PayloadAction<CartState>) => {
       // TODO: set state from localStorage data
       state.items = action.payload.items;

@@ -28,7 +28,7 @@ export interface UserInfo {
 export interface Order {
   id: string;             
   resource: "order"|"Order";
-  
+  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
   userId: number | string;
   userinfo: UserInfo;     
   items: Product[];     

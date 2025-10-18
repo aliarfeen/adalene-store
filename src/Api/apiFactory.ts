@@ -5,6 +5,8 @@ import axiosInstance from './axiosInstance';
 import type { User, Product, MockResource, Order } from '../Types'; 
 
 const ALL_RESOURCES_ENDPOINT: string = import.meta.env.VITE_MOCK_API_ENDPOINT; 
+const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT; 
+
 
 
  //Generic Fetch Function ---
@@ -18,6 +20,22 @@ async function fetchResource<T extends MockResource>(resourceType: T['resource']
   try {
     // 1. Fetch the entire combined array of mixed resources
     const response = await axiosInstance.get<MockResource[]>(ALL_RESOURCES_ENDPOINT);
+    const allData = response.data;
+
+    // 2. Filter the array based on the 'resource' field and assert the type
+    const filteredData = allData.filter((item) => item.resource === resourceType) as T[];
+
+    return filteredData;
+  } catch (error) {
+    console.error(`Error fetching or filtering ${resourceType} data:`, error);
+    throw error;
+  }
+}
+
+async function fetchAllProducts<T extends MockResource>(resourceType: T['resource']): Promise<T[]> {
+  try {
+    // 1. Fetch the entire combined array of mixed resources
+    const response = await axiosInstance.get<MockResource[]>(PRODUCTS_ENDPOINT);
     const allData = response.data;
 
     // 2. Filter the array based on the 'resource' field and assert the type
@@ -61,12 +79,13 @@ async function updateResource<T extends MockResource>(
 const apiFactory = {
   // Primary, reusable function
   fetchResource, 
+  fetchAllProducts,
   sendResource,
   updateResource,
 
   // Simple aliases for type clarity and ease of use in components
   fetchUsers: (): Promise<User[]> => fetchResource('user'),
-  fetchProducts: (): Promise<Product[]> => fetchResource('products'),
+  fetchProducts: (): Promise<Product[]> => fetchAllProducts('products'),
   fetchOrders: (): Promise<Order[]> => fetchResource('Order'),
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),

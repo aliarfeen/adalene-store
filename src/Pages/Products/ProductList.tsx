@@ -11,6 +11,8 @@ import { useState } from "react"
 import ProductsFilter from "../../Components/Products/ProductsFilter"
 import ProductsList from "../../Components/Products/ProductsList"
 import { useSearchParams } from "react-router-dom"
+import { useSelector } from "react-redux"
+import type { RootState } from "../../App/store"
 
 const ProductListPage = () => {
   const [activeFilters, setActiveFilters] = useState({
@@ -18,7 +20,10 @@ const ProductListPage = () => {
     colors: [] as string[],
     sizes: [] as string[],
   })
-
+  
+     const items = useSelector((s: RootState) => s.product.items);
+     console.log(items);
+     
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get("search") || ""
 

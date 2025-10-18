@@ -11,13 +11,14 @@ const PLACEHOLDER_IMAGE_URL = "https://i.imgur.com/g8D0kK5.png";
 const ProductPreview: React.FC<Product> = ({
   image = PLACEHOLDER_IMAGE_URL,
   title = "I'm a product",
-  id = 1,
+  id = "1",
   price = 250.0,
   description = "I'm a product description...",
   resource,
   category,
   bestSeller,
-  quantity = 10, // 👈 coming from backend
+  orderQuantity = 0,
+  quantity = 10, 
 }) => {
   const dispatch = useDispatch();
   const cart = localStorage.getItem("cart")
@@ -27,11 +28,15 @@ const ProductPreview: React.FC<Product> = ({
   // Find if the product is already in the cart and set its orderQuantity
   const existingCartItem = parsedCart.find((e: Product) => e.id === id);
   if (existingCartItem) {
-    initialOrderQuantity = existingCartItem.orderQuantity;
+    initialOrderQuantity = 1;
   }
   
-  const [orderQuantity, setorderQantity] = useState(initialOrderQuantity);
+  const [clientorderQuantity, setorderQantity] = useState(initialOrderQuantity);
   const [blur, setBlur] = useState(true);
+
+
+  const quantityDiffernce = quantity - orderQuantity-clientorderQuantity;
+
 
   useEffect(() => {
     const timer = setTimeout(() =>  setBlur(false), 750);
@@ -39,7 +44,7 @@ const ProductPreview: React.FC<Product> = ({
   }, []);
 
   const addToCartAndNotify = () => {
-    if (quantity <= 0 ) {
+    if (quantityDiffernce <= 0 ) {
       toast.error(`${title} is out of stock!`);
       return;
     }
@@ -72,7 +77,7 @@ const ProductPreview: React.FC<Product> = ({
       const newQuantity = prev + delta;
 
       // Don't allow increasing beyond available stock
-      if (newQuantity > quantity){
+      if (orderQuantity +newQuantity > quantity){
           toast.error(`${title} is out of stock!`);
 
         return prev};
@@ -88,9 +93,9 @@ const ProductPreview: React.FC<Product> = ({
 
   // --- Stock Labels Logic ---
   const stockLabel =
-    quantity <= 0
+    quantityDiffernce <= 0
       ? { text: "Out of Stock", color: "bg-red-600" }
-      : quantity <= 5
+      : quantityDiffernce <= 5
       ? { text: "Low Stock", color: "bg-yellow-500" }
       : null;
 
@@ -132,7 +137,7 @@ const ProductPreview: React.FC<Product> = ({
           </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
-          <p className="text-base mb-2 text-yellow-500"> Only {quantity} items left !</p>
+          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce+1} items left !</p>
 
           <hr className="my-6 border-t border-gray-200" />
 
@@ -152,7 +157,7 @@ const ProductPreview: React.FC<Product> = ({
               >
                 –
               </button>
-              <div className="p-2">{orderQuantity}</div>
+              <div className="p-2">{clientorderQuantity}</div>
               <button
                 className="p-2 border-l border-gray-300 hover:bg-gray-100"
                 onClick={() => handleQuantityChange(1)}
@@ -167,12 +172,12 @@ const ProductPreview: React.FC<Product> = ({
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
-                  quantity - orderQuantity +1 <= 0
+                  quantityDiffernce +1 <= 0
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
-              text={quantity - orderQuantity +1 <= 0 ? "Unavailable" : "Add to Cart"}
+              text={quantityDiffernce +1 <= 0 ? "Unavailable" : "Add to Cart"}
             />
             {/* <Button
               className="py-3 px-6 text-base font-semibold rounded shadow-md hover:bg-gray-800 transition-colors duration-200"

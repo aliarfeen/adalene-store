@@ -25,9 +25,9 @@ const ProductDetails = () => {
         price={product.price}
         description={product.description}
         image={product.image}
-        category={""}
+        category={product.category}
         quantity={product.quantity}
-        orderQuantity={0}
+        orderQuantity={product.orderQuantity}
       />
       
       <InfoContainer />

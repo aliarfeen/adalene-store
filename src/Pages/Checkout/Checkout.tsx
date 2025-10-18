@@ -66,6 +66,7 @@ const CheckoutPage: React.FC = () => {
     items, 
     total,
     paymentMethod,
+    status: "pending",
     date: new Date().toLocaleString(),
     resource: 'Order',
   };

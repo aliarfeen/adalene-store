@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { Product } from './../../Types/Product';
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ProductContext } from '../../context/ProductContext';
 import slugify from "slugify";
 
@@ -10,7 +10,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [loading, setLoading] = useState(true); // controls blur + skeleton
   const cart = localStorage.getItem("cart")
     const parsedCart = cart ? JSON.parse(cart) : [];
-    let initialOrderQuantity = 0;
+    let initialOrderQuantity = product.orderQuantity;
   
     // Find if the product is already in the cart and set its orderQuantity
     const existingCartItem = parsedCart.find((e: Product) => e.id === product.id);
@@ -18,7 +18,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       initialOrderQuantity = existingCartItem.orderQuantity;
     }
     
-    const [orderQuantity, setorderQantity] = useState(initialOrderQuantity);
+    const [orderQuantity] = useState(initialOrderQuantity);
   const quantityDiffernce = product.quantity - orderQuantity;
 
   useEffect(() => {
