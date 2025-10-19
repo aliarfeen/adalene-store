@@ -1,11 +1,71 @@
 import React, { useEffect, useState } from "react";
 import Table from "../../Components/Table/Table";
 import ReusableModal from "../../Components/Forms/ReusableModal";
-import type { User } from "../../Types/User"; 
+import type { User } from "../../Types/User";
+import { z } from "zod";
+import { toast } from "react-toastify";
+import apiFactory from "../../Api/apiFactory";
 
+const userSchema = z.object({
+  username: z
+    .string()
+    .regex(
+      /^[a-zA-Z][a-zA-Z0-9_]{3,15}$/,
+      "username must start with a letter and can contain letters, numbers, and underscores (4–16 chars)"
+    ),
+  email: z
+    .string()
+    .email("Invalid email format")
+    .regex(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[cC][oO][mM]$/,
+      "Email must end with .com"
+    ),
+  password: z
+    .string()
+    .regex(
+      /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{8,}$/,
+      "Password must be at least 8 characters and can include letters, numbers, and special characters"
+    ),
+});
 
+type FormData = z.infer<typeof userSchema>;
 
-const  UsersTable: React.FC = () => {
+const mapZodToRHF = (schema: z.ZodString) => {
+  const validation: Record<string, any> = {};
+
+  // Find the 'required' rule (implied by z.string().min(1, ...))
+  const minRule = schema.safeParse("").success === false && (schema as any)._def.checks.find((check: any) => check.kind === 'min');
+  if (minRule) {
+      // Use the message from the min check for the 'required' error
+      validation.required = minRule.message || "This field is required";
+  } else {
+      // Fallback if no min(1) is found, ensure required fields are marked
+      validation.required = "This field is required";
+  }
+
+  // Find regex patterns
+  const regexCheck = (schema as any)._def.checks.find((check: any) => check.kind === 'regex');
+  if (regexCheck) {
+    validation.pattern = {
+      value: regexCheck.regex,
+      message: regexCheck.message || "Invalid format",
+    };
+  }
+  
+  // Find email format
+  if ((schema as any)._def.checks.some((check: any) => check.kind === 'email')) {
+    // Note: RHF's 'pattern' or 'validate' can handle email, but since we are using regex in Zod anyway,
+    // the regex check above often covers the format, but let's ensure the message is correct.
+    const emailMessage = (schema as any)._def.checks.find((check: any) => check.kind === 'email')?.message;
+    if (emailMessage) {
+        // We'll rely on the regex above and ensure the RHF message is good.
+    }
+  }
+
+  return validation;
+};
+
+const UsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,11 +74,83 @@ const  UsersTable: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  //Ali--------------------------------------------------------------------
+  
+  // Define the RHF validation objects using the Zod helper
+  const usernameValidation = mapZodToRHF(userSchema.shape.username as z.ZodString);
+  const emailValidation = mapZodToRHF(userSchema.shape.email as z.ZodString);
+  const passwordValidation = mapZodToRHF(userSchema.shape.password as z.ZodString);
+  //Ali--------------------------------------------------------------------
+const handleSave = async (data: FormData) => {
+    // 1. Perform final Zod validation check (backend safety)
+    const result = userSchema.safeParse(data);
+
+    if (!result.success) {
+      // This should ideally not happen if RHF validation in the modal worked,
+      // but it's a critical safety net.
+      console.error("Zod Validation Failed:", result.error);
+      toast.error(`Validation failed. Check your inputs.`);
+      return;
+    }
+
+    const validatedData = result.data;
+
+    try {
+      if (isAdding) {
+        // Logic for adding a new user
+        console.log("🆕 Submitting new user to API:", validatedData);
+        const userIds = users
+        .filter((u) => u.resource === "user")
+        .map((u) => Number(u.id))
+        .filter((id) => !isNaN(id));
+
+      const lastUserId = userIds.length > 0 ? Math.max(...userIds) : 100;
+
+        const newUser: User = {
+                id: (lastUserId + 1).toString(),
+                username: data.username,
+                email: data.email,
+                password: data.password,
+                resource: "user",
+                role:"customer"
+              };
+       await apiFactory.sendUser(newUser);
+        
+        // Mock success for demonstration:
+        // setUsers((prev) => [
+        //   ...prev,
+        //   { id: String(Date.now()), role: "customer", ...validatedData } as User,
+        // ]);
+        toast.success(`User ${validatedData.username} added successfully!`);
+
+      } else if (selectedUser) {
+        // Logic for updating an existing user
+        const updatedUser = { ...validatedData, id: selectedUser.id, role: selectedUser.role };
+        console.log("✏️ Submitting update to API:", updatedUser);
+        // await apiFactory.users.update(updatedUser.id, updatedUser);
+
+        // Mock success for demonstration:
+        // setUsers((prev) =>
+        //   prev.map((u) => (u.id === selectedUser.id ? updatedUser as User : u))
+        // );
+        toast.success(`User ${updatedUser.username} updated successfully!`);
+      }
+    } catch (error) {
+      console.error("API error:", error);
+      toast.error(`Operation failed: ${error}`);
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
+  //Ali--------------------------------------------------------------------
+
   // fetch data
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
+        const res = await fetch(
+          "https://68e4f1f88e116898997db023.mockapi.io/data"
+        );
         const data: User[] = await res.json();
 
         // get users with role=customer
@@ -34,7 +166,6 @@ const  UsersTable: React.FC = () => {
     fetchUsers();
   }, []);
 
-
   // 🔍 handle search filter
   useEffect(() => {
     const lowerTerm = searchTerm.toLowerCase();
@@ -47,7 +178,6 @@ const  UsersTable: React.FC = () => {
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
-
   // culomns name
   const columns = [
     {
@@ -56,7 +186,7 @@ const  UsersTable: React.FC = () => {
     },
     {
       key: "username",
-      header: "Username",
+      header: "username",
     },
     {
       key: "email",
@@ -75,7 +205,7 @@ const  UsersTable: React.FC = () => {
       key: "actions",
       header: "Actions",
       render: (user: User) => (
-         <div className="flex gap-2">
+        <div className="flex gap-2">
           <button
             onClick={() => handleEdit(user)}
             className="text-blue-600 hover:underline"
@@ -93,14 +223,13 @@ const  UsersTable: React.FC = () => {
     },
   ];
 
-  // open modal to edit 
+  // open modal to edit
   const handleEdit = (user: User) => {
     setSelectedUser(user);
     setIsAdding(false);
     setIsModalOpen(true);
   };
 
-  
   // open modal to add new user
   const handleAddNew = () => {
     setSelectedUser(null);
@@ -108,43 +237,27 @@ const  UsersTable: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  
-  // handle form submit (add / edit)
-  const handleSave = (data: Partial<User>) => {
-    if (isAdding) {
-      console.log("🆕 Adding new user:", data);
-      setUsers((prev) => [...prev, { id: String(prev.length + 1), role: "customer", ...data } as User]);
-    } else {
-      console.log("✏️ Updating user:", data);
-      if (selectedUser) {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === selectedUser.id ? { ...u, ...data } : u))
-        );
-      }
-    }
-    setIsModalOpen(false);
-  };
-
-
   // modal inputs fields
   const fields = [
-    {
-      name: "username",
-      label: "Username",
-      type: "text",
-    },
-    {
-      name: "email",
-      label: "Email",
-      type: "email",
-    },
-    {
-      name: "password",
-      label: "Password",
-      type: "password",
-    },
-  ];
-
+  {
+    name: "username",
+    label: "username",
+    type: "text",
+    validation: usernameValidation, 
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+    validation: emailValidation, 
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+    validation: passwordValidation, 
+  },
+];
   // loading stage or not customers stage
   if (loading) {
     return (
@@ -155,7 +268,7 @@ const  UsersTable: React.FC = () => {
   }
 
   return (
-     <div className="p-6">
+    <div className="p-6">
       {/* 🔍 Filter & Add */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
         {/* Filter Input */}
@@ -186,17 +299,20 @@ const  UsersTable: React.FC = () => {
       )}
 
       {/* Reusable Modal */}
-      <ReusableModal<User>
+      <ReusableModal<FormData>
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSave}
         title={isAdding ? "Add New Customer" : `Edit ${selectedUser?.username}`}
         fields={fields}
-        initialValues={selectedUser ?? {}}
+        initialValues={
+          isAdding
+            ? { username: "", email: "", password: "" }
+            : (selectedUser as unknown as FormData)
+        }
       />
     </div>
   );
 };
 
 export default UsersTable;
-

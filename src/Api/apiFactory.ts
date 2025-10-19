@@ -89,6 +89,7 @@ const apiFactory = {
   fetchOrders: (): Promise<Order[]> => fetchResource('Order'),
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
+  sendUser: (payload: User): Promise<User> => sendResource<User>('user', payload),
   
   updateProduct: (payload: Product): Promise<Product> => updateResource<Product>(payload),
   updateOrder: (payload: Order): Promise<Order> => updateResource<Order>(payload),
