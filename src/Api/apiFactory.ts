@@ -67,6 +67,16 @@ async function sendResource<T extends MockResource>(
 async function updateResource<T extends MockResource>(
   resource: T
 ): Promise<T> {
+  const url = `${ALL_RESOURCES_ENDPOINT}/${resource.id}`;
+
+  // 2. The payload for PUT is the entire resource object (T).
+  const response = await axiosInstance.put<T>(url, resource);
+
+  return response.data;
+}
+async function updateProduct<T extends MockResource>(
+  resource: T
+): Promise<T> {
   const url = `/${resource.resource}/${resource.id}`;
 
   // 2. The payload for PUT is the entire resource object (T).
@@ -89,9 +99,12 @@ const apiFactory = {
   fetchOrders: (): Promise<Order[]> => fetchResource('Order'),
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
+  sendUser: (payload: User): Promise<User> => sendResource<User>('user', payload),
   
-  updateProduct: (payload: Product): Promise<Product> => updateResource<Product>(payload),
+  updateProduct: (payload: Product): Promise<Product> => updateProduct<Product>(payload),
   updateOrder: (payload: Order): Promise<Order> => updateResource<Order>(payload),
+  updateUser: (payload: User): Promise<User> => updateResource<User>(payload),
+
 
   // Example of a more complex product filter built on the base function
   fetchProductsByCategory: async (category: string): Promise<Product[]> => {
