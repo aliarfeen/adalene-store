@@ -125,14 +125,11 @@ const handleSave = async (data: FormData) => {
 
       } else if (selectedUser) {
         // Logic for updating an existing user
-        const updatedUser = { ...validatedData, id: selectedUser.id, role: selectedUser.role };
-        console.log("✏️ Submitting update to API:", updatedUser);
-        // await apiFactory.users.update(updatedUser.id, updatedUser);
-
-        // Mock success for demonstration:
-        // setUsers((prev) =>
-        //   prev.map((u) => (u.id === selectedUser.id ? updatedUser as User : u))
-        // );
+        const updatedUser = { ...validatedData, id: selectedUser.id, role: selectedUser.role , resource: "user"};
+        console.log(updatedUser);
+        
+       await apiFactory.updateUser(updatedUser as User);
+        
         toast.success(`User ${updatedUser.username} updated successfully!`);
       }
     } catch (error) {
