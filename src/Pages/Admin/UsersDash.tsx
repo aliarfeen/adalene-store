@@ -81,7 +81,20 @@ const UsersTable: React.FC = () => {
   const emailValidation = mapZodToRHF(userSchema.shape.email as z.ZodString);
   const passwordValidation = mapZodToRHF(userSchema.shape.password as z.ZodString);
   //Ali--------------------------------------------------------------------
-const handleSave = async (data: FormData) => {
+
+  const handleDelete = async (selectedUser: User) => {
+    try {
+      await apiFactory.deleteUser(selectedUser);
+      toast.success(`User ${selectedUser.username} deleted successfully!`);
+    }catch(error){
+      
+      console.error("API error:", error);
+      toast.error(`Operation failed: ${error}`);
+    }
+
+  }
+
+  const handleSave = async (data: FormData) => {
     // 1. Perform final Zod validation check (backend safety)
     const result = userSchema.safeParse(data);
 
@@ -210,7 +223,7 @@ const handleSave = async (data: FormData) => {
             Edit
           </button>
           <button
-            onClick={() => alert(`Delete ${user.username}`)}
+            onClick={handleDelete.bind(null, user)}
             className="text-red-600 hover:underline"
           >
             Delete

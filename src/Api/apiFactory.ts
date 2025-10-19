@@ -74,6 +74,19 @@ async function updateResource<T extends MockResource>(
 
   return response.data;
 }
+
+
+async function deleteResource<T extends MockResource>(
+  resource: T
+): Promise<T> {
+  const url = `${ALL_RESOURCES_ENDPOINT}/${resource.id}`;
+
+  // 2. The payload for PUT is the entire resource object (T).
+  const response = await axiosInstance.delete<T>(url);
+
+  return response.data;
+}
+
 async function updateProduct<T extends MockResource>(
   resource: T
 ): Promise<T> {
@@ -84,6 +97,7 @@ async function updateProduct<T extends MockResource>(
 
   return response.data;
 }
+
 
 
 const apiFactory = {
@@ -105,6 +119,7 @@ const apiFactory = {
   updateOrder: (payload: Order): Promise<Order> => updateResource<Order>(payload),
   updateUser: (payload: User): Promise<User> => updateResource<User>(payload),
 
+  deleteUser : (payload: User): Promise<User> => deleteResource<User>(payload),
 
   // Example of a more complex product filter built on the base function
   fetchProductsByCategory: async (category: string): Promise<Product[]> => {
