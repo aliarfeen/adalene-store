@@ -67,6 +67,7 @@ import useProducts from "../../hooks/useProducts"
 interface ProductsListProps {
   activeFilters: {
     category: string
+    price: number
   }
   searchQuery?: string
 }
@@ -92,12 +93,16 @@ const ProductsList = ({ activeFilters, searchQuery = "" }: ProductsListProps) =>
       !activeFilters.category ||
       product.category?.toLowerCase() === activeFilters.category.toLowerCase()
 
+      const matchesPrice =
+      !activeFilters.price || product.price <= activeFilters.price
+
+
     const matchesSearch =
       !searchQuery ||
       product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
-    return matchesCategory && matchesSearch
+    return matchesCategory && matchesSearch && matchesPrice
   })
 
 

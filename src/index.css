@@ -30,3 +30,41 @@
 .shake {
     animation: shake 0.4s ease-in-out;
 }
+
+/* For WebKit (Chrome, Safari) */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Crucial to allow custom styling */
+  appearance: none;
+  width: 16px; /* Example size */
+  height: 16px; /* Example size */
+  background: #007bff; /* Example color (use your theme color) */
+  cursor: pointer;
+  border-radius: 50%; /* Makes it a circle */
+  /* You may need a z-index if it's being hidden by other elements */
+}
+
+/* For Firefox */
+input[type='range']::-moz-range-thumb {
+  width: 16px; /* Example size */
+  height: 16px; /* Example size */
+  background: #007bff; /* Example color (use your theme color) */
+  cursor: pointer;
+  border-radius: 50%;
+  border: none; /* Important for Firefox */
+}
+
+/* For Microsoft Edge/IE */
+input[type='range']::-ms-thumb {
+  width: 16px; /* Example size */
+  height: 16px; /* Example size */
+  background: #007bff; /* Example color (use your theme color) */
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* You also need to explicitly style the track for consistency, though you have Tailwind classes */
+input[type='range'] {
+    /* To ensure the track is styled correctly */
+    -webkit-appearance: none;
+    appearance: none;
+}

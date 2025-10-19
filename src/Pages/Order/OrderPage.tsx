@@ -190,7 +190,6 @@ const OrdersPage: React.FC = () => {
     const fetchOrders = async () => {
       try {
         const data = await apiFactory.fetchResource<Order>("Order");
-        console.log("Fetched Orders:", data); 
         setOrders(Array.isArray(data) ? data.reverse() : []);
       } catch (error) {
         console.error("Error fetching orders:", error);
