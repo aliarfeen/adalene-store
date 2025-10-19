@@ -9,4 +9,5 @@ export interface Product {
   quantity: number;
   orderQuantity:number;
   bestSeller: boolean;
+  sold?: number;
 }
