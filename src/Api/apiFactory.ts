@@ -3,6 +3,7 @@
 import axiosInstance from './axiosInstance';
 
 import type { User, Product, MockResource, Order } from '../Types'; 
+import { send } from 'emailjs-com';
 
 const ALL_RESOURCES_ENDPOINT: string = import.meta.env.VITE_MOCK_API_ENDPOINT; 
 const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT; 
@@ -63,6 +64,19 @@ async function sendResource<T extends MockResource>(
   return response.data;
 }
 
+async function sendProduct<T extends MockResource>(
+  resourceType: T['resource'], 
+  payload: Omit<T, 'resource'>
+): Promise<T> {
+  const url = `${PRODUCTS_ENDPOINT}`; 
+  
+  const resourcePayload = { ...payload, resource: resourceType };
+  
+  const response = await axiosInstance.post<T>(url, resourcePayload);
+  
+  return response.data;
+}
+
 
 async function updateResource<T extends MockResource>(
   resource: T
@@ -114,7 +128,8 @@ const apiFactory = {
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
   sendUser: (payload: User): Promise<User> => sendResource<User>('user', payload),
-  
+  sendProduct: (payload: Product): Promise<Product> => sendProduct<Product>('products', payload),
+
   updateProduct: (payload: Product): Promise<Product> => updateProduct<Product>(payload),
   updateOrder: (payload: Order): Promise<Order> => updateResource<Order>(payload),
   updateUser: (payload: User): Promise<User> => updateResource<User>(payload),
