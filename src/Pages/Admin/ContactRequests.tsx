@@ -1,5 +1,3 @@
-// src/Pages/DashBoard/ContactRequests.tsx
-
 import React, { useEffect, useState } from "react";
 import apiFactory from "../../Api/apiFactory";
 import type { Contact } from "../../Types/Contact";

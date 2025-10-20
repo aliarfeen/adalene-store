@@ -110,7 +110,7 @@ const router = createBrowserRouter([
       { path: "userstable", element: <UsersTable /> },
       { path: "orderstable", element: <OrdersTable /> },
       { path: "productstable", element: <ProductsTable /> },
-      { path: "contactrequests", element: <ContactRequests /> },
+      { path: "contactrequests", element: <ContactRequests /> },//<=
 
     ]}
   ]
