@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { Button } from "../../Components/Common/Button";
+import apiFactory from "../../Api/apiFactory";
+import { toast, ToastContainer} from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 interface FormData {
   firstName: string;
@@ -26,7 +29,7 @@ export default function ContactUs() {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,8 +45,10 @@ export default function ContactUs() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim())
+      newErrors.lastName = "Last name is required";
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -54,19 +59,50 @@ export default function ContactUs() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      setIsSubmitted(true);
+      try {
+        setLoading(true);
 
+        const response = await apiFactory.sendContact(formData);
+        console.log("Contact Saved:", response);
 
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
+        toast.success("Thank you for your inquiry! We'll get back to you soon.", {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: { backgroundColor: "#a0785e", color: "#fff" },
+        });
+
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } catch (error) {
+        console.error("Error submitting contact form:", error);
+
+        toast.error("Something went wrong. Please try again later.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          style: { backgroundColor: "#7b5b45", color: "#fff" },
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -84,7 +120,6 @@ export default function ContactUs() {
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
             <div>
               <label className="block text-sm mb-2 text-gray-700">
                 First Name <span className="text-[#a0785e]">*</span>
@@ -99,7 +134,6 @@ export default function ContactUs() {
                 <p className="text-red-600 text-xs mt-1">{errors.firstName}</p>
               )}
             </div>
-
 
             <div>
               <label className="block text-sm mb-2 text-gray-700">
@@ -142,7 +176,6 @@ export default function ContactUs() {
             />
           </div>
 
-     
           <div>
             <label className="block text-sm mb-2 text-gray-700">Message</label>
             <textarea
@@ -154,24 +187,27 @@ export default function ContactUs() {
             />
           </div>
 
-
           <div className="flex justify-center pt-4">
             <Button
-            text="Submit"
-            className="px-20 py-3 border-2 border-[#a0785e] text-[#a0785e] hover:bg-[#a0785e] hover:text-white transition-colors duration-200"
+              text={loading ? "Submitting..." : "Submit"}
+              disabled={loading}
+              className={`px-20 py-3 border-2 border-[#a0785e] text-[#a0785e] ${
+                loading
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-[#a0785e] hover:text-white"
+              } transition-colors duration-200`}
               onClick={handleSubmit}
             />
-       
-       
           </div>
-
-          {isSubmitted && (
-            <div className="text-center text-green-600 font-medium">
-              Thank you for your inquiry! We'll get back to you soon.
-            </div>
-          )}
         </div>
       </div>
+
+     
+      <ToastContainer
+        position="top-center"
+        limit={3}
+        newestOnTop
+      />
     </div>
   );
 }

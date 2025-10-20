@@ -4,6 +4,7 @@ import axiosInstance from './axiosInstance';
 
 import type { User, Product, MockResource, Order } from '../Types'; 
 import { send } from 'emailjs-com';
+import type { Contact } from '../Types/Contact';
 
 const ALL_RESOURCES_ENDPOINT: string = import.meta.env.VITE_MOCK_API_ENDPOINT; 
 const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT; 
@@ -125,9 +126,12 @@ const apiFactory = {
   fetchUsers: (): Promise<User[]> => fetchResource('user'),
   fetchProducts: (): Promise<Product[]> => fetchAllProducts('products'),
   fetchOrders: (): Promise<Order[]> => fetchResource('Order'),
+  fetchContacts: (): Promise<Contact[]> => fetchResource('contact'),//<=
+
   
   sendOrders: (payload: Order): Promise<Order> => sendResource<Order>('Order', payload),
   sendUser: (payload: User): Promise<User> => sendResource<User>('user', payload),
+  sendContact: (payload: Contact): Promise<Contact> =>sendResource<Contact>('contact', payload),//<=
   sendProduct: (payload: Product): Promise<Product> => sendProduct<Product>('products', payload),
 
   updateProduct: (payload: Product): Promise<Product> => updateProduct<Product>(payload),

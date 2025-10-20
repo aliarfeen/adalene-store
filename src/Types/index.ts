@@ -4,12 +4,15 @@ import type { User } from './User';
 import type { Product } from './Product';
 import type { Order } from './Order';
 import type { ShippingData } from './Cart';
+import type { Contact } from './Contact';//<=
 // Export the individual types
 export * from './User';
 export * from './Product';
 export * from './Order';
 export * from './Cart';
+export * from './Contact';//<=
+
 
 
 // Define the union type for the combined MockAPI array
-export type MockResource = User | Product | ShippingData | Order ;
+export type MockResource = User | Product | ShippingData | Order|Contact ;//<=
