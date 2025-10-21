@@ -100,6 +100,12 @@ const Products: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [localProducts, setLocalProducts] = useState<Product[]>([]);
 
+
+  
+  // ✅ Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; 
+
   useEffect(() => {
     if (products) setLocalProducts(products);
   }, [products]);
@@ -123,6 +129,17 @@ const Products: React.FC = () => {
       return matchesSearch && matchesCategory && matchesPrice;
     });
   }, [localProducts, search, category, maxPrice]);
+
+
+    // ✅ Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredProducts.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
 
   // Columns
   const columns = [
@@ -233,7 +250,7 @@ const Products: React.FC = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-semibold text-brown-600 mb-4">Product Management</h2>
+      <h2 className="text-xl font-semibold text-brown-600 mb-4">Products Management</h2>
 
       {/* Filters + Add Button */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
@@ -241,13 +258,13 @@ const Products: React.FC = () => {
           <input
             type="text"
             placeholder="Search by Title or ID"
-            className="px-3 py-2 rounded-md border"
+            className="border border-gray-300 rounded-lg px-3 py-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-[#a25a2a]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <select
-            className="px-3 py-2 rounded-md border"
+            className="border border-gray-300 rounded-lg px-3 py-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-[#a25a2a]"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -263,7 +280,7 @@ const Products: React.FC = () => {
             type="number"
             min={0}
             placeholder="Max Price"
-            className="px-3 py-2 rounded-md border"
+            className="border border-gray-300 rounded-lg px-3 py-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-[#a25a2a]"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : "")}
           />
@@ -277,7 +294,30 @@ const Products: React.FC = () => {
         </button>
       </div>
 
-      <Table<Product> data={filteredProducts} columns={columns} />
+      <Table<Product> data={currentItems} columns={columns} />
+
+            {/* ✅ Pagination Controls */}
+      <div className="flex justify-center items-center gap-3 mt-6">
+        <button
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          Prev
+        </button>
+
+        <span className="font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          Next
+        </button>
+      </div>
 
       <ReusableModal<ProductFormData>
         isOpen={isModalOpen}

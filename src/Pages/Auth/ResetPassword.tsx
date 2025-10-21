@@ -78,7 +78,7 @@ useEffect(() => {
       // ✅ إزالة حالة resetRequested بعد النجاح
       localStorage.removeItem("resetRequested");
 
-      setTimeout(() => navigate("login"), 2000);
+      setTimeout(() => navigate("/login"), 2000);
     } catch {
       toast.error("❌ Failed to reset password!");
     } finally {
