@@ -5,12 +5,15 @@ import apiFactory from "../../Api/apiFactory";
 import { toast, ToastContainer} from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 
+
 interface FormData {
+  id?: number;
   firstName: string;
   lastName: string;
   email: string;
   subject: string;
   message: string;
+  resource: "contact";
 }
 
 interface FormErrors {
@@ -26,6 +29,8 @@ export default function ContactUs() {
     email: "",
     subject: "",
     message: "",
+    resource:"contact",
+   
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -85,6 +90,8 @@ export default function ContactUs() {
           email: "",
           subject: "",
           message: "",
+          resource:"contact",
+   
         });
       } catch (error) {
         console.error("Error submitting contact form:", error);

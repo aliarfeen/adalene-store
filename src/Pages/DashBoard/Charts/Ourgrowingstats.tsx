@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Users, Package, ShoppingBag, DollarSign, TrendingUp } from "lucide-react";
+import { Users, Package, ShoppingBag,  TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import apiFactory from "../../../Api/apiFactory";
 import CountUpNumber from "../../../Components/UI/CountUpNumber";
