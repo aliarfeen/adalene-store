@@ -25,63 +25,60 @@ const ContactRequests: React.FC = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-[#faf8f6]">
         <p className="text-lg text-gray-600">Loading inquiries...</p>
       </div>
     );
 
   if (error)
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-[#faf8f6]">
         <p className="text-lg text-red-500">{error}</p>
       </div>
     );
 
   return (
-    <div className="min-h-screen  p-8">
-      <h1 className="text-3xl font-semibold text-[#a0785e] mb-8 text-center">
-        Contact Inquiries
-      </h1>
+    <div className="min-h-screen  flex items-center justify-center py-10 px-4">
+      <div className="bg-white shadow-xl rounded-2xl w-full max-w-2xl p-6">
+        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+          Received Messages
+        </h1>
 
-      {contacts.length === 0 ? (
-        <p className="text-center text-gray-500">No contact inquiries found.</p>
-      ) : (
-        <div className="bg-white shadow-md rounded-xl overflow-hidden">
+        {contacts.length === 0 ? (
+          <p className="text-center text-gray-500">No messages found.</p>
+        ) : (
           <div
-            className={`${
-              contacts.length > 6 ? "max-h-[400px] overflow-y-auto" : ""
+            className={`space-y-4 ${
+              contacts.length > 5 ? "max-h-[450px] overflow-y-auto" : ""
             }`}
           >
-            <table className="min-w-full">
-              <thead className="bg-[#a0785e] text-white sticky top-0">
-                <tr>
-                  <th className="py-3 px-4 text-left">#</th>
-                  <th className="py-3 px-4 text-left">First Name</th>
-                  <th className="py-3 px-4 text-left">Last Name</th>
-                  <th className="py-3 px-4 text-left">Email</th>
-                  <th className="py-3 px-4 text-left">Subject</th>
-                  <th className="py-3 px-4 text-left">Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contacts.map((contact, index) => (
-                  <tr
-                    key={contact.firstName || index}
-                    className="border-b hover:bg-[#f3eee8] transition-colors duration-150"
-                  >
-                    <td className="py-3 px-4 text-gray-700">{index + 1}</td>
-                    <td className="py-3 px-4 text-gray-700">{contact.firstName}</td>
-                    <td className="py-3 px-4 text-gray-700">{contact.lastName}</td>
-                    <td className="py-3 px-4 text-gray-700">{contact.email}</td>
-                    <td className="py-3 px-4 text-gray-700">{contact.subject}</td>
-                    <td className="py-3 px-4 text-gray-700">{contact.message}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {contacts.map((contact, index) => (
+              <div
+                key={index}
+                className="border border-gray-200 rounded-xl p-4 shadow-sm bg-[#fcfbfa]"
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <h2 className="font-medium text-gray-800">
+                    {/* {contact.firstName} {contact.lastName}{" "} */}
+                    {contact.email }
+                  </h2>
+                  {/* <span className="text-sm text-gray-400">
+                    {new Date(contact.createdAt || Date.now()).toLocaleString()}
+                  </span> */}
+                </div>
+                <p className="text-sm text-gray-600">
+                  <span className="font-semibold">Subject:</span>{" "}
+                  {contact.subject}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-semibold">Message:</span>{" "}
+                  {contact.message}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
