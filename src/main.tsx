@@ -44,6 +44,7 @@ import ProductsTable from "./Pages/Admin/ProductsDash.tsx";
 import ProtectedRoute from "./Routes/ProtectedRoute.tsx";
 import ContactUs from "./Pages/ContactUs/ContactUs.tsx";
 import ContactRequests from "./Pages/Admin/ContactRequests.tsx";
+import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails.tsx";
 
 // Create Query Client
 const queryClient = new QueryClient();
@@ -110,7 +111,8 @@ const router = createBrowserRouter([
       { path: "userstable", element: <UsersTable /> },
       { path: "orderstable", element: <OrdersTable /> },
       { path: "productstable", element: <ProductsTable /> },
-      { path: "contactrequests", element: <ContactRequests /> },//<=
+      { path: "contactrequests", element: <ContactRequests /> },
+      { path: "orderstable/:id", element: <AdminOrderDetails/>},
 
     ]}
   ]

@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
-const OrderDetails: React.FC = () => {
+const AdminOrderDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,7 @@ const OrderDetails: React.FC = () => {
         <h2 className="text-2xl font-bold text-[#4a2b0b]">
           Order Details — #{order.id}
         </h2>
-        <Button text="← Back to My Orders" onClick={() => navigate("/profile/myorder")} />
+        <Button text="← Back to My Orders" onClick={() => navigate("/admin/orderstable")} />
       </div>
 
       {/* User Info */}
@@ -109,7 +109,6 @@ const OrderDetails: React.FC = () => {
           </p>
         </div>
       </div>
-
 {/* Items */}
 <div>
   <h3 className="text-lg font-semibold text-[#4a2b0b] mb-3">Items</h3>
@@ -144,9 +143,8 @@ const OrderDetails: React.FC = () => {
   </div>
 </div>
 
-
     </div>
   );
 };
 
-export default OrderDetails;
+export default AdminOrderDetails;
