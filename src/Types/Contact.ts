@@ -1,6 +1,7 @@
-import type { MockResource } from ".";
 
-export interface Contact extends MockResource{
+export interface Contact{
+  id?: number;
+  resource: "contact";
   firstName: string;
   lastName: string;
   email: string;

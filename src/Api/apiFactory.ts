@@ -2,9 +2,7 @@
 
 import axiosInstance from './axiosInstance';
 
-import type { User, Product, MockResource, Order } from '../Types'; 
-import { send } from 'emailjs-com';
-import type { Contact } from '../Types/Contact';
+import type { User, Product, MockResource, Order, Contact} from '../Types';
 
 const ALL_RESOURCES_ENDPOINT: string = import.meta.env.VITE_MOCK_API_ENDPOINT; 
 const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT; 
@@ -13,11 +11,7 @@ const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT
 
  //Generic Fetch Function ---
 
-/**
- * Fetches all data from the single MockAPI endpoint and filters it 
- * to return only the requested resource type (User, Product, etc.).
- * @param resourceType - The value of the 'resource' field to filter by ('user' or 'product').
- */
+
 async function fetchResource<T extends MockResource>(resourceType: T['resource']): Promise<T[]> {
   try {
     // 1. Fetch the entire combined array of mixed resources
