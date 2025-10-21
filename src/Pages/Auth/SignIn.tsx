@@ -246,14 +246,14 @@ const Login: React.FC = () => {
 
 
       setTimeout(() => {
-        if (existingUser.role === "admin") {
-          navigate("/admin/dashboard");
-        } else if (existingUser.role === "customer") {
-          navigate("/");
-        } else {
-          navigate("/"); 
-        }
-      }, 1000);
+  if (existingUser.role === "admin") {
+    navigate("/admin/dashboard", { replace: true }); 
+  } else if (existingUser.role === "customer") {
+    navigate("/profile/account", { replace: true });
+  } else {
+    navigate("/", { replace: true });
+  }
+}, 1000);
     } catch (error) {
       toast.error("⚠️ Something went wrong. Please try again.");
     } finally {

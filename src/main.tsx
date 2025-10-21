@@ -45,6 +45,7 @@ import ProtectedRoute from "./Routes/ProtectedRoute.tsx";
 import ContactUs from "./Pages/ContactUs/ContactUs.tsx";
 import ContactRequests from "./Pages/Admin/ContactRequests.tsx";
 import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails.tsx";
+import AuthRedirectRoute from "./Routes/AuthRedirectRoute.tsx";
 
 // Create Query Client
 const queryClient = new QueryClient();
@@ -75,15 +76,20 @@ const router = createBrowserRouter([
   },
 
 
-  {
-    element: <AuthLayout />,
-    children: [
-      { path: "login", element: <Login /> },
-      { path: "signup", element: <SignUp /> },
-      { path: "forgetpassword", element: <ForgotPassword /> },
-      { path: "resetpassword", element: <ResetPassword /> },
-    ],
-  },
+{
+  element: <AuthRedirectRoute />, 
+  children: [
+    {
+      element: <AuthLayout />,
+      children: [
+        { path: "login", element: <Login /> },
+        { path: "signup", element: <SignUp /> },
+        { path: "forgetpassword", element: <ForgotPassword /> },
+        { path: "resetpassword", element: <ResetPassword /> },
+      ],
+    },
+  ],
+},
 
 
   {
