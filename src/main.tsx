@@ -46,6 +46,7 @@ import ContactUs from "./Pages/ContactUs/ContactUs.tsx";
 import ContactRequests from "./Pages/Admin/ContactRequests.tsx";
 import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails.tsx";
 import AuthRedirectRoute from "./Routes/AuthRedirectRoute.tsx";
+import Report from "./Pages/Admin/report.tsx";
 
 // Create Query Client
 const queryClient = new QueryClient();
@@ -119,6 +120,8 @@ const router = createBrowserRouter([
       { path: "productstable", element: <ProductsTable /> },
       { path: "contactrequests", element: <ContactRequests /> },
       { path: "orderstable/:id", element: <AdminOrderDetails/>},
+    { path: "report", element: <Report /> }
+
 
     ]}
   ]

@@ -6,7 +6,8 @@ import {
   Package,
   ShoppingBag,
   LogOut,
-  MessageSquare
+  MessageSquare,
+FileText
 } from "lucide-react";
 import Sidebar from "../Forms/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
@@ -31,7 +32,8 @@ const AdminLayout: React.FC = () => {
     { to: "userstable", label: "Users", icon: <Users /> },
     { to: "orderstable", label: "Orders", icon: <Package /> },
     { to: "productstable", label: "Products", icon: <ShoppingBag /> },
-     { to: "contactrequests", label: "Messages", icon: <MessageSquare /> },//<=
+     { to: "contactrequests", label: "Messages", icon: <MessageSquare /> },
+     {to:"report",label:"Report",icon:< FileText />},//<=
     {
       to: "/login",
       label: "Log out",

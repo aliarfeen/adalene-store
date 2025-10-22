@@ -3,31 +3,36 @@ import { Pencil, Trash2, Plus } from "lucide-react";
 import useProducts from "../../hooks/useProducts";
 import Table from "../../Components/Table/Table";
 import ReusableModal from "../../Components/Forms/ReusableModal";
+import Pagination from "../../Components/Products/Pagination"; 
 import type { Product } from "../../Types/";
 import { toast } from "react-toastify";
 import { z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
 import { type RegisterOptions } from "react-hook-form";
 import apiFactory from "../../Api/apiFactory";
 
-// ✅ Product schema
+// ========================
+// Product Schema
+// ========================
 export const productSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title can't exceed 100 characters"),
-  category: z.string().min(1, "Category is required").max(100, "Category can't exceed 100 characters"),
-  image: z.string().url("Image must be a valid URL"),
-  description: z.string().min(10, "Description must be at least 10 characters").max(1000, "Description can't exceed 1000 characters"),
+  title: z.string().min(3).max(100),
+  category: z.string().min(1).max(100),
+  image: z.string().url(),
+  description: z.string().min(10).max(1000),
   price: z.preprocess(
     (val) => (typeof val === "string" && val.trim() !== "" ? Number(val) : val),
-    z.number().positive("Price must be greater than 0").max(1_000_000, "Price is unreasonably large")
+    z.number().positive().max(1_000_000)
   ),
   quantity: z.preprocess(
     (val) => (typeof val === "string" && val.trim() !== "" ? Number(val) : val),
-    z.number().int("Quantity must be an integer").nonnegative("Quantity can't be negative").max(1_000_000, "Quantity is unreasonably large")
+    z.number().int().nonnegative().max(1_000_000)
   ),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
 
-// ✅ Map Zod validation to RHF
+// ========================
+// Map Zod validation to RHF
+// ========================
 export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
   const validation: RegisterOptions = {};
   const isString = schema instanceof ZodString;
@@ -37,59 +42,45 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 
   if (isString) {
     const minCheck = checks.find((check) => check.kind === "min");
-    if (minCheck && minCheck.value >= 1) {
+    if (minCheck) {
       validation.required = minCheck.message || "This field is required";
-      if (minCheck.value > 1) {
-        validation.minLength = {
-          value: minCheck.value,
-          message: minCheck.message || `Must be at least ${minCheck.value} characters`,
-        };
-      }
+      if (minCheck.value > 1)
+        validation.minLength = { value: minCheck.value, message: minCheck.message };
     }
 
     const maxCheck = checks.find((check) => check.kind === "max");
-    if (maxCheck) {
-      validation.maxLength = {
-        value: maxCheck.value,
-        message: maxCheck.message || `Cannot exceed ${maxCheck.value} characters`,
-      };
-    }
+    if (maxCheck) validation.maxLength = { value: maxCheck.value, message: maxCheck.message };
 
     const urlCheck = checks.find((check) => check.kind === "url");
-    if (urlCheck) {
-      validation.validate = (value: string) => {
-        const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-        if (value.trim() !== "" && !urlRegex.test(value)) {
-          return urlCheck.message || "Must be a valid URL";
-        }
-        return true;
-      };
-    }
+    if (urlCheck)
+      validation.validate = (value: string) =>
+        value.trim() !== "" && !/^(ftp|http|https):\/\/[^ "]+$/.test(value)
+          ? urlCheck.message || "Must be a valid URL"
+          : true;
   } else if (isNumber) {
     const isRequired = checks.some((check) => check.kind === "positive" || check.kind === "nonnegative");
     if (isRequired) validation.required = checks[0]?.message || "A value is required";
 
-    const minCheck = checks.find((check) => check.kind === "min" || check.kind === "positive" || check.kind === "nonnegative");
+    const minCheck = checks.find((check) => ["min", "positive", "nonnegative"].includes(check.kind));
     if (minCheck) {
       const minValue = minCheck.kind === "positive" ? 0.0001 : minCheck.kind === "nonnegative" ? 0 : minCheck.value;
-      validation.min = { value: minValue, message: minCheck.message || `Value must be at least ${minValue}` };
+      validation.min = { value: minValue, message: minCheck.message };
     }
 
     const maxCheck = checks.find((check) => check.kind === "max");
-    if (maxCheck) {
-      validation.max = { value: maxCheck.value, message: maxCheck.message || `Value cannot exceed ${maxCheck.value}` };
-    }
+    if (maxCheck) validation.max = { value: maxCheck.value, message: maxCheck.message };
 
     const intCheck = checks.find((check) => check.kind === "int");
-    if (intCheck) {
+    if (intCheck)
       validation.validate = (value: number) => Number.isInteger(Number(value)) || intCheck.message || "Must be a whole number";
-    }
   }
 
   return validation;
 };
 
-// ✅ Main Component
+// ========================
+// Main Component
+// ========================
 const Products: React.FC = () => {
   const { products, isLoading, isError } = useProducts();
   const [search, setSearch] = useState("");
@@ -100,17 +91,19 @@ const Products: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [localProducts, setLocalProducts] = useState<Product[]>([]);
 
-
-  
-  // ✅ Pagination states
+  // ========================
+  // Pagination States
+  // ========================
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; 
+  const itemsPerPage = 8;
 
   useEffect(() => {
     if (products) setLocalProducts(products);
   }, [products]);
 
+  // ========================
   // Validation Mappings
+  // ========================
   const titleValidation = mapZodToRHF(productSchema.shape.title);
   const categoryValidation = mapZodToRHF(productSchema.shape.category);
   const imageValidation = mapZodToRHF(productSchema.shape.image);
@@ -118,7 +111,9 @@ const Products: React.FC = () => {
   const priceValidation = mapZodToRHF(productSchema.shape.price as unknown as z.ZodNumber);
   const quantityValidation = mapZodToRHF(productSchema.shape.quantity as unknown as z.ZodNumber);
 
-  // Filtered products
+  // ========================
+  // Filtered Products
+  // ========================
   const filteredProducts = useMemo(() => {
     return localProducts.filter((product) => {
       const matchesSearch =
@@ -130,25 +125,21 @@ const Products: React.FC = () => {
     });
   }, [localProducts, search, category, maxPrice]);
 
-
-    // ✅ Pagination logic
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  // ========================
+  // Paginated Items
+  // ========================
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredProducts.slice(startIndex, endIndex);
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-
-  // Columns
+  // ========================
+  // Columns for Table
+  // ========================
   const columns = [
     {
       key: "image",
       header: "Image",
-      render: (item: Product) => (
-        <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded" />
-      ),
+      render: (item: Product) => <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded" />,
     },
     { key: "title", header: "Title" },
     { key: "category", header: "Category" },
@@ -162,7 +153,7 @@ const Products: React.FC = () => {
           <button onClick={() => handleEdit(item)} className="text-orange-500 hover:scale-110 transition">
             <Pencil size={18} />
           </button>
-          <button onClick={() => handleDelete()} className="text-red-500 hover:scale-110 transition">
+          <button onClick={() => handleDelete(item)} className="text-red-500 hover:scale-110 transition">
             <Trash2 size={18} />
           </button>
         </div>
@@ -170,10 +161,14 @@ const Products: React.FC = () => {
     },
   ];
 
-  // Unique categories for both filter + modal dropdown
+  // ========================
+  // Unique Categories
+  // ========================
   const categories = Array.from(new Set(localProducts.map((p) => p.category)));
 
+  // ========================
   // Handlers
+  // ========================
   const handleAddNew = () => {
     setSelectedProduct(null);
     setIsAdding(true);
@@ -186,8 +181,8 @@ const Products: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = () => {
-    toast.success("Product deleted successfully!");
+  const handleDelete = (product: Product) => {
+    toast.success(`Product "${product.title}" deleted successfully!`);
   };
 
   const handleSave = (data: ProductFormData) => {
@@ -211,15 +206,7 @@ const Products: React.FC = () => {
         description: validatedData.description,
         orderQuantity: 0,
         bestSeller: false,
-        rating: {
-          starDistribution: {
-            "1_star": 0,
-            "2_star": 0,
-            "3_star": 0,
-            "4_star": 0,
-            "5_star": 0,
-          },
-        },
+        rating: { starDistribution: { "1_star": 0, "2_star": 0, "3_star": 0, "4_star": 0, "5_star": 0 } },
         comments: [],
       };
       apiFactory.sendProduct(newProduct);
@@ -241,13 +228,12 @@ const Products: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // ✅ Fields for modal form — Category is now a dropdown
   const fields = [
     { name: "title", label: "Title", type: "text", validation: titleValidation },
     {
       name: "category",
       label: "Category",
-      type: "select", // Dropdown instead of text
+      type: "select",
       options: categories.map((cat) => ({ label: cat, value: cat })),
       validation: categoryValidation,
     },
@@ -257,6 +243,9 @@ const Products: React.FC = () => {
     { name: "quantity", label: "Stock", type: "number", validation: quantityValidation },
   ];
 
+  // ========================
+  // Render
+  // ========================
   if (isLoading) return <p>Loading products...</p>;
   if (isError) return <p>Failed to load products.</p>;
 
@@ -306,31 +295,20 @@ const Products: React.FC = () => {
         </button>
       </div>
 
+      {/* Table */}
       <Table<Product> data={currentItems} columns={columns} />
 
-            {/* ✅ Pagination Controls */}
-      <div className="flex justify-center items-center gap-3 mt-6">
-        <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          disabled={currentPage === 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          Prev
-        </button>
-
-        <span className="font-medium">
-          Page {currentPage} of {totalPages}
-        </span>
-
-        <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          disabled={currentPage === totalPages}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          Next
-        </button>
+      {/* Pagination */}
+      <div className="flex justify-center mt-6">
+        <Pagination
+          totalitems={filteredProducts.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
 
+      {/* Modal */}
       <ReusableModal<ProductFormData>
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
