@@ -19,6 +19,9 @@ const ProductPreview: React.FC<Product> = ({
   bestSeller,
   orderQuantity = 0,
   quantity = 10, 
+  rating,
+  comments,
+
 }) => {
   const dispatch = useDispatch();
   const cart = localStorage.getItem("cart")
@@ -62,8 +65,11 @@ const ProductPreview: React.FC<Product> = ({
         description,
         category,
         bestSeller,
+        rating,
+        comments,
       })
     );
+    
     toast.success(`(${title}) was added to cart!`);
   };
 
