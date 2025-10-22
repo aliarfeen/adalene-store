@@ -34,7 +34,7 @@
     "react-router-dom": "^7.9.1",
     "react-toastify": "^11.0.5",
     "slugify": "^1.6.6",
-    "swiper": "^12.0.2",
+    "swiper": "^12.0.3",
     "yup": "^1.7.1",
     "zod": "^4.1.12"
   },
