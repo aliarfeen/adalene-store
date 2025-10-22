@@ -162,7 +162,7 @@ const Products: React.FC = () => {
           <button onClick={() => handleEdit(item)} className="text-orange-500 hover:scale-110 transition">
             <Pencil size={18} />
           </button>
-          <button onClick={() => handleDelete(item)} className="text-red-500 hover:scale-110 transition">
+          <button onClick={() => handleDelete()} className="text-red-500 hover:scale-110 transition">
             <Trash2 size={18} />
           </button>
         </div>
@@ -186,7 +186,7 @@ const Products: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (product: Product) => {
+  const handleDelete = () => {
     toast.success("Product deleted successfully!");
   };
 
