@@ -211,6 +211,16 @@ const Products: React.FC = () => {
         description: validatedData.description,
         orderQuantity: 0,
         bestSeller: false,
+        rating: {
+          starDistribution: {
+            "1_star": 0,
+            "2_star": 0,
+            "3_star": 0,
+            "4_star": 0,
+            "5_star": 0,
+          },
+        },
+        comments: [],
       };
       apiFactory.sendProduct(newProduct);
       toast.success(`${validatedData.title} added successfully!`);
@@ -221,6 +231,8 @@ const Products: React.FC = () => {
         resource: selectedProduct.resource,
         orderQuantity: selectedProduct.orderQuantity,
         bestSeller: selectedProduct.bestSeller,
+        rating: selectedProduct.rating,
+        comments: selectedProduct.comments,
       };
       apiFactory.updateProduct(updatedProduct);
       toast.success(`${validatedData.title} updated successfully!`);
