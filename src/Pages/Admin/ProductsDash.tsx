@@ -162,7 +162,7 @@ const Products: React.FC = () => {
           <button onClick={() => handleEdit(item)} className="text-orange-500 hover:scale-110 transition">
             <Pencil size={18} />
           </button>
-          <button onClick={() => handleDelete(item)} className="text-red-500 hover:scale-110 transition">
+          <button onClick={() => handleDelete()} className="text-red-500 hover:scale-110 transition">
             <Trash2 size={18} />
           </button>
         </div>
@@ -186,7 +186,7 @@ const Products: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (product: Product) => {
+  const handleDelete = () => {
     toast.success("Product deleted successfully!");
   };
 
@@ -211,6 +211,16 @@ const Products: React.FC = () => {
         description: validatedData.description,
         orderQuantity: 0,
         bestSeller: false,
+        rating: {
+          starDistribution: {
+            "1_star": 0,
+            "2_star": 0,
+            "3_star": 0,
+            "4_star": 0,
+            "5_star": 0,
+          },
+        },
+        comments: [],
       };
       apiFactory.sendProduct(newProduct);
       toast.success(`${validatedData.title} added successfully!`);
@@ -221,6 +231,8 @@ const Products: React.FC = () => {
         resource: selectedProduct.resource,
         orderQuantity: selectedProduct.orderQuantity,
         bestSeller: selectedProduct.bestSeller,
+        rating: selectedProduct.rating,
+        comments: selectedProduct.comments,
       };
       apiFactory.updateProduct(updatedProduct);
       toast.success(`${validatedData.title} updated successfully!`);

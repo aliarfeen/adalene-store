@@ -68,7 +68,8 @@ const CheckoutPage: React.FC = () => {
     paymentMethod,
     status: "pending",
     date: new Date().toLocaleString(),
-    resource: 'Order',
+    resource: 'Order'
+    
   };
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
