@@ -28,7 +28,7 @@ const userSchema = z.object({
     ),
 });
 
-type FormData = z.infer<typeof userSchema>;
+type FormData = z.infer<typeof userSchema> & { role?: "customer" | "admin" };
 
 const mapZodToRHF = (schema: z.ZodString) => {
   const validation: Record<string, any> = {};
@@ -73,6 +73,8 @@ const UsersTable: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const currentUserString = localStorage.getItem("loggedUser");
+  const currentUser: User | null = currentUserString ? JSON.parse(currentUserString) : null;
 
 
     // Added for pagination
@@ -135,7 +137,7 @@ const UsersTable: React.FC = () => {
         .map((u) => Number(u.id))
         .filter((id) => !isNaN(id));
 
-      const lastUserId = userIds.length > 0 ? Math.max(...userIds) : 100;
+      // const lastUserId = userIds.length > 0 ? Math.max(...userIds) : 100;
 
         const newUser: User = {
                 // id: (lastUserId + 1).toString(),
@@ -144,7 +146,7 @@ const UsersTable: React.FC = () => {
                 email: data.email,
                 password: data.password,
                 resource: "user",
-                role:"customer"
+                role: data.role ??  "customer"
               };
           // save user and store response
           const createdUser = await apiFactory.sendUser(newUser);
@@ -188,26 +190,44 @@ const UsersTable: React.FC = () => {
   //Ali--------------------------------------------------------------------
 
   // fetch data
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch(
-          "https://68e4f1f88e116898997db023.mockapi.io/data"
-        );
-        const data: User[] = await res.json();
+useEffect(() => {
+  const fetchUsers = async () => {
+    if (!currentUser) {
+      console.error("No current user found in localStorage");
+      setLoading(false);
+      return;
+    }
 
-        // get users with role=customer
-        const customers = data.filter((user) => user.role === "customer");
-        setUsers(customers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
+      const data: User[] = await res.json();
 
-    fetchUsers();
-  }, []);
+let visibleUsers: User[] = [];
+
+if (currentUser.adminLevel === "super_admin") {
+  // Super admin يشوف كل الـ admins + customers، لكن يستبعد نفسه
+  visibleUsers = data.filter(
+    (user) =>
+      (user.role === "customer" || user.role === "admin") &&
+      user.id !== currentUser.id
+  );
+} else {
+  // أي admin عادي يشوف العملاء فقط
+  visibleUsers = data.filter(
+    (user) => user.role === "customer" && user.id !== currentUser.id
+  );
+}
+
+      setUsers(visibleUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchUsers();
+}, [currentUser]);
 
   // handle search filter
   useEffect(() => {
@@ -223,49 +243,55 @@ const UsersTable: React.FC = () => {
   }, [searchTerm, users]);
 
   // culomns name
-  const columns = [
-    {
-      key: "id",
-      header: "ID",
-    },
-    {
-      key: "username",
-      header: "username",
-    },
-    {
-      key: "email",
-      header: "Email",
-    },
-    {
-      key: "password",
-      header: "Password",
-      render: (user: User) => (
-        <span className="text-gray-500 italic">
-          {user.password ? "••••••••" : "No Password"}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      header: "Actions",
-      render: (user: User) => (
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleEdit(user)}
-            className="text-blue-600 hover:underline"
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete.bind(null, user)}
-            className="text-red-600 hover:underline"
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
-  ];
+const columns = [
+  {
+    key: "id",
+    header: "ID",
+  },
+  {
+    key: "username",
+    header: "Username",
+  },
+  {
+    key: "email",
+    header: "Email",
+  },
+  {
+    key: "role",
+    header: "Role",
+    render: (user: User) => <span className="capitalize">{user.role}</span>,
+  },
+  {
+    key: "password",
+    header: "Password",
+    render: (user: User) => (
+      <span className="text-gray-500 italic">
+        {user.password ? "••••••••" : "No Password"}
+      </span>
+    ),
+  },
+  {
+    key: "actions",
+    header: "Actions",
+    render: (user: User) => (
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleEdit(user)}
+          className="text-blue-600 hover:underline"
+        >
+          Edit
+        </button>
+        <button
+          onClick={handleDelete.bind(null, user)}
+          className="text-red-600 hover:underline"
+        >
+          Delete
+        </button>
+      </div>
+    ),
+  },
+];
+
 
   // open modal to edit
   const handleEdit = (user: User) => {
@@ -282,26 +308,43 @@ const UsersTable: React.FC = () => {
   };
 
   // modal inputs fields
-  const fields = [
+const fields = [
   {
     name: "username",
-    label: "username",
+    label: "Username",
     type: "text",
-    validation: usernameValidation, 
+    validation: usernameValidation,
   },
   {
     name: "email",
     label: "Email",
     type: "email",
-    validation: emailValidation, 
+    validation: emailValidation,
   },
   {
     name: "password",
     label: "Password",
     type: "password",
-    validation: passwordValidation, 
+    validation: passwordValidation,
   },
+  // Only show role field if the current user is super_admin
+  ...(isAdding && currentUser?.adminLevel === "super_admin"
+    ? [
+        {
+          name: "role",
+          label: "Role",
+          type: "select",
+          options: [
+            { label: "Customer", value: "customer" },
+            { label: "Admin", value: "admin" },
+          ],
+          validation: { required: "Role is required" },
+        },
+      ]
+    : []),
 ];
+
+
   // loading stage or not customers stage
   if (loading) {
     return (
@@ -378,7 +421,7 @@ const UsersTable: React.FC = () => {
         fields={fields}
         initialValues={
           isAdding
-            ? { username: "", email: "", password: "" }
+            ? { username: "", email: "", password: "" ,role: "customer" }
             : (selectedUser as unknown as FormData)
         }
       />
