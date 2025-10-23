@@ -8,9 +8,9 @@ import { Provider } from "react-redux";
 import { store } from "./App/store.ts";
 
 import 'flowbite';
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // Pages & Layouts
 import { App } from "./App.tsx";
@@ -46,7 +46,8 @@ import ContactUs from "./Pages/ContactUs/ContactUs.tsx";
 import ContactRequests from "./Pages/Admin/ContactRequests.tsx";
 import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails.tsx";
 import AuthRedirectRoute from "./Routes/AuthRedirectRoute.tsx";
-import Report from "./Pages/Admin/report.tsx";
+import Report from "./Pages/Admin/Report.tsx";
+
 
 // Create Query Client
 const queryClient = new QueryClient();

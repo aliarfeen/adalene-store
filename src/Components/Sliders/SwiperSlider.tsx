@@ -1,14 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import ProductCard from "../Products/ProductCard";
 import type { Product } from "../../Types";
 
-// type Product = {
-//   id: string | number;
-//   name: string;
-//   price: number | string;
-//   image?: string;
-// };
+import "swiper/css";
+import "swiper/css/navigation";
 
 type ProductSliderProps = {
   title: string;
@@ -22,11 +18,8 @@ const SwiperSlider = ({ title, products, sortFn, limit = 8 }: ProductSliderProps
     return <p>No products available.</p>;
   }
 
-const sortedProducts = [...products];
-
-  if (sortFn) {
-    sortedProducts.sort(sortFn);
-  }
+  const sortedProducts = [...products];
+  if (sortFn) sortedProducts.sort(sortFn);
 
   const sliced = sortedProducts.slice(0, limit);
 
@@ -37,9 +30,14 @@ const sortedProducts = [...products];
       </h1>
 
       <Swiper
-        modules={[Navigation]}
+        modules={[Navigation, Autoplay]}
         spaceBetween={20}
         navigation
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        loop={true}
         breakpoints={{
           320: { slidesPerView: 1 },
           640: { slidesPerView: 2 },
