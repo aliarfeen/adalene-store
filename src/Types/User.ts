@@ -1,3 +1,5 @@
+import type { Product } from "./Product";
+
 export interface User {
   resource: 'user';
   id: string;
@@ -7,4 +9,5 @@ export interface User {
   password?: string;
   avatar?: string | null;
   adminLevel?:string;
+  favourites?: Product[];
 } 
