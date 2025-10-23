@@ -20,7 +20,7 @@ export const productSchema = z.object({
   description: z.string().min(10).max(1000),
   price: z.preprocess(
     (val) => (typeof val === "string" && val.trim() !== "" ? Number(val) : val),
-    z.number().positive().max(1_000_000)
+    z.number().positive().max(1_000_000).min(100)
   ),
   quantity: z.preprocess(
     (val) => (typeof val === "string" && val.trim() !== "" ? Number(val) : val),
@@ -63,7 +63,7 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 
     const minCheck = checks.find((check) => ["min", "positive", "nonnegative"].includes(check.kind));
     if (minCheck) {
-      const minValue = minCheck.kind === "positive" ? 0.0001 : minCheck.kind === "nonnegative" ? 0 : minCheck.value;
+      const minValue = minCheck.kind === "positive" ? .0001 : minCheck.kind === "nonnegative" ? 0 : minCheck.value;
       validation.min = { value: minValue, message: minCheck.message };
     }
 
