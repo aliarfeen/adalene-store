@@ -11,18 +11,16 @@ export interface CartItem {
   bestSeller: boolean;
 }
 
-
 export interface ShippingData {
-id:string;
-fullName: string;
-email: string;
-phone: string;
-address: string;
-city: string;
-postalCode: string;
-note: string | "";
-resource: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  note?: string;
 }
+
 
 
 // export interface Order {
