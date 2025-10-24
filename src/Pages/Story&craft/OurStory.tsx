@@ -4,12 +4,12 @@ import ourstory2 from '../../assets/ourstory&Craft/ourStory2.avif';
 
 const OurStory = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
+        const rect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
         const progress = Math.max(
           0,
           Math.min(1, -rect.top / (rect.height - window.innerHeight))

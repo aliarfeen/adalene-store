@@ -73,7 +73,7 @@ interface ProductsListProps {
 }
 
 const ProductsList = ({ activeFilters, searchQuery = "" }: ProductsListProps) => {
-  const { products = [] } = useProducts()
+  const { products } = useProducts()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(9)

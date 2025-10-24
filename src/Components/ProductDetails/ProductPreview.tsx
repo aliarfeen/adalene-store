@@ -17,11 +17,10 @@ const ProductPreview: React.FC<Product> = ({
   resource,
   category,
   bestSeller,
-  orderQuantity = 0,
   quantity = 10, 
   rating,
   comments,
-
+  
 }) => {
   const dispatch = useDispatch();
   const cart = localStorage.getItem("cart")
@@ -38,7 +37,7 @@ const ProductPreview: React.FC<Product> = ({
   const [blur, setBlur] = useState(true);
 
 
-  const quantityDiffernce = quantity - orderQuantity-clientorderQuantity;
+  const quantityDiffernce = quantity -clientorderQuantity;
 
 
   useEffect(() => {
@@ -47,7 +46,7 @@ const ProductPreview: React.FC<Product> = ({
   }, []);
 
   const addToCartAndNotify = () => {
-    if (quantityDiffernce <= 0 ) {
+    if (quantityDiffernce <= -1 ) {
       toast.error(`${title} is out of stock!`);
       return;
     }
@@ -59,7 +58,6 @@ const ProductPreview: React.FC<Product> = ({
         image,
         title,
         price,
-        orderQuantity,
         quantity,
         resource,
         description,
@@ -67,6 +65,7 @@ const ProductPreview: React.FC<Product> = ({
         bestSeller,
         rating,
         comments,
+        orderQuantity: clientorderQuantity,
       })
     );
     
@@ -80,7 +79,7 @@ const ProductPreview: React.FC<Product> = ({
       const newQuantity = prev + delta;
 
       // Don't allow increasing beyond available stock
-      if (orderQuantity + newQuantity > quantity ){
+      if (newQuantity > quantity ){
           toast.error(`${title} is out of stock!`);
 
         return prev};
@@ -140,7 +139,7 @@ const ProductPreview: React.FC<Product> = ({
           </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
-          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce} items left !</p>
+          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce>=0 ? quantityDiffernce : 0} items left !</p>
 
           <hr className="my-6 border-t border-gray-200" />
 
@@ -175,12 +174,12 @@ const ProductPreview: React.FC<Product> = ({
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
-                  quantityDiffernce  <= 0
+                  quantityDiffernce  <= -1
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
-              text={quantityDiffernce  <= 0 ? "Unavailable" : "Add to Cart"}
+              text={quantityDiffernce  <= -1 ? "Unavailable" : "Add to Cart"}
             />
           </div>
         </div>

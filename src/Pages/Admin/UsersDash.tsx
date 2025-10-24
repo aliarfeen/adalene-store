@@ -127,10 +127,10 @@ const UsersTable: React.FC = () => {
       if (isAdding) {
         // Logic for adding a new user
         console.log("🆕 Submitting new user to API:", validatedData);
-        const userIds = users
-        .filter((u) => u.resource === "user")
-        .map((u) => Number(u.id))
-        .filter((id) => !isNaN(id));
+        // const userIds = users
+        // .filter((u) => u.resource === "user")
+        // .map((u) => Number(u.id))
+        // .filter((id) => !isNaN(id));
 
       // const lastUserId = userIds.length > 0 ? Math.max(...userIds) : 100;
 

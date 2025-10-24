@@ -93,17 +93,17 @@ const Cart: React.FC = () => {
 
   //  Apply promo code
   const applyPromoCode = () => {
-    const validCodes = {
-      "dr.nasr": 100, // 100% discount
-      "engnourhan": 50, // 50% discount
-    };
+    // const validCodes = {
+    //   "dr.nasr": 100, // 100% discount
+    //   "engnourhan": 50, // 50% discount
+    // };
 
-    if (promoApplied) {
-      toast.info("Promo code already applied");
-      return;
-    }
+    // if (promoApplied) {
+    //   toast.info("Promo code already applied");
+    //   return;
+    // }
 
-    const code = promoCode.trim().toLowerCase();
+    // const code = promoCode.trim().toLowerCase();
     // if (code in validCodes) {
     //   const discountPercent = validCodes[code];
     //   const discountValue = (subtotal * discountPercent) / 100;

@@ -10,23 +10,12 @@ export const Footer = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const loggedUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
-  const loggedInEmail = loggedUser?.email || null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(" Form submit triggered");
+    console.log("Form submit triggered");
 
     if (!formRef.current) {
       console.error("No form reference found");
-      return;
-    }
-
-    const formData = new FormData(formRef.current);
-    const subscriptionEmail = formData.get("user_email") as string;
-
-    if (loggedInEmail && subscriptionEmail !== loggedInEmail) {
-      setStatusMessage("The email must match your logged-in account.");
       return;
     }
 
@@ -103,12 +92,7 @@ export const Footer = () => {
                 <h1 className="font-bold hover:text-orange-800 outline-none">Join Us!</h1>
 
                 <label className="font-thin" htmlFor="user_email">Email*</label>
-                <InputField
-                  type="email"
-                  name="user_email"
-                  required
-                  defaultValue={loggedInEmail || ""}
-                />
+                <InputField type="email" name="user_email" required />
 
                 <div className="flex items-center gap-3 mt-2">
                   <input

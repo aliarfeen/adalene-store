@@ -32,4 +32,5 @@ export interface Product {
   comments: Comment[];
 
   sold?: number;
+  cost?:number;
 }

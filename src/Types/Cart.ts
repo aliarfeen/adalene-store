@@ -13,17 +13,16 @@ export interface CartItem {
 
 
 export interface ShippingData {
-id:string;
+id?:string;
 fullName: string;
 email: string;
 phone: string;
 address: string;
 city: string;
 postalCode: string;
-note: string | "";
-resource: string;
+note?: string | "";
+resource?: string;
 }
-
 
 // export interface Order {
 // id: string;

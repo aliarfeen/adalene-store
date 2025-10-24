@@ -13,10 +13,12 @@ import { clearCart } from "../../Features/products/productSlice";
 import type { Order, Product } from "../../Types";
 
 
+
 //const user = localStorage.getItem('user')
 // ✅ Validation Schema
 const schema: yup.ObjectSchema<ShippingData> = yup.object({
-  
+  id: yup.string().optional(),
+  resource: yup.string().optional(),
   fullName: yup.string().required("Full name is required").min(3),
   email: yup.string().required("Email is required").email("Invalid email address"),
   phone: yup
@@ -33,7 +35,7 @@ const schema: yup.ObjectSchema<ShippingData> = yup.object({
 });
 
 const CheckoutPage: React.FC = () => {
-   const items = useSelector((s: RootState) => s.product.items);
+  const items = useSelector((s: RootState) => s.product.items);
   const total = items.reduce((s, i) => s + i.price * i.orderQuantity, 0);
   const currentUser =JSON.parse(localStorage.getItem("loggedUser") || "null");
   const userId = currentUser.id;
@@ -47,7 +49,7 @@ const CheckoutPage: React.FC = () => {
     formState: { errors },
     reset,
   } = useForm<ShippingData>({
-    resolver: yupResolver<ShippingData>(schema),
+    resolver: yupResolver(schema),
     mode: "onTouched",
   });
 
@@ -70,12 +72,13 @@ const CheckoutPage: React.FC = () => {
     date: new Date().toLocaleString(),
     resource: 'Order'
     
+    
   };
   const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
   existingOrders.push(orderData);
   apiFactory.sendOrders(orderData as Order)
   orderData.items.forEach((product: Product)=>{
-    apiFactory.updateProduct(product);
+    apiFactory.updateProduct({...product , quantity: product.quantity - product.orderQuantity});
   })
   localStorage.setItem("orders", JSON.stringify(existingOrders));
   toast.success("Order placed successfully!");

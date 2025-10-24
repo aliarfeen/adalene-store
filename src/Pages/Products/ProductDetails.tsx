@@ -6,15 +6,21 @@ import SwiperSlider from "../../Components/Sliders/SwiperSlider";
 import useProducts from "../../hooks/useProducts";
 import ProductRatingCard from "../../Components/ProductDetails/ProductRatingCard";
 import CommentSection from "../../Components/ProductDetails/CommentSection";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ProductDetails = () => {
-  const product: Product = JSON.parse(localStorage.getItem("product") || "{}");
+  
+  const { pathname } = useLocation();
+  let product: Product = JSON.parse(localStorage.getItem("product") || "{}");
   const { products } = useProducts();
 
   const filterdDataByCategory = products.filter(
     (p) => p.category === product.category
   );
-
+  useEffect(() => {
+    product = JSON.parse(localStorage.getItem("product") || "{}");
+  }, [pathname]);
   return (
     <div>
       <ScrollToTop />

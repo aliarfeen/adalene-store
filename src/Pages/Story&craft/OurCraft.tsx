@@ -5,13 +5,13 @@ import craft3 from '../../assets/ourstory&Craft/ourcraft3.avif';
 
 const OurCraft = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const progress = Math.max(
+        const progress = Math.max( // Cast to HTMLDivElement
           0,
           Math.min(1, -rect.top / (rect.height - window.innerHeight))
         );
@@ -25,7 +25,7 @@ const OurCraft = () => {
   }, []);
 
   // Smooth animations with easing
-  const easeInOutQuad = (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  const easeInOutQuad = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   const easeProgress = easeInOutQuad(scrollProgress);
   
   const imageParallax = easeProgress * 50;
