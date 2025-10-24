@@ -17,6 +17,8 @@ import type { Order, Product } from "../../Types";
 //const user = localStorage.getItem('user')
 // ✅ Validation Schema
 const schema: yup.ObjectSchema<ShippingData> = yup.object({
+  id: yup.string().optional(),
+  resource: yup.string().optional(),
   fullName: yup.string().required("Full name is required").min(3),
   email: yup.string().required("Email is required").email("Invalid email address"),
   phone: yup
