@@ -5,7 +5,7 @@ const useProducts = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: apiFactory.fetchProducts,
-    staleTime: 1000 * 60 * 2, // cache for 2 minutes
+    staleTime: 1000 * 60 ,
   });
 
   return {
