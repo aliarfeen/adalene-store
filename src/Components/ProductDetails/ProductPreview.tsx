@@ -25,9 +25,19 @@ const ProductPreview: React.FC<Product> = ({
   const dispatch = useDispatch();
   const cart = localStorage.getItem("cart");
   const parsedCart = cart ? JSON.parse(cart) : [];
+  const pathname = window.location.pathname;
+  let currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+  useEffect(
+    ()=>{ 
+      currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+
+    },[pathname]
+  )
+  
+  const favorites = currentUser.favourites || [];
+ 
   let initialOrderQuantity = 1;
-  const [addedToFavorites, setAddedToFavorites] = useState(false);
-  const currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+  const [addedToFavorites, setAddedToFavorites] = useState(favorites.some((p: Product) => p.id === id));
   console.log(currentUser);
 
   const handleFavorite = (product: Product) => {
@@ -42,8 +52,11 @@ const ProductPreview: React.FC<Product> = ({
         apiFactory.updateUser({
           ...currentUser,
           favourites: favorites,
-        })
-        localStorage.setItem("loggedUser", JSON.stringify({...currentUser, favourites: favorites}));
+        });
+        localStorage.setItem(
+          "loggedUser",
+          JSON.stringify({ ...currentUser, favourites: favorites })
+        );
       }
       if (addedToFavorites) {
         const favorites = currentUser.favourites || [];
@@ -51,8 +64,13 @@ const ProductPreview: React.FC<Product> = ({
           ...currentUser,
           favourites: favorites.filter((p: Product) => p.id !== product.id),
         });
-        localStorage.setItem("loggedUser", JSON.stringify({...currentUser, favourites:  favorites.filter((p: Product) => p.id !== product.id)}));
-         
+        localStorage.setItem(
+          "loggedUser",
+          JSON.stringify({
+            ...currentUser,
+            favourites: favorites.filter((p: Product) => p.id !== product.id),
+          })
+        );
       }
     }
   };
@@ -213,20 +231,22 @@ const ProductPreview: React.FC<Product> = ({
             />
             <Button
               className={`py-3 px-6  text-base font-semibold rounded shadow-md transition-colors duration-200 `}
-              onClick={()=> handleFavorite({
-                id,
-                image,
-                title,
-                price,
-                quantity,
-                resource,
-                description,
-                category,
-                bestSeller,
-                rating,
-                comments,
-                orderQuantity: clientorderQuantity,
-              })}
+              onClick={() =>
+                handleFavorite({
+                  id,
+                  image,
+                  title,
+                  price,
+                  quantity,
+                  resource,
+                  description,
+                  category,
+                  bestSeller,
+                  rating,
+                  comments,
+                  orderQuantity: clientorderQuantity,
+                })
+              }
               text={
                 !addedToFavorites ? "Add to Favorite" : "Remove from Favorite"
               }
