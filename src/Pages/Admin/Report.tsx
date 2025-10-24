@@ -1,32 +1,58 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Table from "../../Components/Table/Table";
 import type { Product } from "../../Types/";
 import useProducts from "../../hooks/useProducts";
-import Pagination from "../../Components/Products/Pagination"; 
+import Pagination from "../../Components/Products/Pagination";
+import { Button } from "../../Components/Common/Button";
+
 
 interface ProductPerformance extends Product {
   productRevenue: number;
   avgPrice: number;
-  tax:number;
- 
+  tax: number;
+
 }
 
 const Report: React.FC = () => {
   const { products = [], isLoading, isError } = useProducts();
-
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; 
+  const itemsPerPage = 10;
+  const componentRef = useRef<HTMLDivElement>(null);
 
- 
+  const handlePrint = () => {
+    const printContent = componentRef.current;
+    const WindowPrint = window.open("", "", "width=900,height=650");
+    if (WindowPrint && printContent) {
+      WindowPrint.document.write(`
+        <html>
+          <head>
+            <title>Report</title>
+            <style>
+              body { font-family: Arial; padding: 20px; }
+              table { width: 100%; border-collapse: collapse; }
+              th, td { border: 1px solid #ddd; padding: 8px; }
+              th { background-color: #f2f2f2; }
+            </style>
+          </head>
+          <body>
+            ${printContent.innerHTML}
+          </body>
+        </html>
+      `);
+      WindowPrint.document.close();
+      WindowPrint.print();
+    }
+  };
+
   const tableData: ProductPerformance[] = useMemo(() => {
     return products.map((product) => {
       const cost = product.cost ?? 0;
       const productRevenue = (product.price - cost - 0.08) * product.quantity;
       const avgPrice = product.quantity > 0 ? productRevenue / product.quantity : 0;
-      const price=product.price;
-      const tax=.08;
+      const price = product.price;
+      const tax = .08;
 
-      return { ...product, productRevenue, avgPrice ,price,tax};
+      return { ...product, productRevenue, avgPrice, price, tax };
     });
   }, [products]);
 
@@ -42,19 +68,19 @@ const Report: React.FC = () => {
   const columns = [
     { key: "title", header: "Product" },
     { key: "quantity", header: "Quantity" },
-    {key:"price",header:"Price"},
+    { key: "price", header: "Price" },
     {
       key: "avgPrice",
       header: "Average Price",
       render: (item: ProductPerformance) => `$${item.avgPrice.toFixed(2)}`,
     },
-    {key:"tax",header:"Tax"},
+    { key: "tax", header: "Tax" },
     {
       key: "productRevenue",
       header: "Product Revenue",
       render: (item: ProductPerformance) => `$${item.productRevenue.toFixed(2)}`,
     },
-  
+
   ];
 
   return (
@@ -62,8 +88,11 @@ const Report: React.FC = () => {
       <h2 className="text-xl font-semibold text-brown-600 mb-4 flex items-center gap-2">
         Product Performance
       </h2>
+      <Button text="Print Report" onClick={handlePrint} className="m-4" />
+      <div ref={componentRef}>
+        <Table<ProductPerformance> data={paginatedData} columns={columns} />
+      </div>
 
-      <Table<ProductPerformance> data={paginatedData} columns={columns} />
       <Pagination
         totalitems={tableData.length}
         itemsPerPage={itemsPerPage}
