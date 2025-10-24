@@ -176,7 +176,6 @@ import React, { useEffect, useState } from "react";
 import apiFactory from "../../Api/apiFactory";
 import type { Order } from "../../Types";
 import { FiSearch, FiEye, FiTrash2 } from "react-icons/fi";
-import { number } from "zod";
 
 const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -220,7 +219,7 @@ const OrdersPage: React.FC = () => {
   const handleDelete = async (id: string | number) => {
     if (!confirm("Are you sure you want to delete this order?")) return;
     try {
-      await apiFactory.updateOrder("Order"); // أو استخدم delete لو عندك endpoint
+      //await apiFactory.updateOrder("Order"); // أو استخدم delete لو عندك endpoint
       setOrders(orders.filter((order) => order.id !== id));
     } catch (error) {
       console.error("Error deleting order:", error);
