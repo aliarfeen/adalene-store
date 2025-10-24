@@ -6,6 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User } from "../../Types/User";
+import apiFactory from "../../Api/apiFactory";
 
 const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
@@ -40,8 +41,9 @@ useEffect(() => {
   // جلب المستخدمين
   const fetchUsers = async () => {
     try {
-      const res = await axios.get<User[]>(API_URL);
-      setUsers(res.data.filter((u) => u.role === "customer"));
+      // const res = await axios.get<User[]>(API_URL);
+      const res = await apiFactory.fetchUsers();
+      setUsers(res.filter((u) => u.role === "customer"));
     } catch {
       toast.error("⚠️ Failed to load users!");
     }
@@ -71,7 +73,7 @@ useEffect(() => {
         return;
       }
 
-      await axios.put(`${API_URL}/${user.id}`, { ...user, password: newPassword });
+      await apiFactory.updateUser({ ...user, password: newPassword });
 
       toast.success("✅ Password reset successfully!");
       

@@ -1,9 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, X, Menu } from "lucide-react";
 import type { Product, User as UserType } from "../../Types";
-
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
 import { useSelector } from "react-redux";
@@ -11,19 +9,19 @@ import type { RootState } from "../../App/store";
 
 export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // for hamburger
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<UserType | null>(null);
+  const [shakeCart, setShakeCart] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
   const totalQuantity = useSelector((s: RootState) => s.product.totalQuantity);
-  const [shakeCart, setShakeCart] = useState(false);
 
   useEffect(() => {
     setIsCartOpen(false);
-    setIsMenuOpen(false); // close when navigating
+    setIsMenuOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -51,12 +49,9 @@ export const Navbar = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (search.trim()) {
-      navigate(`/products?search=${encodeURIComponent(search.trim())}`);
-    } else {
-      navigate(`/products`);
-    }
-    setIsMenuOpen(false); // close menu after searching (mobile)
+    if (search.trim()) navigate(`/products?search=${encodeURIComponent(search.trim())}`);
+    else navigate(`/products`);
+    setIsMenuOpen(false);
   };
 
   const handleLogout = () => {
@@ -111,12 +106,14 @@ export const Navbar = () => {
                     {user.username.charAt(0).toUpperCase()}
                   </div>
                 </Link>
-                <span className="text-gray-700 font-medium">{user.username}</span>
+                <span className="text-gray-700 font-medium hidden sm:inline">
+                  {user.username}
+                </span>
 
-                {/* Logout Button */}
+                {/* Logout (desktop only) */}
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-red-600 hover:underline"
+                  className="hidden md:inline text-sm text-red-600 hover:underline"
                 >
                   Logout
                 </button>
@@ -167,7 +164,7 @@ export const Navbar = () => {
         {/* Mobile menu dropdown */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t shadow-lg">
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-4">
               {/* Search (mobile) */}
               <form onSubmit={handleSearch} className="relative">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -202,6 +199,16 @@ export const Navbar = () => {
                 <Link to="/craft"><li className="hover:text-orange-800">Our Craft</li></Link>
                 <Link to="/contact"><li className="hover:text-orange-800">Contact</li></Link>
               </ul>
+
+              {/* Logout only (mobile) */}
+              {user && (
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left text-red-600 hover:underline border-t pt-3"
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </div>
         )}

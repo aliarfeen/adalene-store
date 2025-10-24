@@ -33,7 +33,7 @@ const RevenueChart: React.FC = () => {
       {
         label: "Revenue",
         data,
-        backgroundColor: "#A1887F",
+        backgroundColor: "#6C3F31",
         borderRadius: 6,
       },
     ],

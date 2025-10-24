@@ -5,12 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import emailjs from "emailjs-com";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+// import axios from "axios";
+import apiFactory from "../../Api/apiFactory";
 
 const SERVICE_ID = "service_16sfnoq"; // Service ID
 const TEMPLATE_ID = "template_dt6slte"; // Template ID
 const PUBLIC_KEY = "gdQC34yoBHtXwNZjK"; // Public key من EmailJS
-const USERS_API = "https://68e4f1f88e116898997db023.mockapi.io/data";
+// const USERS_API = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -29,8 +30,7 @@ const ForgotPassword: React.FC = () => {
 
     try {
       // ✅ جلب كل البيانات من الـ API
-      const res = await axios.get(USERS_API);
-      const data = res.data;
+      const data = await apiFactory.fetchUsers();
 
       // ✅ فلترة المستخدمين فقط (resource === "user")
       const users = data.filter((item: any) => item.role === "customer");

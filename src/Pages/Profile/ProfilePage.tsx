@@ -3,10 +3,11 @@ import type { User } from "../../Types/User";
 import { Button } from "../../Components/Common/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+// import axios from "axios";
+import apiFactory from "../../Api/apiFactory";
 
 const STORAGE_KEY = "loggedUser";
-const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
+// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const AccountDetails: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -49,7 +50,12 @@ const AccountDetails: React.FC = () => {
       const updatedUser = { ...user, username: form.username, email: form.email };
 
       // تحديث الـ API
-      await axios.put(`${API_URL}/${user.id}`, updatedUser);
+      await apiFactory.updateResource<User>({
+  ...user,
+  username: form.username,
+  email: form.email,
+  resource: "user",
+});
 
       // تحديث اللوكال ستورج
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));

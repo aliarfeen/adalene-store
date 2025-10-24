@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { Button } from "../../Components/Common/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 import type { Order } from "../../Types/Order";
 import type { User } from "../../Types/User";
 import Pagination from "../../Components/Products/Pagination";
+import apiFactory from "../../Api/apiFactory";
 
-const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
+// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const MyOrders: React.FC = () => {
 
@@ -30,10 +31,11 @@ const MyOrders: React.FC = () => {
 
       try {
         const user: User = JSON.parse(stored);
-        const response = await axios.get<Order[]>(API_URL);
+        // const response = await axios.get<Order[]>(API_URL);
+        const response = await apiFactory.fetchOrders();;
 
         // ✅ فلترة الطلبات الخاصة بالمستخدم الحالي
-        const userOrders = response.data.filter(
+        const userOrders = response.filter(
           (item: any) =>
             (item.resource?.toLowerCase?.() === "order") &&
             Number(item.userId) === Number(user.id)
