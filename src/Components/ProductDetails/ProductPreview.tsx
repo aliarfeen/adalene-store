@@ -4,6 +4,7 @@ import { Button } from "../Common/Button";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../Features/products/productSlice";
 import { toast, ToastContainer } from "react-toastify";
+import apiFactory from "../../Api/apiFactory";
 
 // --- Placeholder image ---
 const PLACEHOLDER_IMAGE_URL = "https://i.imgur.com/g8D0kK5.png";
@@ -17,40 +18,66 @@ const ProductPreview: React.FC<Product> = ({
   resource,
   category,
   bestSeller,
-  quantity = 10, 
+  quantity = 10,
   rating,
   comments,
-  
 }) => {
   const dispatch = useDispatch();
-  const cart = localStorage.getItem("cart")
+  const cart = localStorage.getItem("cart");
   const parsedCart = cart ? JSON.parse(cart) : [];
   let initialOrderQuantity = 1;
+  const [addedToFavorites, setAddedToFavorites] = useState(false);
+  const currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+  console.log(currentUser);
+
+  const handleFavorite = (product: Product) => {
+    if (currentUser.role !== "customer") {
+      toast.error("Successfully toasted!");
+      return;
+    } else {
+      setAddedToFavorites(!addedToFavorites);
+      if (!addedToFavorites) {
+        const favorites = currentUser.favourites || [];
+        favorites.push(product);
+        apiFactory.updateUser({
+          ...currentUser,
+          favourites: favorites,
+        })
+        localStorage.setItem("loggedUser", JSON.stringify({...currentUser, favourites: favorites}));
+      }
+      if (addedToFavorites) {
+        const favorites = currentUser.favourites || [];
+        apiFactory.updateUser({
+          ...currentUser,
+          favourites: favorites.filter((p: Product) => p.id !== product.id),
+        });
+        localStorage.setItem("loggedUser", JSON.stringify({...currentUser, favourites:  favorites.filter((p: Product) => p.id !== product.id)}));
+         
+      }
+    }
+  };
 
   // Find if the product is already in the cart and set its orderQuantity
   const existingCartItem = parsedCart.find((e: Product) => e.id === id);
   if (existingCartItem) {
     initialOrderQuantity = 1;
   }
-  
+
   const [clientorderQuantity, setorderQantity] = useState(initialOrderQuantity);
   const [blur, setBlur] = useState(true);
 
-
-  const quantityDiffernce = quantity -clientorderQuantity;
-
+  const quantityDiffernce = quantity - clientorderQuantity;
 
   useEffect(() => {
-    const timer = setTimeout(() =>  setBlur(false), 750);
+    const timer = setTimeout(() => setBlur(false), 750);
     return () => clearTimeout(timer);
   }, []);
 
   const addToCartAndNotify = () => {
-    if (quantityDiffernce <= -1 ) {
+    if (quantityDiffernce <= -1) {
       toast.error(`${title} is out of stock!`);
       return;
     }
-
 
     dispatch(
       addToCart({
@@ -68,21 +95,21 @@ const ProductPreview: React.FC<Product> = ({
         orderQuantity: clientorderQuantity,
       })
     );
-    
+
     toast.success(`(${title}) was added to cart!`);
   };
 
- 
   const handleQuantityChange = (delta: number) => {
     setorderQantity((prev: number) => {
       // Calculate the next value based on user action
       const newQuantity = prev + delta;
 
       // Don't allow increasing beyond available stock
-      if (newQuantity > quantity ){
-          toast.error(`${title} is out of stock!`);
+      if (newQuantity > quantity) {
+        toast.error(`${title} is out of stock!`);
 
-        return prev};
+        return prev;
+      }
 
       // Don't allow decreasing below 1
       if (delta < 0 && newQuantity < 1) return prev;
@@ -139,7 +166,10 @@ const ProductPreview: React.FC<Product> = ({
           </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
-          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce>=0 ? quantityDiffernce : 0} items left !</p>
+          <p className="text-base mb-2 text-yellow-500">
+            {" "}
+            Only {quantityDiffernce >= 0 ? quantityDiffernce : 0} items left !
+          </p>
 
           <hr className="my-6 border-t border-gray-200" />
 
@@ -174,12 +204,32 @@ const ProductPreview: React.FC<Product> = ({
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
                 ${
-                  quantityDiffernce  <= -1
+                  quantityDiffernce <= -1
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
-              text={quantityDiffernce  <= -1 ? "Unavailable" : "Add to Cart"}
+              text={quantityDiffernce <= -1 ? "Unavailable" : "Add to Cart"}
+            />
+            <Button
+              className={`py-3 px-6  text-base font-semibold rounded shadow-md transition-colors duration-200 `}
+              onClick={()=> handleFavorite({
+                id,
+                image,
+                title,
+                price,
+                quantity,
+                resource,
+                description,
+                category,
+                bestSeller,
+                rating,
+                comments,
+                orderQuantity: clientorderQuantity,
+              })}
+              text={
+                !addedToFavorites ? "Add to Favorite" : "Remove from Favorite"
+              }
             />
           </div>
         </div>

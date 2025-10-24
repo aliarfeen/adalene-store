@@ -18,8 +18,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       initialOrderQuantity = existingCartItem.orderQuantity;
     }
     
-    const [orderQuantity] = useState(initialOrderQuantity);
-  const quantityDiffernce = product.quantity - orderQuantity;
+  const quantityDiffernce = product.quantity ;
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
@@ -56,9 +55,9 @@ const ProductCard = ({ product }: { product: Product }) => {
       )}
 
       {/* --- Product Image with blur --- */}
-      <div className="overflow-hidden rounded-lg">
+      <div className="overflow-hidden rounded-lg h-96">
         <img
-          className={`rounded-lg brightness-105 w-full hover:scale-[1.1] object-cover transition-all duration-500 ${
+          className={`h-80 rounded-lg brightness-105 w-full scale-90 hover:scale-[1] object-cover transition-all duration-500 ${
             loading ? 'blur-md scale-105' : 'blur-0 scale-100'
           }`}
           src={product.image}
