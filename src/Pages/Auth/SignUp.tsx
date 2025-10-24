@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
+import apiFactory from "../../Api/apiFactory";
 
 // ✅ Validation Schema
 const schema = z
@@ -40,7 +41,7 @@ const schema = z
   });
 
 type FormData = z.infer<typeof schema>;
-const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
+// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const SignUp: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -66,8 +67,9 @@ const SignUp: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get<User[]>(API_URL);
-        const allUsers = response.data.filter((item) => item.role === "customer");
+        // const response = await axios.get<User[]>(API_URL);
+        const response = await apiFactory.fetchUsers();
+        const allUsers = response.filter((item) => item.role === "customer");
         setUsers(allUsers);
         console.log(allUsers);
       } catch {
@@ -127,7 +129,7 @@ const SignUp: React.FC = () => {
         role:"customer"
       };
 
-      await axios.post(API_URL, newUser);
+      await apiFactory.sendUser(newUser);
       setUsers((prev) => [...prev, newUser]);
       reset();
       toast.success("🎉 Account created successfully!");

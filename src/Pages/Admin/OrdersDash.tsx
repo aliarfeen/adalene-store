@@ -4,6 +4,8 @@ import Table from "../../Components/Table/Table";
 import type { Order } from "../../Types/Order";
 import { useNavigate , useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import Pagination from "../../Components/Products/Pagination";
+import apiFactory from "../../Api/apiFactory";
 
 const OrdersTable: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -12,31 +14,30 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-    useEffect(() => {
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+
+      useEffect(() => {
     const params = new URLSearchParams(location.search);
     const page = parseInt(params.get("page") || "1", 10);
     setCurrentPage(page);
   }, [location.search]);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-
-  const nextPage = () => currentPage < totalPages && setCurrentPage((p) => p + 1);
-  const prevPage = () => currentPage > 1 && setCurrentPage((p) => p - 1);
 
   // ✅ Fetch Orders
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
-        const data = await res.json();
+        //const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
+        const res = apiFactory.fetchOrders();
+        const data = await res;
 
         const normalizedData = Array.isArray(data) ? data : [data];
         const onlyOrders = normalizedData.filter((item) => item?.resource === "Order");
@@ -230,25 +231,12 @@ const columns = [
 
       {/* Pagination */}
       {filteredOrders.length > itemsPerPage && (
-        <div className="flex justify-center items-center gap-4 mt-4">
-          <button
-            onClick={prevPage}
-            disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={nextPage}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          totalitems={filteredOrders.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </div>
   );

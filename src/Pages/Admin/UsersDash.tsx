@@ -5,6 +5,8 @@ import type { User } from "../../Types/User";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import apiFactory from "../../Api/apiFactory";
+import { Pencil, Trash2 } from "lucide-react";
+import Pagination from "../../Components/Products/Pagination";
 
 const userSchema = z.object({
   username: z
@@ -83,14 +85,7 @@ const UsersTable: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
+ 
   // End pagination section
 
   //Ali--------------------------------------------------------------------
@@ -199,8 +194,9 @@ useEffect(() => {
     }
 
     try {
-      const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
-      const data: User[] = await res.json();
+      //const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
+      const res = apiFactory.fetchUsers();
+      const data: User[] = await res;
 
 let visibleUsers: User[] = [];
 
@@ -277,15 +273,15 @@ const columns = [
       <div className="flex gap-2">
         <button
           onClick={() => handleEdit(user)}
-          className="text-blue-600 hover:underline"
+          className="text-red-600 hover:underline"
         >
-          Edit
+          <Pencil size={18} />
         </button>
         <button
           onClick={handleDelete.bind(null, user)}
           className="text-red-600 hover:underline"
         >
-          Delete
+          <Trash2 size={18} />
         </button>
       </div>
     ),
@@ -357,7 +353,7 @@ const fields = [
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold text-brown-600 mb-4">Users Management</h2>
-      {/* 🔍 Filter & Add */}
+      {/*  Filter & Add */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
         {/* Filter Input */}
         <input
@@ -377,38 +373,18 @@ const fields = [
         </button>
       </div>
 
-      {/* 📋 Table */}
-      
-      {/* {filteredUsers.length > 0 ? ( */}
+      {/*  Table */}
         <Table<User> data={currentUsers} columns={columns} />
-      {/* ) : (
-        <p className="text-center text-gray-500 italic">
-          No matching customers found.
-        </p>
-      )} */}
 
 
        {/* Pagination Controls */}
       {filteredUsers.length > itemsPerPage && (
-        <div className="flex justify-center items-center gap-4 mt-4">
-          <button
-            onClick={prevPage}
-            disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={nextPage}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          totalitems={filteredUsers.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
       {/* End Pagination */}
 

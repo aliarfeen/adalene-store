@@ -6,21 +6,6 @@ const AuthLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-[#5c3317] to-[#e0c2a2]">
       {/* Left Section */}
-      {/* <div
-        className="hidden md:flex w-full md:w-1/2 text-white flex-col justify-center px-6 md:px-16 py-10 md:py-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-        }}
-      >
-
-        <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#4a2b0b]">
-          Welcome to Our Community
-        </h1>
-        <p className="text-base md:text-lg text-gray-900">
-          Join thousands of users who trust us with their journey.
-        </p>
-      </div> */}
-
       <div
   className="hidden md:flex w-full md:w-1/2 text-white flex-col justify-center px-6 md:px-16 py-10 md:py-0 bg-cover bg-center bg-no-repeat relative"
   style={{

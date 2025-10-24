@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
 import { type RegisterOptions } from "react-hook-form";
 import apiFactory from "../../Api/apiFactory";
+import Pagination from "../../Components/Products/Pagination";
 
 // ✅ Product schema
 export const productSchema = z.object({
@@ -308,28 +309,15 @@ const Products: React.FC = () => {
 
       <Table<Product> data={currentItems} columns={columns} />
 
-            {/* ✅ Pagination Controls */}
-      <div className="flex justify-center items-center gap-3 mt-6">
-        <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          disabled={currentPage === 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          Prev
-        </button>
-
-        <span className="font-medium">
-          Page {currentPage} of {totalPages}
-        </span>
-
-        <button
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-          disabled={currentPage === totalPages}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          Next
-        </button>
-      </div>
+            {/*  Pagination Controls */}
+      {filteredProducts.length > itemsPerPage && (
+        <Pagination
+          totalitems={filteredProducts.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
 
       <ReusableModal<ProductFormData>
         isOpen={isModalOpen}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Home, LogOut, User, Package } from "lucide-react";
+import { Home, LogOut, User, Package, Heart  } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User as UserType } from "../../Types/User";
@@ -44,6 +44,7 @@ const UserProfileLayout: React.FC = () => {
   const links = [
     { to: "account", label: "Account Details", icon: <User /> },
     { to: "myorder", label: "My Orders", icon: <Package /> },
+    { to: "wishlist", label: "My Wishlist", icon: <Heart /> },
     { to: "/", label: "Back Home", icon: <Home /> },
     { to: "/login", label: "Log out", icon: <LogOut />, onClick: handleLogout },
   ];
