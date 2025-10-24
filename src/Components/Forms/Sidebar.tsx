@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // icons for open/close toggle
+import { Menu, X } from "lucide-react";
 
 interface SidebarLink {
   to: string;
@@ -23,8 +23,8 @@ const Sidebar: React.FC<SidebarProps> = ({ user, links }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      {/* Toggle Button (Visible only on small & medium screens) */}
+    <div className="flex">
+      {/* Toggle Button (visible on small screens) */}
       <button
         className="lg:hidden fixed top-4 left-4 z-50 bg-[#5c3317] text-white p-2 rounded-md shadow-md"
         onClick={() => setIsOpen(!isOpen)}
@@ -34,9 +34,9 @@ const Sidebar: React.FC<SidebarProps> = ({ user, links }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full bg-gradient-to-b from-[#a25a2a] to-[#5c3317] text-white shadow-lg transform transition-transform duration-300 ease-in-out 
+        className={`bg-gradient-to-b from-[#a25a2a] to-[#5c3317] text-white shadow-lg transition-all duration-300 ease-in-out 
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-        lg:translate-x-0 lg:w-80 w-64 p-6 z-40`}
+        fixed lg:static lg:translate-x-0 h-full lg:h-auto w-64 lg:w-80 p-6 z-40`}
       >
         {/* User Info */}
         <div className="flex flex-col items-center gap-4 mt-10 lg:mt-0">
@@ -45,12 +45,8 @@ const Sidebar: React.FC<SidebarProps> = ({ user, links }) => {
           </div>
 
           <div className="text-center">
-            <div className="font-semibold text-lg">
-              {user?.username || "User Name"}
-            </div>
-            <div className="text-xs opacity-80">
-              {user?.email || "user.email@example.com"}
-            </div>
+            <div className="font-semibold text-lg">{user?.username || "User Name"}</div>
+            <div className="text-xs opacity-80">{user?.email || "user.email@example.com"}</div>
           </div>
         </div>
 
@@ -77,14 +73,14 @@ const Sidebar: React.FC<SidebarProps> = ({ user, links }) => {
         </nav>
       </aside>
 
-      {/* Background overlay for mobile view */}
+      {/* Overlay (only visible when sidebar is open on small screens) */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}
-    </>
+    </div>
   );
 };
 
