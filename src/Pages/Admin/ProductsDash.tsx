@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import useProducts from "../../hooks/useProducts";
 import Table from "../../Components/Table/Table";
@@ -63,7 +63,7 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 
     const minCheck = checks.find((check) => ["min", "positive", "nonnegative"].includes(check.kind));
     if (minCheck) {
-      const minValue = minCheck.kind === "positive" ? .0001 : minCheck.kind === "nonnegative" ? 0 : minCheck.value;
+      const minValue = minCheck.kind === "positive" ? 0.0001 : minCheck.kind === "nonnegative" ? 0 : minCheck.value;
       validation.min = { value: minValue, message: minCheck.message };
     }
 
@@ -82,24 +82,19 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 // Main Component
 // ========================
 const Products: React.FC = () => {
-  const { products, isLoading, isError } = useProducts();
+  const { products = [], isLoading, isError } = useProducts();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [localProducts, setLocalProducts] = useState<Product[]>([]);
 
   // ========================
   // Pagination States
   // ========================
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-
-  useEffect(() => {
-    if (products) setLocalProducts(products);
-  }, [products]);
 
   // ========================
   // Validation Mappings
@@ -115,7 +110,7 @@ const Products: React.FC = () => {
   // Filtered Products
   // ========================
   const filteredProducts = useMemo(() => {
-    return localProducts.filter((product) => {
+    return products.filter((product) => {
       const matchesSearch =
         product.title.toLowerCase().includes(search.toLowerCase()) ||
         product.id.toString().includes(search);
@@ -123,7 +118,7 @@ const Products: React.FC = () => {
       const matchesPrice = maxPrice !== "" ? product.price <= Number(maxPrice) : true;
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [localProducts, search, category, maxPrice]);
+  }, [products, search, category, maxPrice]);
 
   // ========================
   // Paginated Items
@@ -164,7 +159,7 @@ const Products: React.FC = () => {
   // ========================
   // Unique Categories
   // ========================
-  const categories = Array.from(new Set(localProducts.map((p) => p.category)));
+  const categories = Array.from(new Set(products.map((p) => p.category)));
 
   // ========================
   // Handlers
