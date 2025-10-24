@@ -7,7 +7,8 @@ import Pagination from "../../Components/Products/Pagination";
 interface ProductPerformance extends Product {
   productRevenue: number;
   avgPrice: number;
-  avgQuantity: number;
+  tax:number;
+ 
 }
 
 const Report: React.FC = () => {
@@ -22,8 +23,10 @@ const Report: React.FC = () => {
       const cost = product.cost ?? 0;
       const productRevenue = (product.price - cost - 0.08) * product.quantity;
       const avgPrice = product.quantity > 0 ? productRevenue / product.quantity : 0;
-      const avgQuantity = product.quantity;
-      return { ...product, productRevenue, avgPrice, avgQuantity };
+      const price=product.price;
+      const tax=.08;
+
+      return { ...product, productRevenue, avgPrice ,price,tax};
     });
   }, [products]);
 
@@ -39,21 +42,19 @@ const Report: React.FC = () => {
   const columns = [
     { key: "title", header: "Product" },
     { key: "quantity", header: "Quantity" },
-    {
-      key: "productRevenue",
-      header: "Product Revenue",
-      render: (item: ProductPerformance) => `$${item.productRevenue.toFixed(2)}`,
-    },
+    {key:"price",header:"Price"},
     {
       key: "avgPrice",
       header: "Average Price",
       render: (item: ProductPerformance) => `$${item.avgPrice.toFixed(2)}`,
     },
+    {key:"tax",header:"Tax"},
     {
-      key: "avgQuantity",
-      header: "Average Quantity",
-      render: (item: ProductPerformance) => item.avgQuantity.toFixed(2),
+      key: "productRevenue",
+      header: "Product Revenue",
+      render: (item: ProductPerformance) => `$${item.productRevenue.toFixed(2)}`,
     },
+  
   ];
 
   return (

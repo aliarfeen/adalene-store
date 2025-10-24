@@ -59,16 +59,23 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "products", element: <ProductListPage 
-    
-        /> },
+      {
+        path: "products", element: <ProductListPage
+
+        />
+      },
       { path: "cart", element: <Cart /> },
-      { path: "checkout", element: <CheckoutPage /> },
+      {
+        element: <ProtectedRoute allowedRole="customer" />,
+        children: [
+          { path: "checkout", element: <CheckoutPage /> },
+        ],
+      },
       { path: "ordersuccess", element: <OrderSuccess /> },
       { path: "orderreview", element: <OrderReview /> },
       { path: "story", element: <OurStory /> },
       { path: "craft", element: <OurCraft /> },
-      {path:"contact",element:<ContactUs/>},
+      { path: "contact", element: <ContactUs /> },
       {
         path: "product/:slug",
         element: <ProductDetailsLayout />,
@@ -78,55 +85,59 @@ const router = createBrowserRouter([
   },
 
 
-{
-  element: <AuthRedirectRoute />, 
-  children: [
-    {
-      element: <AuthLayout />,
-      children: [
-        { path: "login", element: <Login /> },
-        { path: "signup", element: <SignUp /> },
-        { path: "forgetpassword", element: <ForgotPassword /> },
-        { path: "resetpassword", element: <ResetPassword /> },
-      ],
-    },
-  ],
-},
+  {
+    element: <AuthRedirectRoute />,
+    children: [
+      {
+        element: <AuthLayout />,
+        children: [
+          { path: "login", element: <Login /> },
+          { path: "signup", element: <SignUp /> },
+          { path: "forgetpassword", element: <ForgotPassword /> },
+          { path: "resetpassword", element: <ResetPassword /> },
+        ],
+      },
+    ],
+  },
 
 
   {
-  path: "/profile",
-  element: <ProtectedRoute allowedRole="customer" />,  // حماية للـ customers
-  children: [
-    { element: <UserProfileLayout />, children: [
-      { index: true, element: <Navigate to="account" replace /> },
-      { path: "account", element: <AccountDetails /> },
-      { path: "myorder", element: <MyOrders /> },
-      { path: "myorder/:id", element: <OrderDetails /> },
-    ] }
-  ]
-},
+    path: "/profile",
+    element: <ProtectedRoute allowedRole="customer" />,  // حماية للـ customers
+    children: [
+      {
+        element: <UserProfileLayout />, children: [
+          { index: true, element: <Navigate to="account" replace /> },
+          { path: "account", element: <AccountDetails /> },
+          { path: "myorder", element: <MyOrders /> },
+          { path: "myorder/:id", element: <OrderDetails /> },
+        ]
+      }
+    ]
+  },
 
-  
+
   // Admin Dashboard routes
-{
-  path: "/admin",
-  element: <ProtectedRoute allowedRole="admin" />,  
-  children: [
-    { element: <AdminLayout />, children: [
-      { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <DashBoard /> },
-      { path: "userstable", element: <UsersTable /> },
-      { path: "orderstable", element: <OrdersTable /> },
-      { path: "productstable", element: <ProductsTable /> },
-      { path: "contactrequests", element: <ContactRequests /> },
-      { path: "orderstable/:id", element: <AdminOrderDetails/>},
-    { path: "report", element: <Report /> }
+  {
+    path: "/admin",
+    element: <ProtectedRoute allowedRole="admin" />,
+    children: [
+      {
+        element: <AdminLayout />, children: [
+          { index: true, element: <Navigate to="dashboard" replace /> },
+          { path: "dashboard", element: <DashBoard /> },
+          { path: "userstable", element: <UsersTable /> },
+          { path: "orderstable", element: <OrdersTable /> },
+          { path: "productstable", element: <ProductsTable /> },
+          { path: "contactrequests", element: <ContactRequests /> },
+          { path: "orderstable/:id", element: <AdminOrderDetails /> },
+          { path: "report", element: <Report /> }
 
 
-    ]}
-  ]
-},
+        ]
+      }
+    ]
+  },
 
   // Global catch-all for 404
   { path: "*", element: <NotFound /> },
