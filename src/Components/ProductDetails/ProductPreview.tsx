@@ -140,7 +140,7 @@ const ProductPreview: React.FC<Product> = ({
           </p>
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
-          <p className="text-base mb-2 text-yellow-500"> Only {quantityDiffernce} items left !</p>
+          <p className="text-base mb-2 text-yellow-500"> Only {quantity-orderQuantity} items left !</p>
 
           <hr className="my-6 border-t border-gray-200" />
 
