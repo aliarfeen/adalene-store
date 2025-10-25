@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../Types";
 import apiFactory from "../../Api/apiFactory";
+import { toast } from "react-toastify";
 
 const AddReviewForm: React.FC<{ product: Product }> = ({ product }) => {
   // Local state to manage the user's input
@@ -34,8 +35,10 @@ const AddReviewForm: React.FC<{ product: Product }> = ({ product }) => {
           [`${selectedRating}_star`]: product.rating.starDistribution[`${selectedRating}_star`] + 1,},
       },
     };
-    console.log(updatedProduct);
     apiFactory.updateProduct(updatedProduct);
+    toast.success("Review submitted successfully!");
+    setSelectedRating(0);
+    setCommentText("");
   };
   const renderStarSelector = () => {
     return (

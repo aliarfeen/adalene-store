@@ -82,7 +82,9 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 // Main Component
 // ========================
 const Products: React.FC = () => {
-  const { products = [], isLoading, isError } = useProducts();
+  const pathname = window.location.pathname;
+
+  let { products, isLoading, isError } = useProducts();
   const [productsList, setProducts] = useState<Product[]>(products);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -97,8 +99,13 @@ const Products: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);  const itemsPerPage = 8;
 
   useEffect(() => {
-    setProducts(products);
-  }, [products]);
+    const fetchProducts = async () => {
+      const fetchedProducts: Product [] = await apiFactory.fetchAllProducts('products');
+      setProducts(fetchedProducts);
+    };
+
+    fetchProducts();
+  }, [pathname]);
 
   // ========================
   // Validation Mappings
