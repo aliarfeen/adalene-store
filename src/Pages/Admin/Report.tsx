@@ -50,7 +50,7 @@ const Report: React.FC = () => {
       const productRevenue = (product.price - cost - 0.08) * product.quantity;
       const avgPrice = product.quantity > 0 ? productRevenue / product.quantity : 0;
       const price = product.price;
-      const tax = .08;
+      const tax = product.price*.08;
 
       return { ...product, productRevenue, avgPrice, price, tax };
     });
@@ -70,15 +70,19 @@ const Report: React.FC = () => {
     { key: "quantity", header: "Quantity" },
     { key: "price", header: "Price" },
     {
-      key: "avgPrice",
-      header: "Average Price",
-      render: (item: ProductPerformance) => `$${item.avgPrice.toFixed(2)}`,
+      key: "Cost",
+      header: "Cost",
+      render: (item: ProductPerformance) => `${item.avgPrice.toFixed(2)}EGP`,
     },
-    { key: "tax", header: "Tax" },
+  {
+  key: "tax",
+  header: "Tax",
+  render: (item: ProductPerformance) => `${item.tax.toFixed(2)}EGP`,
+},
     {
       key: "productRevenue",
       header: "Product Revenue",
-      render: (item: ProductPerformance) => `$${item.productRevenue.toFixed(2)}`,
+      render: (item: ProductPerformance) => `${item.productRevenue.toFixed(2)}EGP`,
     },
 
   ];
