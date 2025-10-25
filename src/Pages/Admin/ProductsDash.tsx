@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import useProducts from "../../hooks/useProducts";
 import Table from "../../Components/Table/Table";
 import ReusableModal from "../../Components/Forms/ReusableModal";
 import type { Product } from "../../Types/";
 import { toast } from "react-toastify";
-import { z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
+import { set, z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
 import { type RegisterOptions } from "react-hook-form";
 import apiFactory from "../../Api/apiFactory";
 import Pagination from "../../Components/Products/Pagination";
@@ -83,6 +83,7 @@ export const mapZodToRHF = (schema: ZodTypeAny): RegisterOptions => {
 // ========================
 const Products: React.FC = () => {
   const { products = [], isLoading, isError } = useProducts();
+  const [productsList, setProducts] = useState<Product[]>(products);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
@@ -93,8 +94,11 @@ const Products: React.FC = () => {
   // ========================
   // Pagination States
   // ========================
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [currentPage, setCurrentPage] = useState(1);  const itemsPerPage = 8;
+
+  useEffect(() => {
+    setProducts(products);
+  }, [products]);
 
   // ========================
   // Validation Mappings
@@ -110,7 +114,7 @@ const Products: React.FC = () => {
   // Filtered Products
   // ========================
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    return productsList.filter((product) => {
       const matchesSearch =
         product.title.toLowerCase().includes(search.toLowerCase()) ||
         product.id.toString().includes(search);
@@ -118,7 +122,7 @@ const Products: React.FC = () => {
       const matchesPrice = maxPrice !== "" ? product.price <= Number(maxPrice) : true;
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [products, search, category, maxPrice]);
+  }, [productsList, search, category, maxPrice]);
 
   // ========================
   // Paginated Items
@@ -206,6 +210,8 @@ const Products: React.FC = () => {
       };
       apiFactory.sendProduct(newProduct);
       toast.success(`${validatedData.title} added successfully!`);
+              setProducts((prev) => [...prev, newProduct as Product]);
+      
     } else if (selectedProduct) {
       const updatedProduct = {
         ...validatedData,
@@ -217,6 +223,7 @@ const Products: React.FC = () => {
         comments: selectedProduct.comments,
       };
       apiFactory.updateProduct(updatedProduct);
+      setProducts((prev) => prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)));
       toast.success(`${validatedData.title} updated successfully!`);
     }
 
