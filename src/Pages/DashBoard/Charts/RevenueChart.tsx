@@ -12,18 +12,25 @@ const RevenueChart: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const orders = await apiFactory.fetchResource("Order");
+        const orders = await apiFactory.fetchOrders();
         const grouped = orders.reduce((acc: any, order: any) => {
-          const month = new Date(order.date).toLocaleString("default", { month: "short" });
-          acc[month] = (acc[month] || 0) + order.total;
+        const month = new Date(order.date).toLocaleString("default", { month: "short" });
+        const orderRevenue = order.items?.reduce((sum: number, item: any) => {
+        const qty = item.orderQuantity || 0;
+        const price = item.price || 0;
+        return sum + qty * price;
+          }, 0) || 0;
+          acc[month] = (acc[month] || 0) + orderRevenue;
           return acc;
         }, {});
+
         setLabels(Object.keys(grouped));
         setData(Object.values(grouped));
       } catch (err) {
         console.error(err);
       }
     };
+
     fetchData();
   }, []);
 
