@@ -142,7 +142,7 @@ const Products: React.FC = () => {
     },
     { key: "title", header: "Title" },
     { key: "category", header: "Category" },
-    { key: "price", header: "Price", render: (item: Product) => `${item.price}$` },
+    { key: "price", header: "Price", render: (item: Product) => `${item.price}EGP` },
     { key: "quantity", header: "Stock" },
     {
       key: "actions",
