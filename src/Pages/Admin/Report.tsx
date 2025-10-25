@@ -47,7 +47,7 @@ const Report: React.FC = () => {
   const tableData: ProductPerformance[] = useMemo(() => {
     return products.map((product) => {
       const cost = product.cost ?? 0;
-      const productRevenue = (product.price - cost - 0.08) * product.quantity;
+      const productRevenue = (product.price - cost - 0.08*product.price) * product.quantity;
       const avgPrice = product.quantity > 0 ? productRevenue / product.quantity : 0;
       const price = product.price;
       const tax = product.price*.08;
@@ -72,7 +72,8 @@ const Report: React.FC = () => {
     {
       key: "Cost",
       header: "Cost",
-      render: (item: ProductPerformance) => `${item.avgPrice.toFixed(2)}EGP`,
+      render: (item: ProductPerformance) => item.cost ?`${item.cost.toFixed(2)}EGP` : "N/A",
+    
     },
   {
   key: "tax",
