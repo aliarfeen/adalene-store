@@ -28,52 +28,89 @@ const ProductPreview: React.FC<Product> = ({
   const pathname = window.location.pathname;
   let currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
   useEffect(
-    ()=>{ 
+    () => {
       currentUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
 
-    },[pathname]
+    }, [pathname]
   )
-  
+
   const favorites = currentUser.favourites || [];
- 
+
   let initialOrderQuantity = 1;
   const [addedToFavorites, setAddedToFavorites] = useState(favorites.some((p: Product) => p.id === id));
   console.log(currentUser);
-
   const handleFavorite = (product: Product) => {
     if (currentUser.role !== "customer") {
-      toast.error("Successfully toasted!");
+      toast.error("Only customers can add to favorites!");
       return;
-    } else {
-      setAddedToFavorites(!addedToFavorites);
-      if (!addedToFavorites) {
-        const favorites = currentUser.favourites || [];
-        favorites.push(product);
-        apiFactory.updateUser({
-          ...currentUser,
-          favourites: favorites,
-        });
-        localStorage.setItem(
-          "loggedUser",
-          JSON.stringify({ ...currentUser, favourites: favorites })
-        );
-      }
-      if (addedToFavorites) {
-        const favorites = currentUser.favourites || [];
-        apiFactory.updateUser({
-          ...currentUser,
-          favourites: favorites.filter((p: Product) => p.id !== product.id),
-        });
-        localStorage.setItem(
-          "loggedUser",
-          JSON.stringify({
-            ...currentUser,
-            favourites: favorites.filter((p: Product) => p.id !== product.id),
-          })
-        );
-      }
     }
+
+    setAddedToFavorites(!addedToFavorites);
+
+    const favorites = currentUser.favourites || [];
+
+    if (!addedToFavorites) {
+      //  إضافة المنتج
+      const updatedFavs = [...favorites, product];
+      apiFactory.updateUser({
+        ...currentUser,
+        favourites: updatedFavs,
+      });
+      localStorage.setItem(
+        "loggedUser",
+        JSON.stringify({ ...currentUser, favourites: updatedFavs })
+      );
+    } else {
+      //  حذف المنتج
+      const updatedFavs = favorites.filter((p: Product) => p.id !== product.id);
+      apiFactory.updateUser({
+        ...currentUser,
+        favourites: updatedFavs,
+      });
+      localStorage.setItem(
+        "loggedUser",
+        JSON.stringify({ ...currentUser, favourites: updatedFavs })
+      );
+    }
+
+    //  التحديث الفوري للـ Navbar بدون reload
+    window.dispatchEvent(new Event("storage"));
   };
+
+  // const handleFavorite = (product: Product) => {
+  //   if (currentUser.role !== "customer") {
+  //     toast.error("Successfully toasted!");
+  //     return;
+  //   } else {
+  //     setAddedToFavorites(!addedToFavorites);
+  //     if (!addedToFavorites) {
+  //       const favorites = currentUser.favourites || [];
+  //       favorites.push(product);
+  //       apiFactory.updateUser({
+  //         ...currentUser,
+  //         favourites: favorites,
+  //       });
+  //       localStorage.setItem(
+  //         "loggedUser",
+  //         JSON.stringify({ ...currentUser, favourites: favorites })
+  //       );
+  //     }
+  //     if (addedToFavorites) {
+  //       const favorites = currentUser.favourites || [];
+  //       apiFactory.updateUser({
+  //         ...currentUser,
+  //         favourites: favorites.filter((p: Product) => p.id !== product.id),
+  //       });
+  //       localStorage.setItem(
+  //         "loggedUser",
+  //         JSON.stringify({
+  //           ...currentUser,
+  //           favourites: favorites.filter((p: Product) => p.id !== product.id),
+  //         })
+  //       );
+  //     }
+  //   }
+  // };
 
   // Find if the product is already in the cart and set its orderQuantity
   const existingCartItem = parsedCart.find((e: Product) => e.id === id);
@@ -143,8 +180,8 @@ const ProductPreview: React.FC<Product> = ({
     quantityDiffernce <= 0
       ? { text: "Out of Stock", color: "bg-red-600" }
       : quantityDiffernce <= 5
-      ? { text: "Low Stock", color: "bg-yellow-500" }
-      : null;
+        ? { text: "Low Stock", color: "bg-yellow-500" }
+        : null;
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 lg:p-12">
@@ -169,9 +206,8 @@ const ProductPreview: React.FC<Product> = ({
           <img
             src={image}
             alt={title}
-            className={`w-96 h-96 object-cover max-w-lg shadow-lg transition-all duration-500 ${
-              blur ? "blur-md scale-105" : "blur-0 scale-100"
-            }`}
+            className={`w-96 h-96 object-cover max-w-lg shadow-lg transition-all duration-500 ${blur ? "blur-md scale-105" : "blur-0 scale-100"
+              }`}
           />
         </div>
 
@@ -221,10 +257,9 @@ const ProductPreview: React.FC<Product> = ({
           <div className="flex flex-col space-y-3">
             <Button
               className={`py-3 px-6 text-white text-base font-semibold rounded shadow-md transition-colors duration-200 
-                ${
-                  quantityDiffernce <= -1
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-orange-800 hover:bg-gray-800"
+                ${quantityDiffernce <= -1
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-800 hover:bg-gray-800"
                 }`}
               onClick={addToCartAndNotify}
               text={quantityDiffernce <= -1 ? "Unavailable" : "Add to Cart"}

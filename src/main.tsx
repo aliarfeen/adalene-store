@@ -47,6 +47,7 @@ import ContactRequests from "./Pages/Admin/ContactRequests.tsx";
 import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails.tsx";
 import AuthRedirectRoute from "./Routes/AuthRedirectRoute.tsx";
 import Report from "./Pages/Admin/Report.tsx";
+import Wishlist from "./Pages/Profile/Wishlist.tsx";
 
 
 // Create Query Client
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
         />
       },
       { path: "cart", element: <Cart /> },
+      { path: "fav", element: <Wishlist /> },
       {
         element: <ProtectedRoute allowedRole="customer" />,
         children: [

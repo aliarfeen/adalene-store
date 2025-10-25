@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, X, Menu } from "lucide-react";
+import { ShoppingCart, User, X, Menu, Heart } from "lucide-react";
 import type { Product, User as UserType } from "../../Types";
 import AdalenaLogo from "../Logo/Logo";
 import { Button } from "../Common/Button";
@@ -11,6 +11,7 @@ export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [favoritesCount, setFavoritesCount] = useState(0); // ❤️ Favorites count
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<UserType | null>(null);
   const [shakeCart, setShakeCart] = useState(false);
@@ -19,11 +20,13 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const totalQuantity = useSelector((s: RootState) => s.product.totalQuantity);
 
+  // Close cart and menu on route change
   useEffect(() => {
     setIsCartOpen(false);
     setIsMenuOpen(false);
   }, [location]);
 
+  // Cart shake animation
   useEffect(() => {
     if (totalQuantity > 0) {
       setShakeCart(true);
@@ -32,11 +35,13 @@ export const Navbar = () => {
     }
   }, [totalQuantity]);
 
+  // Load cart items from localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     setCartItems(storedCart ? JSON.parse(storedCart) : []);
   }, [isCartOpen]);
 
+  // Load user info from localStorage
   useEffect(() => {
     const syncUser = () => {
       const storedUser = localStorage.getItem("loggedUser");
@@ -47,6 +52,19 @@ export const Navbar = () => {
     return () => window.removeEventListener("storage", syncUser);
   }, []);
 
+  useEffect(() => {
+    const syncFavorites = () => {
+      const storedUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
+      const fav = storedUser.favourites;
+      setFavoritesCount(Array.isArray(fav) ? fav.length : (fav ? JSON.parse(fav).length : 0));
+    };
+
+    syncFavorites();
+    window.addEventListener("storage", syncFavorites);
+    return () => window.removeEventListener("storage", syncFavorites);
+  }, []);
+
+  // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) navigate(`/products?search=${encodeURIComponent(search.trim())}`);
@@ -54,6 +72,7 @@ export const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");
     setUser(null);
@@ -128,7 +147,20 @@ export const Navbar = () => {
               </Link>
             )}
 
-            {/* Cart */}
+            {/*Favorites */}
+            <Link
+              to="/fav"
+              className="flex items-center hover:text-orange-800 relative"
+            >
+              <Heart className="w-5 h-5" />
+              {favoritesCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-orange-800 text-white text-xs rounded-full px-1.5">
+                  {favoritesCount}
+                </span>
+              )}
+            </Link>
+
+            {/*  Cart */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="flex items-center hover:text-orange-800 relative"
@@ -141,7 +173,7 @@ export const Navbar = () => {
               )}
             </button>
 
-            {/* Hamburger menu (mobile) */}
+            {/* ☰ Hamburger menu (mobile) */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden flex items-center text-gray-700 hover:text-orange-800"
@@ -216,17 +248,15 @@ export const Navbar = () => {
 
       {/* Cart overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
         onClick={() => setIsCartOpen(false)}
       ></div>
 
       {/* Cart Drawer */}
       <div
-        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-          isCartOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${isCartOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold text-orange-800">Your Cart</h2>
@@ -240,10 +270,7 @@ export const Navbar = () => {
             <p className="text-gray-500 text-center">Your cart is empty.</p>
           ) : (
             cartItems.map((item: Product, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between border-b pb-2"
-              >
+              <div key={index} className="flex items-center justify-between border-b pb-2">
                 <span>{item.title}</span>
                 <span className="font-medium">${item.price}</span>
               </div>
