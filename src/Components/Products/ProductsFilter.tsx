@@ -7,7 +7,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, PlusIcon, MinusIcon ,FunnelIcon} from "@heroicons/react/24/outline";
 import useProducts from "../../hooks/useProducts";
 
 
@@ -81,7 +81,7 @@ const minPrice = Math.min(...prices);
   };
 
   return (
-    <div className="bg-white min-h-screen flex">
+    <div className="bg-white lg:min-h-screen flex">
       {/* Mobile filter dialog */}
       <Dialog
         open={mobileFiltersOpen}
@@ -98,7 +98,7 @@ const minPrice = Math.min(...prices);
                 onClick={() => setMobileFiltersOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
               >
-                <XMarkIcon aria-hidden="true" className="size-6" />
+                <XMarkIcon aria-hidden="true" className="size-10" />
               </button>
             </div>
 
@@ -188,7 +188,14 @@ const minPrice = Math.min(...prices);
           </DialogPanel>
         </div>
       </Dialog>
-
+                <button
+        type="button"
+        className="lg:hidden p-2 text-gray-400 hover:text-gray-500"
+        onClick={() => setMobileFiltersOpen(true)}
+      >
+        <span className="sr-only">Open filters</span>
+        <FunnelIcon className="size-5" aria-hidden="true" /> 
+      </button>
       <div className="lg:block">
         {/* Desktop filter sidebar */}
         <aside className="hidden w-64 border-r border-gray-200 p-4 lg:block">

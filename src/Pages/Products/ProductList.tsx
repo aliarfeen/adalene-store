@@ -36,7 +36,7 @@ const ProductListPage = () => {
           All Products
         </h1>
       </div>
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         <ProductsFilter
           activeFilters={activeFilters}
           onFilterChange={setActiveFilters}
