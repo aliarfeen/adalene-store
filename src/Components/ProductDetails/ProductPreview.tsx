@@ -60,6 +60,7 @@ const ProductPreview: React.FC<Product> = ({
         "loggedUser",
         JSON.stringify({ ...currentUser, favourites: updatedFavs })
       );
+      toast.success("Successfully added to favorites!");
     } else {
       //  حذف المنتج
       const updatedFavs = favorites.filter((p: Product) => p.id !== product.id);
@@ -71,6 +72,7 @@ const ProductPreview: React.FC<Product> = ({
         "loggedUser",
         JSON.stringify({ ...currentUser, favourites: updatedFavs })
       );
+      toast.success("Successfully removed from favorites!");
     }
 
     //  التحديث الفوري للـ Navbar بدون reload
