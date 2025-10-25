@@ -10,7 +10,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [loading, setLoading] = useState(true); // controls blur + skeleton
   const cart = localStorage.getItem("cart")
     const parsedCart = cart ? JSON.parse(cart) : [];
-    let initialOrderQuantity = product.orderQuantity;
+    let initialOrderQuantity = 0;
   
     // Find if the product is already in the cart and set its orderQuantity
     const existingCartItem = parsedCart.find((e: Product) => e.id === product.id);
@@ -18,7 +18,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       initialOrderQuantity = existingCartItem.orderQuantity;
     }
     
-  const quantityDiffernce = product.quantity ;
+  const quantityDiffernce = product.quantity-initialOrderQuantity ;
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);

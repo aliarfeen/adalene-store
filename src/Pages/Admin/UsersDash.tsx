@@ -194,7 +194,6 @@ useEffect(() => {
     }
 
     try {
-      //const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
       const res = apiFactory.fetchUsers();
       const data: User[] = await res;
 

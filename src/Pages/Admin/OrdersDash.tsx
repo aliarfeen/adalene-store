@@ -35,7 +35,6 @@ const OrdersTable: React.FC = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        //const res = await fetch("https://68e4f1f88e116898997db023.mockapi.io/data");
         const res = apiFactory.fetchOrders();
         const data = await res;
 
@@ -71,16 +70,10 @@ const OrdersTable: React.FC = () => {
     );
 
     try {
-      const res = await fetch(
-        `https://68e4f1f88e116898997db023.mockapi.io/data/${orderId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to update status");
+      const currentOrder = orders.find((order) => String(order.id) === String(orderId));
+      if (!currentOrder) throw new Error("Order not found");
+      const updatedOrder: Order = { ...currentOrder, status: newStatus as Order["status"] };
+      await apiFactory.updateOrder(updatedOrder)
       toast.success(`Order ${orderId} updated to "${newStatus}"`, { autoClose: 1500 });
     } catch (err) {
       console.error("❌ Error updating order:", err);
