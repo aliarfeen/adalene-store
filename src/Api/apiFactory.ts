@@ -1,5 +1,3 @@
-// src/api/apiFactory.ts
-
 import axiosInstance from './axiosInstance';
 
 import type { User, Product, MockResource, Order, Contact} from '../Types';
@@ -9,7 +7,7 @@ const PRODUCTS_ENDPOINT: string = import.meta.env.VITE_MOCK_API_PRODUCT_ENDPOINT
 
 
 
- //Generic Fetch Function ---
+ //Generic Functions ---
 
 
 async function fetchResource<T extends MockResource>(resourceType: T['resource']): Promise<T[]> {
@@ -30,11 +28,9 @@ async function fetchResource<T extends MockResource>(resourceType: T['resource']
 
 async function fetchAllProducts<T extends MockResource>(resourceType: T['resource']): Promise<T[]> {
   try {
-    // 1. Fetch the entire combined array of mixed resources
     const response = await axiosInstance.get<MockResource[]>(PRODUCTS_ENDPOINT);
     const allData = response.data;
 
-    // 2. Filter the array based on the 'resource' field and assert the type
     const filteredData = allData.filter((item) => item.resource === resourceType) as T[];
 
     return filteredData;
@@ -78,7 +74,6 @@ async function updateResource<T extends MockResource>(
 ): Promise<T> {
   const url = `${ALL_RESOURCES_ENDPOINT}/${resource.id}`;
 
-  // 2. The payload for PUT is the entire resource object (T).
   const response = await axiosInstance.put<T>(url, resource);
 
   return response.data;
@@ -90,7 +85,6 @@ async function deleteResource<T extends MockResource>(
 ): Promise<T> {
   const url = `${ALL_RESOURCES_ENDPOINT}/${resource.id}`;
 
-  // 2. The payload for PUT is the entire resource object (T).
   const response = await axiosInstance.delete<T>(url);
 
   return response.data;
@@ -101,7 +95,6 @@ async function updateProduct<T extends MockResource>(
 ): Promise<T> {
   const url = `/${resource.resource}/${resource.id}`;
 
-  // 2. The payload for PUT is the entire resource object (T).
   const response = await axiosInstance.put<T>(url, resource);
 
   return response.data;
@@ -134,11 +127,6 @@ const apiFactory = {
 
   deleteUser : (payload: User): Promise<User> => deleteResource<User>(payload),
 
-  // Example of a more complex product filter built on the base function
-  fetchProductsByCategory: async (category: string): Promise<Product[]> => {
-    const allProducts = await fetchResource<Product>('products');
-    return allProducts.filter(p => p.category === category);
-  }
 };
 
 export default apiFactory;

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User } from "../../Types/User";
 import apiFactory from "../../Api/apiFactory";
 
-const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
+
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();

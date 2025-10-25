@@ -15,7 +15,7 @@ import type { Order, Product } from "../../Types";
 
 
 //const user = localStorage.getItem('user')
-// ✅ Validation Schema
+// Validation Schema
 const schema: yup.ObjectSchema<ShippingData> = yup.object({
   id: yup.string().optional(),
   resource: yup.string().optional(),
@@ -96,7 +96,7 @@ const CheckoutPage: React.FC = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-8 bg-gray-50 min-h-screen">
      
-      {/* ✅ Shipping Form */}
+      {/* Shipping Form */}
       <div className="lg:col-span-8 bg-white p-6 rounded-2xl shadow">
         <h3 className="text-2xl  mb-6 text-gray-800">Checkout</h3>
 
@@ -238,12 +238,12 @@ const CheckoutPage: React.FC = () => {
         </form>
       </div>
 
-      {/* ✅ Order Summary */}
+      {/* Order Summary */}
       <div className="lg:col-span-4">
         <div className="bg-white p-6 rounded-2xl shadow sticky top-6">
           <h4 className="text-lg  mb-4">Order Summary</h4>
 
-          {/* ✅ Product List with Images */}
+          {/* Product List with Images */}
           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
             {items.map((item) => (
               <div
@@ -268,7 +268,7 @@ const CheckoutPage: React.FC = () => {
             ))}
           </div>
 
-          {/* ✅ Total */}
+          {/*Total */}
           <div className="border-t mt-4 pt-3 flex justify-between text-gray-800">
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
