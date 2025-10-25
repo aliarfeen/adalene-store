@@ -56,11 +56,10 @@ export const Footer = () => {
           {/* Links 1 */}
           <div>
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-thin md:space-y-8 md:flex-col md:mt-0 md:border-0">
-              <Link to=""><li className="hover:text-orange-800">Shop All</li></Link>
-              <Link to=""><li className="hover:text-orange-800">Our Story</li></Link>
-              <Link to=""><li className="hover:text-orange-800">Our Craft</li></Link>
-              <Link to="/gift"><li className="hover:text-orange-800">Gift Card</li></Link>
-              <Link to=""><li className="hover:text-orange-800">Contact</li></Link>
+              <Link to="/products"><li className="hover:text-orange-800">Shop All</li></Link>
+              <Link to="/story"><li className="hover:text-orange-800">Our Story</li></Link>
+              <Link to="/craft"><li className="hover:text-orange-800">Our Craft</li></Link>
+              <Link to="/contact"><li className="hover:text-orange-800">Contact</li></Link>
             </ul>
           </div>
 
