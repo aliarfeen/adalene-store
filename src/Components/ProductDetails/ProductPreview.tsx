@@ -115,7 +115,7 @@ const ProductPreview: React.FC<Product> = ({
   // Find if the product is already in the cart and set its orderQuantity
   const existingCartItem = parsedCart.find((e: Product) => e.id === id);
   if (existingCartItem) {
-    initialOrderQuantity = 1;
+    initialOrderQuantity = 0 + existingCartItem.orderQuantity;
   }
 
   const [clientorderQuantity, setorderQantity] = useState(initialOrderQuantity);
@@ -177,7 +177,7 @@ const ProductPreview: React.FC<Product> = ({
 
   // --- Stock Labels Logic ---
   const stockLabel =
-    quantityDiffernce <= 0
+    quantityDiffernce <= -1
       ? { text: "Out of Stock", color: "bg-red-600" }
       : quantityDiffernce <= 5
         ? { text: "Low Stock", color: "bg-yellow-500" }
@@ -221,8 +221,8 @@ const ProductPreview: React.FC<Product> = ({
 
           <p className="text-base mb-2 text-gray-700">{description}</p>
           <p className="text-base mb-2 text-yellow-500">
-            {" "}
-            Only {quantityDiffernce >= 0 ? quantityDiffernce : 0} items left !
+            {quantity === 1 ? "1 item left !" :
+            `Only ${quantityDiffernce >= 0 ? quantityDiffernce  : 0} items left !`}
           </p>
 
           <hr className="my-6 border-t border-gray-200" />
