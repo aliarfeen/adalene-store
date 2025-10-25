@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InputField from "../../Components/Forms/InputField2";
 import { PersonIcon, LockClosedIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import axios from "axios";
 import type { User } from "../../Types/User";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -41,7 +40,7 @@ const schema = z
   });
 
 type FormData = z.infer<typeof schema>;
-// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
+
 
 const SignUp: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

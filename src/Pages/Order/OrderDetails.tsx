@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import axios from "axios";
 import type { Order } from "../../Types/Order";
 import { ToastContainer, toast } from "react-toastify";
 import { Button } from "../../Components/Common/Button";
@@ -8,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import RatingModal from "../../Components/Profile/RatingModal";
 import apiFactory from "../../Api/apiFactory";
 
-// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const OrderDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

@@ -3,11 +3,9 @@ import type { User } from "../../Types/User";
 import { Button } from "../../Components/Common/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import axios from "axios";
 import apiFactory from "../../Api/apiFactory";
 
 const STORAGE_KEY = "loggedUser";
-// const API_URL = "https://68e4f1f88e116898997db023.mockapi.io/data";
 
 const AccountDetails: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
