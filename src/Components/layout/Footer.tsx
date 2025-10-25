@@ -49,10 +49,10 @@ export const Footer = () => {
       <div className="bg-white border-gray-200 shadow-sm mt-3 h-50">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           {/* Logo */}
-          <div>
+          <Link to="/">  <div>
             <AdalenaLogo className="hover:opacity-80 transition-opacity cursor-pointer" />
           </div>
-
+          </Link>
           {/* Links 1 */}
           <div>
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-thin md:space-y-8 md:flex-col md:mt-0 md:border-0">
