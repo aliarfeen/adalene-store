@@ -8,15 +8,16 @@ import { removeItem, setQty, clearCart} from "../../Features/products/productSli
 import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
 import Modal from "../../Components/Common/Dialog";
+import InfoContainer from "../../Components/ProductDetails/InfoColumn";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.product);
   const navigate = useNavigate();
 
-  const [promoCode, setPromoCode] = useState("");
+  //const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const [promoApplied, setPromoApplied] = useState(false);
+  //const [promoApplied, setPromoApplied] = useState(false);
 
   //  Subtotal = sum of (price * quantity)
   const subtotal = useMemo(
@@ -85,36 +86,36 @@ const Cart: React.FC = () => {
 
   const handleClear = () => {
     dispatch(clearCart());
-    setPromoApplied(false);
-    setPromoCode("");
+    //setPromoApplied(false);
+    //setPromoCode("");
     setDiscount(0);
     toast.warn("Cart cleared");
   };
 
   //  Apply promo code
-  const applyPromoCode = () => {
-    // const validCodes = {
-    //   "dr.nasr": 100, // 100% discount
-    //   "engnourhan": 50, // 50% discount
-    // };
+  // const applyPromoCode = () => {
+  //   // const validCodes = {
+  //   //   "dr.nasr": 100, // 100% discount
+  //   //   "engnourhan": 50, // 50% discount
+  //   // };
 
-    // if (promoApplied) {
-    //   toast.info("Promo code already applied");
-    //   return;
-    // }
+  //   // if (promoApplied) {
+  //   //   toast.info("Promo code already applied");
+  //   //   return;
+  //   // }
 
-    // const code = promoCode.trim().toLowerCase();
-    // if (code in validCodes) {
-    //   const discountPercent = validCodes[code];
-    //   const discountValue = (subtotal * discountPercent) / 100;
-    //   setDiscount(discountValue);
-    //   setPromoApplied(true);
-    //   toast.success(` Promo applied: ${discountPercent}% off`);
-    // } else {
-    //   setDiscount(0);
-    //   toast.error("❌ Invalid promo code");
-    // }
-  };
+  //   // const code = promoCode.trim().toLowerCase();
+  //   // if (code in validCodes) {
+  //   //   const discountPercent = validCodes[code];
+  //   //   const discountValue = (subtotal * discountPercent) / 100;
+  //   //   setDiscount(discountValue);
+  //   //   setPromoApplied(true);
+  //   //   toast.success(` Promo applied: ${discountPercent}% off`);
+  //   // } else {
+  //   //   setDiscount(0);
+  //   //   toast.error("❌ Invalid promo code");
+  //   // }
+  // };
   const navigateAndCloseModal = () => {
     setTimeout(() => navigate("/login"), 500)
     setModalOpen(false);
@@ -226,7 +227,7 @@ const Cart: React.FC = () => {
             </div>
 
             {/* Promo Code */}
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Enter a promo code
               </label>
@@ -258,8 +259,9 @@ const Cart: React.FC = () => {
                   applied — saved ${discount.toFixed(2)}
                 </p>
               )}
-            </div>
+            </div> */}
           </div>
+          
 
           {/* RIGHT - order summary */}
           <aside className="border rounded-xl p-6 shadow-sm bg-white">
@@ -294,6 +296,8 @@ const Cart: React.FC = () => {
           </aside>
         </div>
       </div>
+      
+                <InfoContainer />
     </div>
   );
 };
