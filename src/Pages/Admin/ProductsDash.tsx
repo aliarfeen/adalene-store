@@ -5,7 +5,7 @@ import Table from "../../Components/Table/Table";
 import ReusableModal from "../../Components/Forms/ReusableModal";
 import type { Product } from "../../Types/";
 import { toast } from "react-toastify";
-import { set, z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
+import { z, ZodNumber, ZodString, type ZodTypeAny } from "zod";
 import { type RegisterOptions } from "react-hook-form";
 import apiFactory from "../../Api/apiFactory";
 import Pagination from "../../Components/Products/Pagination";
