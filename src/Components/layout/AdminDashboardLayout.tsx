@@ -12,6 +12,7 @@ FileText
 import Sidebar from "../Forms/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from 'react-helmet';
 
 const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ const AdminLayout: React.FC = () => {
   ];
 
   return (
+    <>
+    <Helmet>
+      <title>Admin Dashboard</title>
+    </Helmet>
     <div className="min-h-screen flex bg-gradient-to-r from-[#f6efe6] to-[#fdf5ef]">
       {/* ✅ Toast container */}
       <ToastContainer position="top-right" autoClose={2000} />
@@ -55,6 +60,7 @@ const AdminLayout: React.FC = () => {
         <Outlet />
       </main>
     </div>
+    </>
   );
 };
 

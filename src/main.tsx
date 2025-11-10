@@ -153,7 +153,7 @@ createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <ProductProvider>
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
+            <RouterProvider router={router} />
         </QueryClientProvider>
       </ProductProvider>
     </Provider>

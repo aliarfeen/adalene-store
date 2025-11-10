@@ -3,6 +3,7 @@ import type { Product } from "../../Types/Product";
 import ProductCard from "../../Components/Products/ProductCard";
 import ScrollToTop from "../../Components/Common/ScrollToTop";
 import Pagination from "../../Components/Products/Pagination"; 
+import { Helmet } from 'react-helmet';
 
 const Wishlist: React.FC = () => {
   const [favorites, setFavorites] = useState<Product[]>([]);
@@ -25,6 +26,9 @@ const Wishlist: React.FC = () => {
 
   return (
     <>
+    <Helmet>
+      <title>Wishlist</title>
+    </Helmet>
       <ScrollToTop />
       <div className="max-w-6xl mx-auto bg-white m-1 shadow-sm p-6">
         {favorites.length === 0 ? (

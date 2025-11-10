@@ -8,6 +8,7 @@ import ProductRatingCard from "../../Components/ProductDetails/ProductRatingCard
 import CommentSection from "../../Components/ProductDetails/CommentSection";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const ProductDetails = () => {
   
@@ -22,6 +23,10 @@ const ProductDetails = () => {
     product = JSON.parse(localStorage.getItem("product") || "{}");
   }, [pathname]);
   return (
+    <>
+    <Helmet>
+      <title>Product Details</title>
+    </Helmet>
     <div>
       <ScrollToTop />
       <ProductPrieview
@@ -51,6 +56,7 @@ const ProductDetails = () => {
         limit={filterdDataByCategory.length}
       />
     </div>
+    </>
   );
 };
 

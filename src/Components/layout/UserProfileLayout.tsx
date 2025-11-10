@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User as UserType } from "../../Types/User";
 import Sidebar from "../Forms/Sidebar"; 
+import { Helmet } from 'react-helmet';
 
 const UserProfileLayout: React.FC = () => {
   const [user, setUser] = useState<UserType | null>(null);
@@ -49,6 +50,10 @@ const UserProfileLayout: React.FC = () => {
   ];
 
   return (
+    <>
+    <Helmet>
+      <title>Profile</title>
+    </Helmet>
     <div className="min-h-screen flex bg-gradient-to-r from-[#f6efe6] to-[#fdf5ef]">
       <ToastContainer position="top-right" autoClose={2000} />
 
@@ -59,6 +64,7 @@ const UserProfileLayout: React.FC = () => {
         <Outlet />
       </main>
     </div>
+    </>
   );
 };
 

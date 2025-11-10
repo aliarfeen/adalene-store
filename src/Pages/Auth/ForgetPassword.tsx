@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import emailjs from "emailjs-com";
 import "react-toastify/dist/ReactToastify.css";
 import apiFactory from "../../Api/apiFactory";
+import { Helmet } from "react-helmet";
+
 
 const SERVICE_ID = "service_16sfnoq"; // Service ID
 const TEMPLATE_ID = "template_dt6slte"; // Template ID
@@ -76,6 +78,10 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Forgot Password</title>
+    </Helmet>
     <div className="bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10 min-h-screen md:min-h-0">
       <ToastContainer position="top-right" autoClose={2000} />
 
@@ -150,6 +156,7 @@ const ForgotPassword: React.FC = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 

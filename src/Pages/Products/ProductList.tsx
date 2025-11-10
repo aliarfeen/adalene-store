@@ -12,6 +12,7 @@ import ProductsFilter from "../../Components/Products/ProductsFilter"
 import ProductsList from "../../Components/Products/ProductsList"
 import { useLocation, useSearchParams } from "react-router-dom"
 import useProducts from "../../hooks/useProducts"
+import { Helmet } from "react-helmet"
 
 const ProductListPage = () => {
   const location = useLocation();
@@ -31,6 +32,9 @@ const ProductListPage = () => {
 
   return (
     <>
+    <Helmet>
+      <title>Products List</title>
+    </Helmet>
       <div>
         <h1 className="text-5xl font-bold font-sans text-center my-7 text-stone-800">
           All Products

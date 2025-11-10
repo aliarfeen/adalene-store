@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ourstory1 from '../../assets/ourstory&Craft/ourStory1.avif';
 import ourstory2 from '../../assets/ourstory&Craft/ourStory2.avif';
+import { Helmet } from 'react-helmet';
 
 const OurStory = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -36,6 +37,10 @@ const OurStory = () => {
 
 
   return (
+    <>
+    <Helmet>
+      <title>Our Story</title>
+    </Helmet>
     <div className="bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
       <div className="text-center py-8 sm:py-12 md:py-16 px-4">
@@ -126,6 +131,7 @@ const OurStory = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

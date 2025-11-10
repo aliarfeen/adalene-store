@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import craft1 from '../../assets/ourstory&Craft/ourCraft1.avif';
 import craft2 from '../../assets/ourstory&Craft/ourCraft2.avif';
 import craft3 from '../../assets/ourstory&Craft/ourcraft3.avif';
+import { Helmet } from 'react-helmet';
 
 const OurCraft = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -38,6 +39,10 @@ const OurCraft = () => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Our Craft</title>
+    </Helmet>
     <div className="bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
       <div className="text-center py-8 sm:py-12 md:py-16 px-4">
@@ -215,6 +220,7 @@ const OurCraft = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

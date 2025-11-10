@@ -1,8 +1,11 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet , useLocation } from "react-router-dom";
 import bgImage from "../../assets/Auth/authImage.png";
 
-const AuthLayout: React.FC = () => {
+const AuthLayout: React.FC = () => { 
+
+  const location = useLocation();
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-[#5c3317] to-[#e0c2a2]">
       {/* Left Section */}
@@ -30,7 +33,7 @@ const AuthLayout: React.FC = () => {
 
       {/* Right Section — dynamic content */}
       <div className="w-full md:w-1/2 bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10">
-        <Outlet />
+        <Outlet key={location.pathname}/>
       </div>
     </div>
   );

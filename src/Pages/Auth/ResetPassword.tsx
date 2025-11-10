@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User } from "../../Types/User";
 import apiFactory from "../../Api/apiFactory";
+import { Helmet } from "react-helmet";
+
 
 
 
@@ -88,6 +90,10 @@ useEffect(() => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Reset Password</title>
+    </Helmet>
     <div className="bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10 min-h-screen md:min-h-0">
       <ToastContainer position="top-right" autoClose={2000} />
       <h2 className="text-2xl md:text-3xl font-bold mb-1 text-[#4a2b0b] text-center md:text-left">
@@ -159,6 +165,7 @@ useEffect(() => {
         </button>
       </form>
     </div>
+    </>
   );
 };
 

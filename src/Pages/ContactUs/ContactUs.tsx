@@ -4,6 +4,7 @@ import { Button } from "../../Components/Common/Button";
 import apiFactory from "../../Api/apiFactory";
 import { toast, ToastContainer} from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 
 interface FormData {
@@ -114,6 +115,10 @@ export default function ContactUs() {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Contact Us</title>
+    </Helmet>
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#e8e3dc]">
       <div className="w-full max-w-2xl">
         <h1 className="text-4xl text-center mb-4 italic text-[#a0785e]">
@@ -216,5 +221,6 @@ export default function ContactUs() {
         newestOnTop
       />
     </div>
+    </>
   );
 }

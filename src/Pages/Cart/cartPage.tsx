@@ -9,6 +9,7 @@ import type { RootState } from "../../App/store";
 import { Button } from "../../Components/Common/Button";
 import Modal from "../../Components/Common/Dialog";
 import InfoContainer from "../../Components/ProductDetails/InfoColumn";
+import { Helmet } from 'react-helmet';
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
@@ -134,6 +135,10 @@ const Cart: React.FC = () => {
 
 
   return (
+    <>
+    <Helmet>
+      <title>Cart</title>
+    </Helmet>
     <div className="min-h-screen px-6 md:px-16 py-10 bg-white">
        {/* diaalog*/}
       <Modal isOpen={isModalOpen} onClose={()=>setModalOpen(false)}>
@@ -299,6 +304,7 @@ const Cart: React.FC = () => {
       
                 <InfoContainer />
     </div>
+    </>
   );
 };
 

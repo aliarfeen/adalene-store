@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 import apiFactory from "../../Api/apiFactory";
+import { Helmet } from "react-helmet";
 
 // ✅ Validation Schema
 const schema = z
@@ -143,6 +144,10 @@ const SignUp: React.FC = () => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Regsister</title>
+    </Helmet>
     <div className="bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10 min-h-screen md:min-h-0">
       <ToastContainer position="top-right" autoClose={2000} />
 
@@ -255,6 +260,7 @@ const SignUp: React.FC = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 

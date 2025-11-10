@@ -11,6 +11,7 @@ import { Button } from "../../Components/Common/Button";
 import apiFactory from "../../Api/apiFactory";
 import { clearCart } from "../../Features/products/productSlice";
 import type { Order, Product } from "../../Types";
+import { Helmet } from 'react-helmet';
 
 
 
@@ -94,6 +95,10 @@ const CheckoutPage: React.FC = () => {
     return <div className="text-center py-20 text-gray-500">Your cart is empty</div>;
 
   return (
+    <>
+    <Helmet>
+      <title>Checkout</title>
+    </Helmet>
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-8 bg-gray-50 min-h-screen">
      
       {/* Shipping Form */}
@@ -277,6 +282,7 @@ const CheckoutPage: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

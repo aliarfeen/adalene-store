@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { User } from "../../Types/User";
 import apiFactory from "../../Api/apiFactory";
+import { Helmet } from "react-helmet";
 
 
 
@@ -84,7 +85,10 @@ const Login: React.FC = () => {
     }
   };
 
-  return (
+  return (<>
+    <Helmet>
+      <title>Login</title>
+    </Helmet>
     <div className="bg-[#fdf5ef] flex flex-col justify-center px-6 md:px-16 py-10 min-h-screen md:min-h-0">
       <ToastContainer position="top-right" autoClose={2000} />
 
@@ -175,6 +179,7 @@ const Login: React.FC = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 
