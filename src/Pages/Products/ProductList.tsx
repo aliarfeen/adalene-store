@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet";
 const ProductListPage = () => {
   const location = useLocation();
   const category = location.state?.category || "";
-  const { products, isLoading, isError } = useProducts();
+  const { products, isError } = useProducts();
 
   const prices = products.map((product) => product.price);
   const price = Math.max(...prices);
