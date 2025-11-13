@@ -7,7 +7,7 @@ import slugify from "slugify";
 const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
   const { setproduct } = useContext(ProductContext) ?? {};
-  const [loading, setLoading] = useState(true); // controls blur + skeleton
+  const [loading, setLoading] = useState(true); 
   const cart = localStorage.getItem("cart")
     const parsedCart = cart ? JSON.parse(cart) : [];
     let initialOrderQuantity = 0;
