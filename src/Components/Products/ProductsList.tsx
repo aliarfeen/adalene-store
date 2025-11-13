@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { Product } from "../../Types";
 import Pagination from "./Pagination";
 import ProductCard from "./ProductCard";
-import useProducts from "../../hooks/useProducts";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 
 interface ProductsListProps {
