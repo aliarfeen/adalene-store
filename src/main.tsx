@@ -149,7 +149,7 @@ const router = createBrowserRouter([
 
 // Render
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <ProductProvider>
         <QueryClientProvider client={queryClient}>
@@ -157,5 +157,5 @@ createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </ProductProvider>
     </Provider>
-  </StrictMode>
+  /* </StrictMode> */
 );

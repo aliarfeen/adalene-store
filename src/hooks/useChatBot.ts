@@ -1,53 +1,101 @@
-import { useState, type ReactNode } from "react";
+// useChatBot.ts
+import { useState, useEffect } from "react";
 import type { Product } from "../Types";
 
-export type ChatMessage = {
+export interface ChatMessage {
   id: string;
-  sender: "user" | "bot";
-  type: "text" | "products";
-  content: string | Product[] | ReactNode;
-};
+  sender: "bot" | "user";
+  type: "text" | "products" | "options";
+  content: any;
+  onSelect: (choice: string) => void;
+}
 
-export const useChatbotLogic = (products: Product[]) => {
+export function useChatbotLogic(products: Product[]) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  const addMessage = (msg: ChatMessage) => setMessages(prev => [...prev, msg]);
+  const OPTIONS = ["Belts", "Phone Cases", "Leather Handles", "Wallets"];
 
-  const handleUserQuery = (query: string) => {
-    addMessage({
-      id: Date.now().toString(),
-      sender: "user",
-      type: "text",
-      content: query
-    });
-
-    setTimeout(() => {
-      const lowerQuery = query.toLowerCase();
-
-      // Example: basic filtering by title, category, or bestSeller
-      const filtered = products.filter(p => {
-        const matchesTitle = p.title.toLowerCase().includes(lowerQuery);
-        const matchesCategory = p.category.toLowerCase().includes(lowerQuery);
-        return matchesTitle || matchesCategory;
-      });
-
-      if (filtered.length > 0) {
-        addMessage({
-          id: (Date.now() + 1).toString(),
-          sender: "bot",
-          type: "products",
-          content: filtered.slice(0, 2)
-        });
-      } else {
-        addMessage({
-          id: (Date.now() + 2).toString(),
-          sender: "bot",
-          type: "text",
-          content: "Sorry, we couldn’t find anything matching your request. We will notify the team!"
-        });
-      }
-    }, 800);
+  const sendMessage = (msg: ChatMessage) => {
+    setMessages((prev) => [...prev, msg]);
   };
 
-  return { messages, handleUserQuery };
-};
+  useEffect(() => {
+    if (messages.length > 0) return; 
+    // Greeting
+    sendMessage({
+      id: "greeting",
+      sender: "bot",
+      type: "text",
+      content: "Hi! 👋 What can I help you find today?",
+      onSelect: () => {}
+    });
+
+    // Options
+    sendMessage({
+      id: "initial_options",
+      sender: "bot",
+      type: "options",
+      content: OPTIONS,
+      onSelect: handleUserChoice,
+    });
+  }, [messages.length==0]);
+
+  const handleUserChoice = (choice: string) => {
+    // Add user's choice message
+    sendMessage({
+      id: Date.now() + "_user",
+      sender: "user",
+      type: "text",
+      content: choice,
+      onSelect: () => {}
+    });
+
+    // Filter products
+    const recommended = products
+      .filter((p) => p.category.toLowerCase() === choice.toLowerCase())
+      .slice(0, 3);
+
+    if (recommended.length === 0) {
+      sendMessage({
+        id: Date.now() + "_no_match",
+        sender: "bot",
+        type: "text",
+        content: "Sorry! We don’t have items in this category right now.",
+        onSelect: () => {}
+      });
+
+      sendMessage({
+        id: Date.now() + "_retry",
+        sender: "bot",
+        type: "options",
+        content: OPTIONS,
+        onSelect: handleUserChoice,
+      });
+
+      return;
+    }
+
+    // Send product recommendations
+    sendMessage({
+      id: Date.now() + "_products",
+      sender: "bot",
+      type: "products",
+      content: recommended,
+      onSelect: () => {}
+    });
+
+    // Next step options
+    sendMessage({
+      id: Date.now() + "_next_options",
+      sender: "bot",
+      type: "options",
+      content: ["Browse More", "Show Best Sellers", "Restart"],
+      onSelect: handleUserChoice,
+    });
+  };
+
+  return {
+    messages,
+    handleUserChoice,
+  };
+}
