@@ -12,7 +12,7 @@ interface Props {
 export default function ChatWindow({ onClose }: Props) {
   const { products } = useProducts();
 
-  const { messages, handleUserChoice } = useChatbotLogic(products);
+  const { messages } = useChatbotLogic(products);
 
   return (
     <motion.div
